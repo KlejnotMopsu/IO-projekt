@@ -13,7 +13,7 @@ namespace IO_projekt
     {
         public class Player
         {
-            Form formHandle;
+            Form1 formHandle;
 
             public PictureBox Sprite;
             public Point Position;
@@ -37,7 +37,7 @@ namespace IO_projekt
                 public static List<Enemy> enemies = new List<Enemy>();
             }
 
-            public Player(Form f, int x = 0, int y = 0)
+            public Player(Form1 f, int x = 0, int y = 0)
             {
                 Console.WriteLine("Player() - f.Width: " + f.Width + "  f.Height: " + f.Height);
 
@@ -139,9 +139,9 @@ namespace IO_projekt
                 Timer BulletTimer;
                 PictureBox Sprite;
                 //zmiana - Artur
-                Form formHandle;
+                Form1 formHandle;
 
-                public Bullet(Form f, Player p)
+                public Bullet(Form1 f, Player p)
                 {
                     formHandle = f;
                     BulletSpeed = 10;
@@ -191,7 +191,8 @@ namespace IO_projekt
                         //zmiana - Mikołaj
                         score = score + 1;
                         Console.WriteLine("score = " + score);
-                        Pointslbl.Text = (score < 10) ? "0" + score.ToString() : score.ToString();
+                        this.formHandle.Pointslbl.Text = Convert.ToString(score);
+                        //pointslbl.Text = (score < 10) ? "0" + score.ToString() : score.ToString();
                         //---------------------------------------------------
                         Conf.enemies.Remove(tmp);
                     }

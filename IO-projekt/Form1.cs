@@ -21,7 +21,7 @@ namespace IO_projekt
         Random Seed;
         Star[] StarArray;
         int StarCount;
-        int score = 0;
+        static int score = 0;
 
         bool Pause;
 
@@ -131,6 +131,8 @@ namespace IO_projekt
         //Zmiana - Artur
         public void MainTimer_Tick(object sender, EventArgs e)
         {
+            //this.Pointslbl.Text = Convert.ToString(score);
+
             for (int i = 0; i < StarCount; i++)
             {
                 StarArray[i].Move();
