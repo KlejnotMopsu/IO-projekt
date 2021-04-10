@@ -21,6 +21,9 @@ namespace IO_projekt
         Random Seed;
         Star[] StarArray;
         int StarCount;
+        int score = 0;
+
+        bool Pause;
 
         /*
         static void Main()
@@ -36,6 +39,7 @@ namespace IO_projekt
         private void Form1_Load(object sender, EventArgs e)
         {
             OPERATIONS = 0;
+            Pause = false;
 
             Console.WriteLine(OPERATIONS++ + "> " + "Loading form...", OPERATIONS);
             p = new Player(this, this.Width / 2, this.Height - 100);
@@ -55,6 +59,7 @@ namespace IO_projekt
             }
         }
 
+
         private void timer1_Tick(object sender, EventArgs e)
         {
 
@@ -62,26 +67,28 @@ namespace IO_projekt
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Right)
-            {
-                p.MoveRight();
-            }
-            if (e.KeyCode == Keys.Left)
-            {
-                p.MoveLeft();
-            }
-            if (e.KeyCode == Keys.Up)
-            {
-                p.MoveUp();
-            }
-            if (e.KeyCode == Keys.Down)
-            {
-                p.MoveDown();
-            }
-            if (e.KeyCode == Keys.Space)
-            {
-                p.Shoot();
-            }
+            
+                if (e.KeyCode == Keys.Right)
+                {
+                    p.MoveRight();
+                }
+                if (e.KeyCode == Keys.Left)
+                {
+                    p.MoveLeft();
+                }
+                if (e.KeyCode == Keys.Up)
+                {
+                    p.MoveUp();
+                }
+                if (e.KeyCode == Keys.Down)
+                {
+                    p.MoveDown();
+                }
+                if (e.KeyCode == Keys.Space)
+                {
+                    p.Shoot();
+                }
+            
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
@@ -107,6 +114,9 @@ namespace IO_projekt
             {
                 p.ShootStop();
             }
+
+
+
         }
 
         //Zmiana - Artur
@@ -122,5 +132,7 @@ namespace IO_projekt
                 }
             }
         }
+
+        
     }
 }

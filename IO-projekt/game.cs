@@ -131,7 +131,7 @@ namespace IO_projekt
                 }
             }
 
-            public class Bullet
+            public class Bullet : Form1
             {
                 int DistanceTravelled;
                 int MaxDistanceTravelled;
@@ -186,8 +186,15 @@ namespace IO_projekt
                     }
                     //koniec zmiany
 
-                    if (tmp != null) Conf.enemies.Remove(tmp);
-
+                    if (tmp != null)
+                    {
+                        //zmiana - Mikołaj
+                        score = score + 1;
+                        Console.WriteLine("score = " + score);
+                        Pointslbl.Text = (score < 10) ? "0" + score.ToString() : score.ToString();
+                        //---------------------------------------------------
+                        Conf.enemies.Remove(tmp);
+                    }
                     if (DistanceTravelled < MaxDistanceTravelled)
                     {
                         DistanceTravelled += BulletSpeed;
