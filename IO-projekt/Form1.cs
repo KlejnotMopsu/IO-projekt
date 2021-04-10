@@ -21,7 +21,7 @@ namespace IO_projekt
         Random Seed;
         Star[] StarArray;
         int StarCount;
-        int score = 0;
+        static int score = 0;
 
         bool Pause;
 
