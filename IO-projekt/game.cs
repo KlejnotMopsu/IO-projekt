@@ -51,7 +51,7 @@ namespace IO_projekt
                 Console.WriteLine("Sprite.Location = " + "(" + Sprite.Location.X + "," + Sprite.Location.Y + ")");
                 f.Controls.Add(this.Sprite);
 
-                MovementSpeed = 10;
+                MovementSpeed = 20;
 
                 MoveRightTimer = new Timer();
                 MoveRightTimer.Tick += new System.EventHandler(MoveRightTimer_Tick);
