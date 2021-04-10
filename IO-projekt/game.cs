@@ -117,21 +117,24 @@ namespace IO_projekt
 
                 public void EnemyTimer_Tick(Object sender, EventArgs e)
                 {
-                    if ((this.Sprite.Top >= p.Sprite.Top - 50 && this.Sprite.Top <= p.Sprite.Top + 50) && (this.Sprite.Left >= p.Sprite.Left - 50 && this.Sprite.Left <= p.Sprite.Left + 50))
+                    if (!Pause)
                     {
-                        this.Sprite.Top = -1000;
-                        DistanceTravelled = MaxDistanceTravel;
-                        Conf.enemies.Remove(this);
-                    }
-                    else if (DistanceTravelled < MaxDistanceTravel)
-                    {
-                        DistanceTravelled += EnemySpeed;
-                        this.Sprite.Top += this.EnemySpeed;
+                        if ((this.Sprite.Top >= p.Sprite.Top - 50 && this.Sprite.Top <= p.Sprite.Top + 50) && (this.Sprite.Left >= p.Sprite.Left - 50 && this.Sprite.Left <= p.Sprite.Left + 50))
+                        {
+                            this.Sprite.Top = -1000;
+                            DistanceTravelled = MaxDistanceTravel;
+                            Conf.enemies.Remove(this);
+                        }
+                        else if (DistanceTravelled < MaxDistanceTravel)
+                        {
+                            DistanceTravelled += EnemySpeed;
+                            this.Sprite.Top += this.EnemySpeed;
+                        }
                     }
                 }
             }
 
-            public class Bullet : Form1
+            public class Bullet
             {
                 int DistanceTravelled;
                 int MaxDistanceTravelled;

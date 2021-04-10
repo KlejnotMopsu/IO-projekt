@@ -39,13 +39,13 @@ namespace IO_projekt
             // 
             // pauseLabel
             // 
-            this.pauseLabel.BackColor = System.Drawing.SystemColors.Desktop;
+            this.pauseLabel.BackColor = System.Drawing.Color.Transparent;
             this.pauseLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.pauseLabel.Font = new System.Drawing.Font("Stencil", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pauseLabel.ForeColor = System.Drawing.Color.Red;
             this.pauseLabel.Location = new System.Drawing.Point(394, 109);
             this.pauseLabel.Name = "pauseLabel";
-            this.pauseLabel.Size = new System.Drawing.Size(298, 90);
+            this.pauseLabel.Size = new System.Drawing.Size(316, 90);
             this.pauseLabel.TabIndex = 0;
             this.pauseLabel.Text = "Pause";
             this.pauseLabel.Visible = false;
@@ -76,6 +76,7 @@ namespace IO_projekt
             // 
             // Scorelbl
             // 
+            this.Scorelbl.BackColor = System.Drawing.Color.Transparent;
             this.Scorelbl.Font = new System.Drawing.Font("Stencil", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Scorelbl.ForeColor = System.Drawing.Color.Gainsboro;
             this.Scorelbl.Location = new System.Drawing.Point(13, 13);
@@ -86,13 +87,14 @@ namespace IO_projekt
             // 
             // Pointslbl
             // 
+            this.Pointslbl.BackColor = System.Drawing.Color.Transparent;
             this.Pointslbl.Font = new System.Drawing.Font("Stencil", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Pointslbl.ForeColor = System.Drawing.Color.Gainsboro;
             this.Pointslbl.Location = new System.Drawing.Point(114, 13);
             this.Pointslbl.Name = "Pointslbl";
-            this.Pointslbl.Size = new System.Drawing.Size(56, 39);
+            this.Pointslbl.Size = new System.Drawing.Size(68, 39);
             this.Pointslbl.TabIndex = 4;
-            this.Pointslbl.Text = "00";
+            this.Pointslbl.Text = "0";
             // 
             // Form1
             // 

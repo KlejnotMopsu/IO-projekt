@@ -23,7 +23,7 @@ namespace IO_projekt
         int StarCount;
         static int score = 0;
 
-        bool Pause;
+        static bool Pause;
 
         /*
         static void Main()
@@ -70,23 +70,38 @@ namespace IO_projekt
             
                 if (e.KeyCode == Keys.Right)
                 {
+                if (!Pause)
+                {
                     p.MoveRight();
+                }
                 }
                 if (e.KeyCode == Keys.Left)
                 {
+                    if (!Pause)
+                    {
                     p.MoveLeft();
+                    }
                 }
                 if (e.KeyCode == Keys.Up)
                 {
-                    p.MoveUp();
+                    if (!Pause)
+                    {
+                        p.MoveUp();
+                    }
                 }
                 if (e.KeyCode == Keys.Down)
                 {
-                    p.MoveDown();
+                    if (!Pause)
+                    {
+                        p.MoveDown();
+                    }
                 }
                 if (e.KeyCode == Keys.Space)
                 {
-                    p.Shoot();
+                    if (!Pause)
+                    {
+                        p.Shoot();
+                    }
                 }
             
         }
@@ -115,6 +130,22 @@ namespace IO_projekt
                 p.ShootStop();
             }
 
+            if (e.KeyCode == Keys.Escape)
+            {
+                if (Pause)
+                {
+                    pauseLabel.Location = new Point(this.Width/2-147, 109);
+                    MainTimer.Start();
+                    pauseLabel.Visible = false;
+                    Pause = false;
+                }
+                else
+                {
+                    pauseLabel.Visible = true;
+                    MainTimer.Stop();
+                    Pause = true;
+                }
+            }
 
 
         }
@@ -122,6 +153,7 @@ namespace IO_projekt
         //Zmiana - Artur
         public void MainTimer_Tick(object sender, EventArgs e)
         {
+
             for (int i = 0; i < StarCount; i++)
             {
                 StarArray[i].Move();
