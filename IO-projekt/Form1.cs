@@ -34,6 +34,10 @@ namespace IO_projekt
         public Form1()
         {
             InitializeComponent();
+            //Adam - pełny ekran i schowanie kursora myszy
+            FormBorderStyle = FormBorderStyle.None;
+            WindowState = FormWindowState.Maximized;
+            Cursor.Hide();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -103,6 +107,11 @@ namespace IO_projekt
                         p.Shoot();
                     }
                 }
+                //Adam - wyjście z gry przez naciśnięcie klawisza esc
+                //if(e.KeyCode == Keys.Escape)
+                //{
+                //    this.Close();
+                //}
             
         }
 
@@ -134,14 +143,17 @@ namespace IO_projekt
             {
                 if (Pause)
                 {
-                    pauseLabel.Location = new Point(this.Width/2-147, 109);
                     MainTimer.Start();
                     pauseLabel.Visible = false;
+                    Exitbtn.Visible = false;
                     Pause = false;
                 }
                 else
                 {
+                    pauseLabel.Location = new Point(768 - 140, 109);
+                    Exitbtn.Location = new Point(768 - 91, 220);
                     pauseLabel.Visible = true;
+                    Exitbtn.Visible = true;
                     MainTimer.Stop();
                     Pause = true;
                 }
@@ -165,6 +177,9 @@ namespace IO_projekt
             }
         }
 
-        
+        private void Exitbtn_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

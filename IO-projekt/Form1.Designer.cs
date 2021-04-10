@@ -43,7 +43,7 @@ namespace IO_projekt
             this.pauseLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.pauseLabel.Font = new System.Drawing.Font("Stencil", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pauseLabel.ForeColor = System.Drawing.Color.Red;
-            this.pauseLabel.Location = new System.Drawing.Point(394, 109);
+            this.pauseLabel.Location = new System.Drawing.Point(628, 109);
             this.pauseLabel.Name = "pauseLabel";
             this.pauseLabel.Size = new System.Drawing.Size(316, 90);
             this.pauseLabel.TabIndex = 0;
@@ -66,13 +66,14 @@ namespace IO_projekt
             // 
             this.Exitbtn.BackColor = System.Drawing.Color.MintCream;
             this.Exitbtn.Font = new System.Drawing.Font("Stencil", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Exitbtn.Location = new System.Drawing.Point(445, 308);
+            this.Exitbtn.Location = new System.Drawing.Point(677, 220);
             this.Exitbtn.Name = "Exitbtn";
             this.Exitbtn.Size = new System.Drawing.Size(183, 56);
             this.Exitbtn.TabIndex = 2;
             this.Exitbtn.Text = "exit";
             this.Exitbtn.UseVisualStyleBackColor = false;
             this.Exitbtn.Visible = false;
+            this.Exitbtn.Click += new System.EventHandler(this.Exitbtn_Click);
             // 
             // Scorelbl
             // 

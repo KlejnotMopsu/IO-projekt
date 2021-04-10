@@ -106,6 +106,7 @@ namespace IO_projekt
                     Sprite.Location = new Point(rand.Next(100, f.Width - 100),
                         -100);
 
+
                     EnemyTimer = new Timer();
                     EnemyTimer.Interval = 20;
                     EnemyTimer.Tick += new System.EventHandler(EnemyTimer_Tick);
@@ -293,9 +294,12 @@ namespace IO_projekt
 
             private void EnemyTimer_Tick(object sender, EventArgs e)
             {
-                Console.WriteLine(OPERATIONS++ + "> " + "Enemy spawned.");
-                Enemy enemy = new Enemy(formHandle, this);
-                Conf.enemies.Add(enemy);
+                if (!Pause)
+                {
+                    Console.WriteLine(OPERATIONS++ + "> " + "Enemy spawned.");
+                    Enemy enemy = new Enemy(formHandle, this);
+                    Conf.enemies.Add(enemy);
+                }
             }
         }
 
