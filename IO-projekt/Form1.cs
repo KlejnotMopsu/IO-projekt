@@ -34,6 +34,10 @@ namespace IO_projekt
         public Form1()
         {
             InitializeComponent();
+            //Adam - pełny ekran i schowanie kursora myszy
+            FormBorderStyle = FormBorderStyle.None;
+            WindowState = FormWindowState.Maximized;
+            Cursor.Hide();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -87,6 +91,11 @@ namespace IO_projekt
                 if (e.KeyCode == Keys.Space)
                 {
                     p.Shoot();
+                }
+                //Adam - wyjście z gry przez naciśnięcie klawisza esc
+                if(e.KeyCode == Keys.Escape)
+                {
+                    this.Close();
                 }
             
         }
