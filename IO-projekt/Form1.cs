@@ -146,6 +146,7 @@ namespace IO_projekt
                 if (Pause)
                 {
                     MainTimer.Start();
+                    Cursor.Hide();
                     pauseLabel.Visible = false;
                     Exitbtn.Visible = false;
                     Pause = false;
@@ -154,6 +155,7 @@ namespace IO_projekt
                 {
                     pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width/2) - 170, 109);
                     Exitbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 270);
+                    Cursor.Show();
                     pauseLabel.Visible = true;
                     Exitbtn.Visible = true;
                     MainTimer.Stop();
