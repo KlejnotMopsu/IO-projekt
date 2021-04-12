@@ -35,17 +35,19 @@ namespace IO_projekt
             this.Exitbtn = new System.Windows.Forms.Button();
             this.Scorelbl = new System.Windows.Forms.Label();
             this.Pointslbl = new System.Windows.Forms.Label();
+            this.Lifelbl = new System.Windows.Forms.Label();
+            this.LifePointslbl = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // pauseLabel
             // 
             this.pauseLabel.BackColor = System.Drawing.Color.Transparent;
             this.pauseLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.pauseLabel.Font = new System.Drawing.Font("Stencil", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pauseLabel.Font = new System.Drawing.Font("Stencil", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pauseLabel.ForeColor = System.Drawing.Color.Red;
-            this.pauseLabel.Location = new System.Drawing.Point(628, 109);
+            this.pauseLabel.Location = new System.Drawing.Point(441, 50);
             this.pauseLabel.Name = "pauseLabel";
-            this.pauseLabel.Size = new System.Drawing.Size(316, 90);
+            this.pauseLabel.Size = new System.Drawing.Size(475, 128);
             this.pauseLabel.TabIndex = 0;
             this.pauseLabel.Text = "Pause";
             this.pauseLabel.Visible = false;
@@ -53,10 +55,10 @@ namespace IO_projekt
             // Replaybtn
             // 
             this.Replaybtn.BackColor = System.Drawing.Color.MintCream;
-            this.Replaybtn.Font = new System.Drawing.Font("Stencil", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Replaybtn.Font = new System.Drawing.Font("Stencil", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Replaybtn.Location = new System.Drawing.Point(445, 227);
             this.Replaybtn.Name = "Replaybtn";
-            this.Replaybtn.Size = new System.Drawing.Size(183, 56);
+            this.Replaybtn.Size = new System.Drawing.Size(226, 83);
             this.Replaybtn.TabIndex = 1;
             this.Replaybtn.Text = "replay";
             this.Replaybtn.UseVisualStyleBackColor = false;
@@ -65,10 +67,10 @@ namespace IO_projekt
             // Exitbtn
             // 
             this.Exitbtn.BackColor = System.Drawing.Color.MintCream;
-            this.Exitbtn.Font = new System.Drawing.Font("Stencil", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Exitbtn.Location = new System.Drawing.Point(677, 220);
+            this.Exitbtn.Font = new System.Drawing.Font("Stencil", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Exitbtn.Location = new System.Drawing.Point(677, 227);
             this.Exitbtn.Name = "Exitbtn";
-            this.Exitbtn.Size = new System.Drawing.Size(183, 56);
+            this.Exitbtn.Size = new System.Drawing.Size(221, 83);
             this.Exitbtn.TabIndex = 2;
             this.Exitbtn.Text = "exit";
             this.Exitbtn.UseVisualStyleBackColor = false;
@@ -97,12 +99,36 @@ namespace IO_projekt
             this.Pointslbl.TabIndex = 4;
             this.Pointslbl.Text = "0";
             // 
+            // Lifelbl
+            // 
+            this.Lifelbl.BackColor = System.Drawing.Color.Transparent;
+            this.Lifelbl.Font = new System.Drawing.Font("Stencil", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Lifelbl.ForeColor = System.Drawing.Color.Gainsboro;
+            this.Lifelbl.Location = new System.Drawing.Point(937, 13);
+            this.Lifelbl.Name = "Lifelbl";
+            this.Lifelbl.Size = new System.Drawing.Size(109, 34);
+            this.Lifelbl.TabIndex = 5;
+            this.Lifelbl.Text = "Life:";
+            // 
+            // LifePointslbl
+            // 
+            this.LifePointslbl.BackColor = System.Drawing.Color.Transparent;
+            this.LifePointslbl.Font = new System.Drawing.Font("Stencil", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LifePointslbl.ForeColor = System.Drawing.Color.Gainsboro;
+            this.LifePointslbl.Location = new System.Drawing.Point(1014, 13);
+            this.LifePointslbl.Name = "LifePointslbl";
+            this.LifePointslbl.Size = new System.Drawing.Size(41, 39);
+            this.LifePointslbl.TabIndex = 6;
+            this.LifePointslbl.Text = "3";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.ClientSize = new System.Drawing.Size(1067, 554);
+            this.Controls.Add(this.LifePointslbl);
+            this.Controls.Add(this.Lifelbl);
             this.Controls.Add(this.Pointslbl);
             this.Controls.Add(this.Scorelbl);
             this.Controls.Add(this.Exitbtn);
@@ -125,6 +151,8 @@ namespace IO_projekt
         private System.Windows.Forms.Button Exitbtn;
         private System.Windows.Forms.Label Scorelbl;
         private System.Windows.Forms.Label Pointslbl;
+        private Label Lifelbl;
+        private Label LifePointslbl;
     }
 }
 

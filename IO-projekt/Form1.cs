@@ -34,6 +34,8 @@ namespace IO_projekt
         public Form1()
         {
             InitializeComponent();
+            Lifelbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width-102, 13);
+            LifePointslbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 40, 13);
             //Adam - pełny ekran i schowanie kursora myszy
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
@@ -150,8 +152,8 @@ namespace IO_projekt
                 }
                 else
                 {
-                    pauseLabel.Location = new Point(768 - 140, 109);
-                    Exitbtn.Location = new Point(768 - 91, 220);
+                    pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width/2) - 170, 109);
+                    Exitbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 270);
                     pauseLabel.Visible = true;
                     Exitbtn.Visible = true;
                     MainTimer.Stop();
