@@ -18,10 +18,6 @@ namespace IO_projekt
             public PictureBox Sprite;
             public Point Position;
 
-            Image sprite_neutral = Image.FromFile("src\\graphics\\player1.png");
-            Image sprite_ltilt = Image.FromFile("src\\graphics\\player1-ltilt.png");
-            Image sprite_rtilt = Image.FromFile("src\\graphics\\player1-rtilt.png");
-
             int MovementSpeed;
 
             Timer MoveRightTimer;
@@ -44,7 +40,7 @@ namespace IO_projekt
                 formHandle = f;
                 Sprite = new PictureBox();
                 Sprite.Height = Sprite.Width = 50;
-                Sprite.Image = sprite_neutral;
+                Sprite.Image = Properties.Resources.player1;
                 Sprite.BackColor = Color.Transparent;
                 Position = new Point(x, y);
                 Sprite.Location = Position;
@@ -101,7 +97,9 @@ namespace IO_projekt
 
                     Sprite = new PictureBox();
                     Sprite.Width = Sprite.Height = 50;
-                    Sprite.BackColor = Color.Blue;
+                    Sprite.BackColor = Color.Transparent;
+                    Sprite.Image = Properties.Resources.enemy1;
+                    Sprite.SizeMode = PictureBoxSizeMode.Zoom;
 
                     Sprite.Location = new Point(rand.Next(100, f.Width - 100),
                         -100);
@@ -210,22 +208,22 @@ namespace IO_projekt
 
             public void MoveRight()
             {
-                Sprite.Image = sprite_rtilt;
+                Sprite.Image = Properties.Resources.player1_rtilt;
                 MoveRightTimer.Start();
             }
             public void MoveRightStop()
             {
-                Sprite.Image = sprite_neutral;
+                Sprite.Image = Properties.Resources.player1;
                 MoveRightTimer.Stop();
             }
             public void MoveLeft()
             {
-                Sprite.Image = sprite_ltilt;
+                Sprite.Image = Properties.Resources.player1_ltilt;
                 MoveLeftTimer.Start();
             }
             public void MoveLeftStop()
             {
-                Sprite.Image = sprite_neutral;
+                Sprite.Image = Properties.Resources.player1;
                 MoveLeftTimer.Stop();
             }
             public void MoveUp()

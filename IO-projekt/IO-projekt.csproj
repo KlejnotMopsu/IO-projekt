@@ -72,6 +72,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -96,6 +97,21 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\src\graphics\enemy1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\src\graphics\enemy2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\src\graphics\player1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\src\graphics\player1-ltilt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\src\graphics\player1-rtilt.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
