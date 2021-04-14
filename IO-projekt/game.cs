@@ -31,6 +31,7 @@ namespace IO_projekt
             static class Conf
             {
                 public static List<Enemy> enemies = new List<Enemy>();
+                public static List<Bullet> bullets = new List<Bullet>();
             }
 
             public Player(Form1 f, int x = 0, int y = 0)
@@ -77,6 +78,28 @@ namespace IO_projekt
                 stopwatch = new System.Diagnostics.Stopwatch();
             }
 
+            //Adam - rozpoczęcie nowej gry po GameOver
+            public void ResetGame()
+            {                
+                Sprite.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width/2, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height - 100);
+
+                foreach (Enemy en in Conf.enemies)
+                {
+                    en.Sprite.Top = -1000;
+                    en.DistanceTravelled = en.MaxDistanceTravel;
+                    formHandle.Controls.Remove(en.Sprite);                    
+                }
+                Conf.enemies.Clear();
+
+                foreach (Bullet b in Conf.bullets)
+                {
+                    b.Sprite.Top = -1000;
+                    b.DistanceTravelled = b.MaxDistanceTravelled;
+                    formHandle.Controls.Remove(b.Sprite);
+                }
+                Conf.bullets.Clear();
+            }
+
             public class Enemy
             {
                 public int DistanceTravelled;
@@ -86,6 +109,7 @@ namespace IO_projekt
                 public PictureBox Sprite;
                 Random rand = new Random();
                 Player p;
+                Form1 formHandle;
 
                 public Enemy(Form1 f, Player p)
                 {
@@ -93,7 +117,7 @@ namespace IO_projekt
                     DistanceTravelled = 0;
                     MaxDistanceTravel = f.Height + 200;
                     this.p = p;
-
+                    formHandle = f;
 
                     Sprite = new PictureBox();
                     Sprite.Width = Sprite.Height = 50;
@@ -103,7 +127,6 @@ namespace IO_projekt
 
                     Sprite.Location = new Point(rand.Next(100, f.Width - 100),
                         -100);
-
 
                     EnemyTimer = new Timer();
                     EnemyTimer.Interval = 20;
@@ -118,28 +141,44 @@ namespace IO_projekt
                 {
                     if (!Pause)
                     {
-                        if ((this.Sprite.Top >= p.Sprite.Top - 50 && this.Sprite.Top <= p.Sprite.Top + 50) && (this.Sprite.Left >= p.Sprite.Left - 50 && this.Sprite.Left <= p.Sprite.Left + 50))
+                        if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
                         {
                             this.Sprite.Top = -1000;
                             DistanceTravelled = MaxDistanceTravel;
+                            formHandle.Controls.Remove(this.Sprite);
                             Conf.enemies.Remove(this);
+                            //Adam - po kontakcie z przeciwnikiem gracz traci 10hp
+                            hp -= 10;
+                            Console.WriteLine("hp = " + hp);
+                            this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
+                            this.EnemyTimer.Stop();
+                            p.HPCheck();
                         }
-                        else if (DistanceTravelled < MaxDistanceTravel)
+                        if (DistanceTravelled < MaxDistanceTravel)
                         {
                             DistanceTravelled += EnemySpeed;
                             this.Sprite.Top += this.EnemySpeed;
                         }
+                        if (this.Sprite.Top == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height)
+                        {
+                            //Adam - gdy przeciwnik przeleci niezestrzelony tracimy 10hp
+                            hp -= 10;
+                            Console.WriteLine("hp = " + hp);
+                            this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
+                            this.EnemyTimer.Stop();
+                            p.HPCheck();
+                        }                        
                     }
                 }
             }
 
             public class Bullet
             {
-                int DistanceTravelled;
-                int MaxDistanceTravelled;
+                public int DistanceTravelled;
+                public int MaxDistanceTravelled;
                 int BulletSpeed;
                 Timer BulletTimer;
-                PictureBox Sprite;
+                public PictureBox Sprite;
                 //zmiana - Artur
                 Form1 formHandle;
 
@@ -164,45 +203,69 @@ namespace IO_projekt
                     BulletTimer.Start();
 
                 }
+                
                 public void BulletTimer_Tick(Object sender, EventArgs e)
                 {
-                    Enemy tmp = null;
-                    if (this.Sprite.Top > 0)
+                    if (!Pause)
                     {
-                        foreach (Enemy en in Conf.enemies)
+                        Enemy tmp = null;
+                        if (this.Sprite.Top > 0)
                         {
-                            if (this.Sprite.Bounds.IntersectsWith(en.Sprite.Bounds))
+                            foreach (Enemy en in Conf.enemies)
                             {
-                                en.Sprite.Top = -1000;
-                                this.Sprite.Top = -1000;
-                                en.DistanceTravelled = en.MaxDistanceTravel;
-                                tmp = en;
+                                if (this.Sprite.Bounds.IntersectsWith(en.Sprite.Bounds))
+                                {
+                                    en.Sprite.Top = -1000;
+                                    this.Sprite.Top = -1000;
+                                    en.DistanceTravelled = en.MaxDistanceTravel;
+                                    tmp = en;
+                                    Conf.bullets.Remove(this);
+                                }
                             }
                         }
-                    }
 
-                    //zmiana - Artur
-                    if (this.DistanceTravelled > this.MaxDistanceTravelled)
-                    {
-                        formHandle.Controls.Remove(this.Sprite);
-                    }
-                    //koniec zmiany
+                        if (tmp != null)
+                        {
+                            //zmiana - Mikołaj
+                            score = score + 1;
+                            Console.WriteLine("score = " + score);
+                            this.formHandle.Pointslbl.Text = Convert.ToString(score);
+                            // Pointslbl.Text = (score < 10) ? "0" + score.ToString() : score.ToString();
+                            //---------------------------------------------------
+                            Conf.enemies.Remove(tmp);
+                        }
 
-                    if (tmp != null)
-                    {
-                        //zmiana - Mikołaj
-                        score = score + 1;
-                        Console.WriteLine("score = " + score);
-                        this.formHandle.Pointslbl.Text = Convert.ToString(score);
-                        // Pointslbl.Text = (score < 10) ? "0" + score.ToString() : score.ToString();
-                        //---------------------------------------------------
-                        Conf.enemies.Remove(tmp);
-                    }
-                    if (DistanceTravelled < MaxDistanceTravelled)
-                    {
-                        DistanceTravelled += BulletSpeed;
-                        this.Sprite.Top -= this.BulletSpeed;
-                    }
+                        if (DistanceTravelled < MaxDistanceTravelled)
+                        {
+                            DistanceTravelled += BulletSpeed;
+                            this.Sprite.Top -= this.BulletSpeed;
+                        }
+                        else if (this.DistanceTravelled >= this.MaxDistanceTravelled)
+                        {
+                            formHandle.Controls.Remove(this.Sprite);
+                            Conf.bullets.Remove(this);
+                        }                                             
+                    }                    
+                }                
+            }
+
+            //Adam - po zmianie hp sprawdzmy, czy spadło do 0
+            public void HPCheck()
+            {
+                if(hp <= 0)
+                {
+                    Sprite.Top = -1000;
+                    GameOver = true;
+                    formHandle.pauseLabel.Text = "Game Over";
+                    formHandle.pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 285, 100);
+                    formHandle.Exitbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 270);
+                    formHandle.Replaybtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 370);
+                    Cursor.Show();
+                    formHandle.pauseLabel.Visible = true;
+                    formHandle.Exitbtn.Visible = true;
+                    formHandle.Replaybtn.Visible = true;
+                    formHandle.MainTimer.Stop();
+                    Pause = true;
                 }
             }
 
@@ -288,6 +351,7 @@ namespace IO_projekt
             {
                 Console.WriteLine(OPERATIONS++ + "> " + "Bullet shot.");
                 Bullet b = new Bullet(formHandle, this);
+                Conf.bullets.Add(b);
             }
 
             private void EnemyTimer_Tick(object sender, EventArgs e)

@@ -21,21 +21,19 @@ namespace IO_projekt
         Random Seed;
         Star[] StarArray;
         int StarCount;
+
         static int score = 0;
+        static int hp = 100;
 
         static bool Pause;
+        static bool GameOver;
 
-        /*
-        static void Main()
-        {
-            Application.Run(new Form1());
-        }
-        */
         public Form1()
         {
             InitializeComponent();
-            Lifelbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width-102, 13);
-            LifePointslbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 40, 13);
+            Lifelbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 120, 13);
+            LifePointslbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 60, 13);
+            LifePointslbl.Text = hp.ToString();
             //Adam - pełny ekran i schowanie kursora myszy
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
@@ -46,6 +44,7 @@ namespace IO_projekt
         {
             OPERATIONS = 0;
             Pause = false;
+            GameOver = false;
 
             Console.WriteLine(OPERATIONS++ + "> " + "Loading form...", OPERATIONS);
             p = new Player(this, this.Width / 2, this.Height - 100);
@@ -63,17 +62,11 @@ namespace IO_projekt
             {
                 StarArray[i] = new Star(this);
             }
-        }
-
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-
-        }
+        }        
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            
+                Console.WriteLine("cos kliknelo...");
                 if (e.KeyCode == Keys.Right)
                 {
                 if (!Pause)
@@ -85,7 +78,7 @@ namespace IO_projekt
                 {
                     if (!Pause)
                     {
-                    p.MoveLeft();
+                    p.MoveLeft();                    
                     }
                 }
                 if (e.KeyCode == Keys.Up)
@@ -108,13 +101,7 @@ namespace IO_projekt
                     {
                         p.Shoot();
                     }
-                }
-                //Adam - wyjście z gry przez naciśnięcie klawisza esc
-                //if(e.KeyCode == Keys.Escape)
-                //{
-                //    this.Close();
-                //}
-            
+                }           
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
@@ -143,27 +130,29 @@ namespace IO_projekt
 
             if (e.KeyCode == Keys.Escape)
             {
-                if (Pause)
+                if (!GameOver)
                 {
-                    MainTimer.Start();
-                    Cursor.Hide();
-                    pauseLabel.Visible = false;
-                    Exitbtn.Visible = false;
-                    Pause = false;
-                }
-                else
-                {
-                    pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width/2) - 170, 109);
-                    Exitbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 270);
-                    Cursor.Show();
-                    pauseLabel.Visible = true;
-                    Exitbtn.Visible = true;
-                    MainTimer.Stop();
-                    Pause = true;
-                }
+                    if (Pause)
+                    {
+                        MainTimer.Start();
+                        Cursor.Hide();
+                        pauseLabel.Visible = false;
+                        Exitbtn.Visible = false;
+                        Pause = false;
+                    }
+                    else
+                    {
+                        pauseLabel.Text = "Pause";
+                        pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 170, 109);
+                        Exitbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 270);
+                        Cursor.Show();
+                        pauseLabel.Visible = true;
+                        Exitbtn.Visible = true;
+                        MainTimer.Stop();
+                        Pause = true;
+                    }
+                }                
             }
-
-
         }
 
         //Zmiana - Artur
@@ -184,6 +173,29 @@ namespace IO_projekt
         private void Exitbtn_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        //Adam - przycisk replay
+        private void Replaybtn_Click(object sender, EventArgs e)
+        {
+            score = 0;
+            Pointslbl.Text = Convert.ToString(score);
+            hp = 100;
+            LifePointslbl.Text = Convert.ToString(hp);
+            Pause = false;
+            GameOver = false;
+            p.ResetGame();
+            MainTimer.Start();
+            Cursor.Hide();
+            pauseLabel.Visible = false;
+            Exitbtn.Visible = false;
+            Replaybtn.Visible = false;
+            this.ActiveControl = null;
+            p.MoveRightStop();
+            p.MoveLeftStop();
+            p.MoveUpStop();
+            p.MoveDownStop();
+            p.ShootStop();
         }
     }
 }
