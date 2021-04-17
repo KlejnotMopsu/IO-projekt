@@ -20,6 +20,12 @@ namespace IO_projekt
 
             int MovementSpeed;
 
+            bool shielded = false; //czy gracz ma na sobie tarczę
+            public bool Shielded
+            {
+                get { return shielded; }
+            }
+
             Timer MoveRightTimer;
             Timer MoveLeftTimer;
             Timer MoveUpTimer;
@@ -82,6 +88,8 @@ namespace IO_projekt
             public void ResetGame()
             {                
                 Sprite.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width/2, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height - 100);
+                Sprite.Image = Properties.Resources.player1;
+                shielded = false;
 
                 foreach (Enemy en in Conf.enemies)
                 {
@@ -111,6 +119,18 @@ namespace IO_projekt
                 Player p;
                 Form1 formHandle;
 
+                bool bonusHP = false; //bonus jest typem przeciwnika
+                public bool BonusHP
+                {
+                    get { return bonusHP; }
+                }
+
+                bool bonusShield = false;
+                public bool BonusShield
+                {
+                    get { return bonusShield; }
+                }
+
                 public Enemy(Form1 f, Player p)
                 {
                     EnemySpeed = 4;
@@ -120,10 +140,29 @@ namespace IO_projekt
                     formHandle = f;
 
                     Sprite = new PictureBox();
-                    Sprite.Width = Sprite.Height = 50;
-                    Sprite.BackColor = Color.Transparent;
-                    Sprite.Image = Properties.Resources.enemy1;
-                    Sprite.SizeMode = PictureBoxSizeMode.Zoom;
+
+                    int enemyType = rand.Next(10); //losowanie np. 10% szansy, że zamiast przeciwnika będzie bonus hp
+                    if (enemyType == 0)
+                    {
+                        Sprite.Image = Properties.Resources.bonusHP;
+                        Sprite.Width = Sprite.Height = 30;
+                        Sprite.SizeMode = PictureBoxSizeMode.StretchImage;
+                        bonusHP = true; //sprawdzane przy kolizji z graczem
+                    }
+                    else if(enemyType == 1)
+                    {
+                        Sprite.Image = Properties.Resources.bonusShield;
+                        Sprite.Width = Sprite.Height = 30;
+                        Sprite.SizeMode = PictureBoxSizeMode.StretchImage;
+                        bonusShield = true;
+                    }
+                    else
+                    {
+                        Sprite.Image = Properties.Resources.enemy1;
+                        Sprite.Width = Sprite.Height = 50;
+                        Sprite.BackColor = Color.Transparent;
+                        Sprite.SizeMode = PictureBoxSizeMode.Zoom;
+                    }                                                                                
 
                     Sprite.Location = new Point(rand.Next(100, f.Width - 100),
                         -100);
@@ -147,12 +186,31 @@ namespace IO_projekt
                             DistanceTravelled = MaxDistanceTravel;
                             formHandle.Controls.Remove(this.Sprite);
                             Conf.enemies.Remove(this);
-                            //Adam - po kontakcie z przeciwnikiem gracz traci 10hp
-                            hp -= 10;
+                            if (bonusHP)
+                            {
+                                hp += 10;
+                            }
+                            else if (bonusShield)
+                            {
+                                p.shielded = true;
+                                p.Sprite.Image = Properties.Resources.player1shield;
+                            }
+                            else
+                            {
+                                if (p.shielded)
+                                {
+                                    p.shielded = false;
+                                    p.Sprite.Image = Properties.Resources.player1;
+                                }
+                                else
+                                {
+                                    hp -= 10;
+                                }                                
+                            }                            
                             Console.WriteLine("hp = " + hp);
                             this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
-                            this.EnemyTimer.Stop();
                             p.HPCheck();
+                            this.EnemyTimer.Stop();
                         }
                         if (DistanceTravelled < MaxDistanceTravel)
                         {
@@ -161,8 +219,10 @@ namespace IO_projekt
                         }
                         if (this.Sprite.Top == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height)
                         {
-                            //Adam - gdy przeciwnik przeleci niezestrzelony tracimy 10hp
-                            hp -= 10;
+                            if (!bonusHP && !bonusShield) // gdy przeleci przeciwnik gracz traci 10hp, co nie stosuje się w przypadku bonusów
+                            {
+                                hp -= 10;
+                            }                            
                             Console.WriteLine("hp = " + hp);
                             this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
                             this.EnemyTimer.Stop();
@@ -226,12 +286,12 @@ namespace IO_projekt
 
                         if (tmp != null)
                         {
-                            //zmiana - Mikołaj
-                            score = score + 1;
-                            Console.WriteLine("score = " + score);
-                            this.formHandle.Pointslbl.Text = Convert.ToString(score);
-                            // Pointslbl.Text = (score < 10) ? "0" + score.ToString() : score.ToString();
-                            //---------------------------------------------------
+                            if (!tmp.BonusHP && !tmp.BonusShield) // za zestrzelenie bonusów nie ma punktów
+                            {
+                                score = score + 1;
+                                Console.WriteLine("score = " + score);
+                                this.formHandle.Pointslbl.Text = Convert.ToString(score);
+                            }                            
                             Conf.enemies.Remove(tmp);
                         }
 
@@ -271,22 +331,50 @@ namespace IO_projekt
 
             public void MoveRight()
             {
-                Sprite.Image = Properties.Resources.player1_rtilt;
+                if (shielded)
+                {
+                    Sprite.Image = Properties.Resources.player1_rtiltshield;
+                }
+                else
+                {
+                    Sprite.Image = Properties.Resources.player1_rtilt;
+                }                
                 MoveRightTimer.Start();
             }
             public void MoveRightStop()
             {
-                Sprite.Image = Properties.Resources.player1;
+                if (shielded)
+                {
+                    Sprite.Image = Properties.Resources.player1shield;
+                }
+                else
+                {
+                    Sprite.Image = Properties.Resources.player1;
+                }                    
                 MoveRightTimer.Stop();
             }
             public void MoveLeft()
             {
-                Sprite.Image = Properties.Resources.player1_ltilt;
+                if(shielded)
+                {
+                    Sprite.Image = Properties.Resources.player1_ltiltshield;
+                }
+                else
+                {
+                    Sprite.Image = Properties.Resources.player1_ltilt;
+                }                
                 MoveLeftTimer.Start();
             }
             public void MoveLeftStop()
             {
-                Sprite.Image = Properties.Resources.player1;
+                if(shielded)
+                {
+                    Sprite.Image = Properties.Resources.player1shield;
+                }
+                else
+                {
+                    Sprite.Image = Properties.Resources.player1;
+                }                
                 MoveLeftTimer.Stop();
             }
             public void MoveUp()

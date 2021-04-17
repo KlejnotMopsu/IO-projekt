@@ -113,5 +113,23 @@
   <ItemGroup>
     <None Include="bin\Debug\src\graphics\player1-rtilt.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bonusHP.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\src\graphics\bonusHP.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\src\graphics\player1shield.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\src\graphics\player1-ltiltshield.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\src\graphics\player1-rtiltshield.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\src\graphics\shield.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
