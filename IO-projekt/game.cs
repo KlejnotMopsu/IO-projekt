@@ -189,11 +189,13 @@ namespace IO_projekt
                             if (bonusHP)
                             {
                                 hp += 10;
+                                this.formHandle.bonusMedia.controls.play();
                             }
                             else if (bonusShield)
-                            {
+                            {                                
                                 p.shielded = true;
                                 p.Sprite.Image = Properties.Resources.player1shield;
+                                this.formHandle.bonusMedia.controls.play();
                             }
                             else
                             {
@@ -439,6 +441,8 @@ namespace IO_projekt
             {
                 Console.WriteLine(OPERATIONS++ + "> " + "Bullet shot.");
                 Bullet b = new Bullet(formHandle, this);
+                this.formHandle.shootMedia.controls.play();
+                
                 Conf.bullets.Add(b);
             }
 

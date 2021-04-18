@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WMPLib;
 
 namespace IO_projekt
 {
@@ -22,8 +24,13 @@ namespace IO_projekt
         Star[] StarArray;
         int StarCount;
 
+        WindowsMediaPlayer gameMedia;
+        WindowsMediaPlayer shootMedia;
+        WindowsMediaPlayer bonusMedia;
+
         static int score = 0;
         static int hp = 100;
+
 
         static bool Pause;
         static bool GameOver;
@@ -34,6 +41,20 @@ namespace IO_projekt
             Lifelbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 120, 13);
             LifePointslbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 60, 13);
             LifePointslbl.Text = hp.ToString();
+
+            gameMedia = new WindowsMediaPlayer();
+            shootMedia = new WindowsMediaPlayer();
+            bonusMedia = new WindowsMediaPlayer();
+            gameMedia.URL = @"sounds\\space_music.wav";
+            shootMedia.URL = @"sounds\\laser.wav";
+            bonusMedia.URL = @"sounds\\bonus.wav";
+
+            gameMedia.settings.setMode("loop", true);
+            gameMedia.settings.volume = 7;
+            shootMedia.settings.volume = 4;
+            bonusMedia.settings.volume = 4;
+
+            gameMedia.controls.play();
             //Adam - pełny ekran i schowanie kursora myszy
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
