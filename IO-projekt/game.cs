@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WMPLib;
 using System.Drawing;
+using System.Threading;
+using System.Media;
 
 namespace IO_projekt
 {
@@ -26,12 +28,12 @@ namespace IO_projekt
                 get { return shielded; }
             }
 
-            Timer MoveRightTimer;
-            Timer MoveLeftTimer;
-            Timer MoveUpTimer;
-            Timer MoveDownTimer;
-            Timer ShootTimer;
-            Timer EnemyTimer;
+            System.Windows.Forms.Timer MoveRightTimer;
+            System.Windows.Forms.Timer MoveLeftTimer;
+            System.Windows.Forms.Timer MoveUpTimer;
+            System.Windows.Forms.Timer MoveDownTimer;
+            System.Windows.Forms.Timer ShootTimer;
+            System.Windows.Forms.Timer EnemyTimer;
             System.Diagnostics.Stopwatch stopwatch;
 
             static class Conf
@@ -56,27 +58,27 @@ namespace IO_projekt
 
                 MovementSpeed = 20;
 
-                MoveRightTimer = new Timer();
+                MoveRightTimer = new System.Windows.Forms.Timer();
                 MoveRightTimer.Tick += new System.EventHandler(MoveRightTimer_Tick);
                 MoveRightTimer.Interval = 10;
 
-                MoveLeftTimer = new Timer();
+                MoveLeftTimer = new System.Windows.Forms.Timer();
                 MoveLeftTimer.Tick += new System.EventHandler(MoveLeftTimer_Tick);
                 MoveLeftTimer.Interval = 10;
 
-                MoveUpTimer = new Timer();
+                MoveUpTimer = new System.Windows.Forms.Timer();
                 MoveUpTimer.Tick += new System.EventHandler(MoveUpTimer_Tick);
                 MoveUpTimer.Interval = 10;
 
-                MoveDownTimer = new Timer();
+                MoveDownTimer = new System.Windows.Forms.Timer();
                 MoveDownTimer.Tick += new System.EventHandler(MoveDownTimer_Tick);
                 MoveDownTimer.Interval = 10;
 
-                ShootTimer = new Timer();
+                ShootTimer = new System.Windows.Forms.Timer();
                 ShootTimer.Tick += new System.EventHandler(ShootTimer_Tick);
                 ShootTimer.Interval = 200;
 
-                EnemyTimer = new Timer();
+                EnemyTimer = new System.Windows.Forms.Timer();
                 EnemyTimer.Tick += new System.EventHandler(EnemyTimer_Tick);
                 EnemyTimer.Interval = 2000;
                 EnemyTimer.Start();
@@ -113,7 +115,7 @@ namespace IO_projekt
                 public int DistanceTravelled;
                 int EnemySpeed;
                 public int MaxDistanceTravel;
-                Timer EnemyTimer;
+                System.Windows.Forms.Timer EnemyTimer;
                 public PictureBox Sprite;
                 Random rand = new Random();
                 Player p;
@@ -167,7 +169,7 @@ namespace IO_projekt
                     Sprite.Location = new Point(rand.Next(100, f.Width - 100),
                         -100);
 
-                    EnemyTimer = new Timer();
+                    EnemyTimer = new System.Windows.Forms.Timer();
                     EnemyTimer.Interval = 20;
                     EnemyTimer.Tick += new System.EventHandler(EnemyTimer_Tick);
 
@@ -195,7 +197,7 @@ namespace IO_projekt
                             {                                
                                 p.shielded = true;
                                 p.Sprite.Image = Properties.Resources.player1shield;
-                                this.formHandle.bonusMedia.controls.play();
+                                this.formHandle.bonusMedia.controls.play();                               
                             }
                             else
                             {
@@ -239,7 +241,7 @@ namespace IO_projekt
                 public int DistanceTravelled;
                 public int MaxDistanceTravelled;
                 int BulletSpeed;
-                Timer BulletTimer;
+                System.Windows.Forms.Timer BulletTimer;
                 public PictureBox Sprite;
                 //zmiana - Artur
                 Form1 formHandle;
@@ -256,7 +258,7 @@ namespace IO_projekt
                     Sprite.Location = new Point(p.Sprite.Location.X + p.Sprite.Width / 2 - this.Sprite.Width / 2,
                         p.Sprite.Location.Y);
 
-                    BulletTimer = new Timer();
+                    BulletTimer = new System.Windows.Forms.Timer();
                     BulletTimer.Interval = 20;
                     BulletTimer.Tick += new System.EventHandler(BulletTimer_Tick);
 
@@ -437,12 +439,29 @@ namespace IO_projekt
                     Sprite.Top += MovementSpeed;
                 }
             }
-            private void ShootTimer_Tick(object sender, EventArgs e)
+            private async void ShootTimer_Tick(object sender, EventArgs e)
             {
                 Console.WriteLine(OPERATIONS++ + "> " + "Bullet shot.");
                 Bullet b = new Bullet(formHandle, this);
                 this.formHandle.shootMedia.controls.play();
+
+                /*
+                Thread th = new Thread(() => {
+                    using (WindowsMediaPlayer laserWMP = new WindowsMediaPlayer())
+                    {
+                        laserWMP.URL = @"sound\laser.wav";
+                        laserWMP.controls.play();
+                    }
+                });
+                th.Start();
+                */
                 
+
+                using (SoundPlayer sp = new SoundPlayer(Properties.Resources.laser))
+                {
+                    sp.Play();
+                }
+
                 Conf.bullets.Add(b);
             }
 

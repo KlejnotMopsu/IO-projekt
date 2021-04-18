@@ -182,5 +182,14 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bonus.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\laser.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\space_music.wav" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -42,12 +42,21 @@ namespace IO_projekt
             LifePointslbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 60, 13);
             LifePointslbl.Text = hp.ToString();
 
+            
             gameMedia = new WindowsMediaPlayer();
             shootMedia = new WindowsMediaPlayer();
             bonusMedia = new WindowsMediaPlayer();
-            gameMedia.URL = @"sounds\\space_music.wav";
-            shootMedia.URL = @"sounds\\laser.wav";
-            bonusMedia.URL = @"sounds\\bonus.wav";
+
+            Directory.CreateDirectory("sound");
+
+            File.WriteAllBytes(@"sound\space_music.wav", StreamToByteArr(Properties.Resources.space_music));
+            File.WriteAllBytes(@"sound\laser.wav", StreamToByteArr(Properties.Resources.laser));
+            File.WriteAllBytes(@"sound\bonus.wav", StreamToByteArr(Properties.Resources.bonus));
+
+            gameMedia.URL = @"sound\space_music.wav";
+            //shootMedia.URL = @"sound\laser.wav";
+            bonusMedia.URL = @"sound\bonus.wav";
+
 
             gameMedia.settings.setMode("loop", true);
             gameMedia.settings.volume = 7;
@@ -217,6 +226,20 @@ namespace IO_projekt
             p.MoveUpStop();
             p.MoveDownStop();
             p.ShootStop();
+        }
+
+        public static byte[] StreamToByteArr(Stream input)
+        {
+            byte[] buffer = new byte[16 * 1024];
+            using (MemoryStream ms = new MemoryStream())
+            {
+                int read;
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+                return ms.ToArray();
+            }
         }
     }
 }
