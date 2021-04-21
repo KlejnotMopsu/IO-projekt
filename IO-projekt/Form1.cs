@@ -24,6 +24,8 @@ namespace IO_projekt
         Star[] StarArray;
         int StarCount;
 
+        Panel GamePanel;
+
         WindowsMediaPlayer gameMedia;
         WindowsMediaPlayer shootMedia;
         WindowsMediaPlayer bonusMedia;
@@ -68,6 +70,7 @@ namespace IO_projekt
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
             Cursor.Hide();
+            this.Shown += Form1_shown;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -92,7 +95,12 @@ namespace IO_projekt
             {
                 StarArray[i] = new Star(this);
             }
-        }        
+        }      
+        
+        private void Form1_shown(object sender, EventArgs e)
+        {
+
+        }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -188,7 +196,6 @@ namespace IO_projekt
         //Zmiana - Artur
         public void MainTimer_Tick(object sender, EventArgs e)
         {
-
             for (int i = 0; i < StarCount; i++)
             {
                 StarArray[i].Move();
@@ -198,6 +205,20 @@ namespace IO_projekt
                     StarArray[i] = new Star(this);
                 }
             }
+
+            foreach (Player.Enemy en in Conf.enemies)
+            {
+                en.TICK();
+            }
+            Conf.CollectEnemies();
+
+            foreach(Player.Bullet bl in Conf.bullets)
+            {
+                bl.TICK();
+            }
+            Conf.CollectBullets();
+
+
         }
 
         private void Exitbtn_Click(object sender, EventArgs e)

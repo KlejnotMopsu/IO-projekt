@@ -11,6 +11,30 @@ using System.Media;
 
 namespace IO_projekt
 {
+    public static class Conf
+    {
+        public static List<Form1.Player.Enemy> enemies = new List<Form1.Player.Enemy>();
+        public static List<Form1.Player.Bullet> bullets = new List<Form1.Player.Bullet>();
+
+        public static List<Form1.Player.Enemy> EnemiesToRemove = new List<Form1.Player.Enemy>();
+        public static void CollectEnemies()
+        {
+            foreach (Form1.Player.Enemy en in EnemiesToRemove)
+            {
+                enemies.Remove(en);
+            }
+        }
+
+        public static List<Form1.Player.Bullet> BulletsToRemove = new List<Form1.Player.Bullet>();
+        public static void CollectBullets()
+        {
+            foreach (Form1.Player.Bullet bl in BulletsToRemove)
+            {
+                bullets.Remove(bl);
+            }
+        }
+    }
+
     public partial class Form1 : Form
     {
         public class Player
@@ -34,13 +58,9 @@ namespace IO_projekt
             System.Windows.Forms.Timer MoveDownTimer;
             System.Windows.Forms.Timer ShootTimer;
             System.Windows.Forms.Timer EnemyTimer;
-            System.Diagnostics.Stopwatch stopwatch;
+            //System.Diagnostics.Stopwatch stopwatch;
 
-            static class Conf
-            {
-                public static List<Enemy> enemies = new List<Enemy>();
-                public static List<Bullet> bullets = new List<Bullet>();
-            }
+            
 
             public Player(Form1 f, int x = 0, int y = 0)
             {
@@ -83,7 +103,7 @@ namespace IO_projekt
                 EnemyTimer.Interval = 2000;
                 EnemyTimer.Start();
 
-                stopwatch = new System.Diagnostics.Stopwatch();
+                //stopwatch = new System.Diagnostics.Stopwatch();
             }
 
             //Adam - rozpoczęcie nowej gry po GameOver
@@ -175,7 +195,62 @@ namespace IO_projekt
 
                     f.Controls.Add(this.Sprite);
 
-                    EnemyTimer.Start();
+                    //EnemyTimer.Start();
+                }
+
+                public void TICK()
+                {
+                    if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
+                    {
+                        this.Sprite.Top = -1000;
+                        DistanceTravelled = MaxDistanceTravel;
+                        formHandle.Controls.Remove(this.Sprite);
+                        Conf.EnemiesToRemove.Add(this);
+                        //Conf.enemies.Remove(this);
+                        if (bonusHP)
+                        {
+                            hp += 10;
+                            this.formHandle.bonusMedia.controls.play();
+                        }
+                        else if (bonusShield)
+                        {
+                            p.shielded = true;
+                            p.Sprite.Image = Properties.Resources.player1shield;
+                            this.formHandle.bonusMedia.controls.play();
+                        }
+                        else
+                        {
+                            if (p.shielded)
+                            {
+                                p.shielded = false;
+                                p.Sprite.Image = Properties.Resources.player1;
+                            }
+                            else
+                            {
+                                hp -= 10;
+                            }
+                        }
+                        Console.WriteLine("hp = " + hp);
+                        this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
+                        p.HPCheck();
+                        this.EnemyTimer.Stop();
+                    }
+                    if (DistanceTravelled < MaxDistanceTravel)
+                    {
+                        DistanceTravelled += EnemySpeed;
+                        this.Sprite.Top += this.EnemySpeed;
+                    }
+                    if (this.Sprite.Top == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height)
+                    {
+                        if (!bonusHP && !bonusShield) // gdy przeleci przeciwnik gracz traci 10hp, co nie stosuje się w przypadku bonusów
+                        {
+                            hp -= 10;
+                        }
+                        Console.WriteLine("hp = " + hp);
+                        this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
+                        this.EnemyTimer.Stop();
+                        p.HPCheck();
+                    }
                 }
 
                 public void EnemyTimer_Tick(Object sender, EventArgs e)
@@ -264,8 +339,51 @@ namespace IO_projekt
 
                     f.Controls.Add(this.Sprite);
 
-                    BulletTimer.Start();
+                    //BulletTimer.Start();
 
+                }
+
+                public void TICK()
+                {
+                    Enemy tmp = null;
+                    if (this.Sprite.Top > 0)
+                    {
+                        foreach (Enemy en in Conf.enemies)
+                        {
+                            if (this.Sprite.Bounds.IntersectsWith(en.Sprite.Bounds))
+                            {
+                                en.Sprite.Top = -1000;
+                                this.Sprite.Top = -1000;
+                                en.DistanceTravelled = en.MaxDistanceTravel;
+                                tmp = en;
+                                //Conf.bullets.Remove(this);
+                                Conf.BulletsToRemove.Add(this);
+                            }
+                        }
+                    }
+
+                    if (tmp != null)
+                    {
+                        if (!tmp.BonusHP && !tmp.BonusShield) // za zestrzelenie bonusów nie ma punktów
+                        {
+                            score = score + 1;
+                            Console.WriteLine("score = " + score);
+                            this.formHandle.Pointslbl.Text = Convert.ToString(score);
+                        }
+                        Conf.enemies.Remove(tmp);
+                    }
+
+                    if (DistanceTravelled < MaxDistanceTravelled)
+                    {
+                        DistanceTravelled += BulletSpeed;
+                        this.Sprite.Top -= this.BulletSpeed;
+                    }
+                    else if (this.DistanceTravelled >= this.MaxDistanceTravelled)
+                    {
+                        formHandle.Controls.Remove(this.Sprite);
+                        //Conf.bullets.Remove(this);
+                        Conf.BulletsToRemove.Add(this);
+                    }
                 }
                 
                 public void BulletTimer_Tick(Object sender, EventArgs e)
@@ -283,7 +401,8 @@ namespace IO_projekt
                                     this.Sprite.Top = -1000;
                                     en.DistanceTravelled = en.MaxDistanceTravel;
                                     tmp = en;
-                                    Conf.bullets.Remove(this);
+                                    //Conf.bullets.Remove(this);
+                                    Conf.BulletsToRemove.Add(this);
                                 }
                             }
                         }
@@ -307,7 +426,8 @@ namespace IO_projekt
                         else if (this.DistanceTravelled >= this.MaxDistanceTravelled)
                         {
                             formHandle.Controls.Remove(this.Sprite);
-                            Conf.bullets.Remove(this);
+                            //Conf.bullets.Remove(this);
+                            Conf.BulletsToRemove.Add(this);
                         }                                             
                     }                    
                 }                
@@ -439,12 +559,13 @@ namespace IO_projekt
                     Sprite.Top += MovementSpeed;
                 }
             }
-            private async void ShootTimer_Tick(object sender, EventArgs e)
+            private void ShootTimer_Tick(object sender, EventArgs e)
             {
                 Console.WriteLine(OPERATIONS++ + "> " + "Bullet shot.");
                 Bullet b = new Bullet(formHandle, this);
-                this.formHandle.shootMedia.controls.play();
+               // this.formHandle.shootMedia.controls.play();
 
+                //Thread - aplikacja wywala po kilkunastu strzalach
                 /*
                 Thread th = new Thread(() => {
                     using (WindowsMediaPlayer laserWMP = new WindowsMediaPlayer())
@@ -455,13 +576,24 @@ namespace IO_projekt
                 });
                 th.Start();
                 */
-                
 
+                //Task<TResult> - dziala, ale buguje sie co kilkanascie strzalow
+                /*
+                var t = Task<int>.Run(() => {
+                    WindowsMediaPlayer laserWMP = new WindowsMediaPlayer();
+                    laserWMP.URL = @"sound\laser.wav";
+                    laserWMP.controls.play();
+                    return 0;
+                });
+                */
+
+                //SoundPlayer - dziala, nie ma regulacji glosnosci
+                
                 using (SoundPlayer sp = new SoundPlayer(Properties.Resources.laser))
                 {
                     sp.Play();
                 }
-
+                
                 Conf.bullets.Add(b);
             }
 
