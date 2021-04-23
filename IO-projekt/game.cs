@@ -13,13 +13,13 @@ namespace IO_projekt
 {
     public static class Conf
     {
-        public static List<Form1.Player.Enemy> enemies = new List<Form1.Player.Enemy>();
+        public static List<Form1.Enemy> enemies = new List<Form1.Enemy>();
         public static List<Form1.Player.Bullet> bullets = new List<Form1.Player.Bullet>();
 
-        public static List<Form1.Player.Enemy> EnemiesToRemove = new List<Form1.Player.Enemy>();
+        public static List<Form1.Enemy> EnemiesToRemove = new List<Form1.Enemy>();
         public static void CollectEnemies()
         {
-            foreach (Form1.Player.Enemy en in EnemiesToRemove)
+            foreach (Form1.Enemy en in EnemiesToRemove)
             {
                 enemies.Remove(en);
             }
@@ -46,7 +46,7 @@ namespace IO_projekt
 
             int MovementSpeed;
 
-            bool shielded = false; //czy gracz ma na sobie tarczę
+            public bool shielded = false; //czy gracz ma na sobie tarczę
             public bool Shielded
             {
                 get { return shielded; }
@@ -130,186 +130,7 @@ namespace IO_projekt
                 Conf.bullets.Clear();
             }
 
-            public class Enemy
-            {
-                public int DistanceTravelled;
-                int EnemySpeed;
-                public int MaxDistanceTravel;
-                System.Windows.Forms.Timer EnemyTimer;
-                public PictureBox Sprite;
-                Random rand = new Random();
-                Player p;
-                Form1 formHandle;
-
-                bool bonusHP = false; //bonus jest typem przeciwnika
-                public bool BonusHP
-                {
-                    get { return bonusHP; }
-                }
-
-                bool bonusShield = false;
-                public bool BonusShield
-                {
-                    get { return bonusShield; }
-                }
-
-                public Enemy(Form1 f, Player p)
-                {
-                    EnemySpeed = 4;
-                    DistanceTravelled = 0;
-                    MaxDistanceTravel = f.Height + 200;
-                    this.p = p;
-                    formHandle = f;
-
-                    Sprite = new PictureBox();
-
-                    int enemyType = rand.Next(10); //losowanie np. 10% szansy, że zamiast przeciwnika będzie bonus hp
-                    if (enemyType == 0)
-                    {
-                        Sprite.Image = Properties.Resources.bonusHP;
-                        Sprite.Width = Sprite.Height = 30;
-                        Sprite.SizeMode = PictureBoxSizeMode.StretchImage;
-                        bonusHP = true; //sprawdzane przy kolizji z graczem
-                    }
-                    else if(enemyType == 1)
-                    {
-                        Sprite.Image = Properties.Resources.bonusShield;
-                        Sprite.Width = Sprite.Height = 30;
-                        Sprite.SizeMode = PictureBoxSizeMode.StretchImage;
-                        bonusShield = true;
-                    }
-                    else
-                    {
-                        Sprite.Image = Properties.Resources.enemy1;
-                        Sprite.Width = Sprite.Height = 50;
-                        Sprite.BackColor = Color.Transparent;
-                        Sprite.SizeMode = PictureBoxSizeMode.Zoom;
-                    }                                                                                
-
-                    Sprite.Location = new Point(rand.Next(100, f.Width - 100),
-                        -100);
-
-                    EnemyTimer = new System.Windows.Forms.Timer();
-                    EnemyTimer.Interval = 20;
-                    EnemyTimer.Tick += new System.EventHandler(EnemyTimer_Tick);
-
-                    f.Controls.Add(this.Sprite);
-
-                    //EnemyTimer.Start();
-                }
-
-                public void TICK()
-                {
-                    if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
-                    {
-                        this.Sprite.Top = -1000;
-                        DistanceTravelled = MaxDistanceTravel;
-                        formHandle.Controls.Remove(this.Sprite);
-                        Conf.EnemiesToRemove.Add(this);
-                        //Conf.enemies.Remove(this);
-                        if (bonusHP)
-                        {
-                            hp += 10;
-                            this.formHandle.bonusMedia.controls.play();
-                        }
-                        else if (bonusShield)
-                        {
-                            p.shielded = true;
-                            p.Sprite.Image = Properties.Resources.player1shield;
-                            this.formHandle.bonusMedia.controls.play();
-                        }
-                        else
-                        {
-                            if (p.shielded)
-                            {
-                                p.shielded = false;
-                                p.Sprite.Image = Properties.Resources.player1;
-                            }
-                            else
-                            {
-                                hp -= 10;
-                            }
-                        }
-                        Console.WriteLine("hp = " + hp);
-                        this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
-                        p.HPCheck();
-                        this.EnemyTimer.Stop();
-                    }
-                    if (DistanceTravelled < MaxDistanceTravel)
-                    {
-                        DistanceTravelled += EnemySpeed;
-                        this.Sprite.Top += this.EnemySpeed;
-                    }
-                    if (this.Sprite.Top == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height)
-                    {
-                        if (!bonusHP && !bonusShield) // gdy przeleci przeciwnik gracz traci 10hp, co nie stosuje się w przypadku bonusów
-                        {
-                            hp -= 10;
-                        }
-                        Console.WriteLine("hp = " + hp);
-                        this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
-                        this.EnemyTimer.Stop();
-                        p.HPCheck();
-                    }
-                }
-
-                public void EnemyTimer_Tick(Object sender, EventArgs e)
-                {
-                    if (!Pause)
-                    {
-                        if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
-                        {
-                            this.Sprite.Top = -1000;
-                            DistanceTravelled = MaxDistanceTravel;
-                            formHandle.Controls.Remove(this.Sprite);
-                            Conf.enemies.Remove(this);
-                            if (bonusHP)
-                            {
-                                hp += 10;
-                                this.formHandle.bonusMedia.controls.play();
-                            }
-                            else if (bonusShield)
-                            {                                
-                                p.shielded = true;
-                                p.Sprite.Image = Properties.Resources.player1shield;
-                                this.formHandle.bonusMedia.controls.play();                               
-                            }
-                            else
-                            {
-                                if (p.shielded)
-                                {
-                                    p.shielded = false;
-                                    p.Sprite.Image = Properties.Resources.player1;
-                                }
-                                else
-                                {
-                                    hp -= 10;
-                                }                                
-                            }                            
-                            Console.WriteLine("hp = " + hp);
-                            this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
-                            p.HPCheck();
-                            this.EnemyTimer.Stop();
-                        }
-                        if (DistanceTravelled < MaxDistanceTravel)
-                        {
-                            DistanceTravelled += EnemySpeed;
-                            this.Sprite.Top += this.EnemySpeed;
-                        }
-                        if (this.Sprite.Top == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height)
-                        {
-                            if (!bonusHP && !bonusShield) // gdy przeleci przeciwnik gracz traci 10hp, co nie stosuje się w przypadku bonusów
-                            {
-                                hp -= 10;
-                            }                            
-                            Console.WriteLine("hp = " + hp);
-                            this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
-                            this.EnemyTimer.Stop();
-                            p.HPCheck();
-                        }                        
-                    }
-                }
-            }
+            
 
             public class Bullet
             {
@@ -352,24 +173,34 @@ namespace IO_projekt
                         {
                             if (this.Sprite.Bounds.IntersectsWith(en.Sprite.Bounds))
                             {
-                                en.Sprite.Top = -1000;
-                                this.Sprite.Top = -1000;
+                                Conf.BulletsToRemove.Add(this);
+                                this.Sprite.Dispose();
+
+                                if (en.GetType() == typeof(EnemyDreadnought))
+                                {
+                                    ((EnemyDreadnought)en).HitPoints--;
+                                    continue;
+                                }
+                                //en.Sprite.Top = -1000;
+                                //this.Sprite.Top = -1000;
                                 en.DistanceTravelled = en.MaxDistanceTravel;
                                 tmp = en;
                                 //Conf.bullets.Remove(this);
-                                Conf.BulletsToRemove.Add(this);
+                                
                             }
                         }
                     }
 
                     if (tmp != null)
                     {
+                        /*
                         if (!tmp.BonusHP && !tmp.BonusShield) // za zestrzelenie bonusów nie ma punktów
                         {
                             score = score + 1;
                             Console.WriteLine("score = " + score);
                             this.formHandle.Pointslbl.Text = Convert.ToString(score);
                         }
+                        */
                         Conf.enemies.Remove(tmp);
                     }
 
@@ -408,13 +239,13 @@ namespace IO_projekt
                         }
 
                         if (tmp != null)
-                        {
+                        {/*
                             if (!tmp.BonusHP && !tmp.BonusShield) // za zestrzelenie bonusów nie ma punktów
                             {
                                 score = score + 1;
                                 Console.WriteLine("score = " + score);
                                 this.formHandle.Pointslbl.Text = Convert.ToString(score);
-                            }                            
+                            } */                           
                             Conf.enemies.Remove(tmp);
                         }
 
@@ -602,12 +433,316 @@ namespace IO_projekt
                 if (!Pause)
                 {
                     Console.WriteLine(OPERATIONS++ + "> " + "Enemy spawned.");
-                    Enemy enemy = new Enemy(formHandle, this);
+                    EnemyDreadnought enemy = new EnemyDreadnought(formHandle, this);
                     Conf.enemies.Add(enemy);
                 }
             }
         }
 
+        public abstract class Enemy
+        {
+            public int DistanceTravelled;
+            public int EnemySpeed;
+            public int MaxDistanceTravel;
+            public System.Windows.Forms.Timer EnemyTimer;
+            public PictureBox Sprite;
+            public Random rand = new Random();
+            public Player p;
+            public Form1 formHandle;           
+
+            public abstract void TICK();
+        }
+
+        public class EnemyStandard : Enemy
+        {
+            public bool bonusHP = false; //bonus jest typem przeciwnika
+            public bool BonusHP
+            {
+                get { return bonusHP; }
+            }
+
+            public bool bonusShield = false;
+            public bool BonusShield
+            {
+                get { return bonusShield; }
+            }
+
+            public EnemyStandard(Form1 f, Player p)
+            {
+                EnemySpeed = 4;
+                DistanceTravelled = 0;
+                MaxDistanceTravel = f.Height + 200;
+                this.p = p;
+                formHandle = f;
+
+                Sprite = new PictureBox();
+
+                int enemyType = rand.Next(10); //losowanie np. 10% szansy, że zamiast przeciwnika będzie bonus hp
+                if (enemyType == 0)
+                {
+                    Sprite.Image = Properties.Resources.bonusHP;
+                    Sprite.Width = Sprite.Height = 30;
+                    Sprite.SizeMode = PictureBoxSizeMode.StretchImage;
+                    bonusHP = true; //sprawdzane przy kolizji z graczem
+                }
+                else if (enemyType == 1)
+                {
+                    Sprite.Image = Properties.Resources.bonusShield;
+                    Sprite.Width = Sprite.Height = 30;
+                    Sprite.SizeMode = PictureBoxSizeMode.StretchImage;
+                    bonusShield = true;
+                }
+                else
+                {
+                    Sprite.Image = Properties.Resources.enemy1;
+                    Sprite.Width = Sprite.Height = 50;
+                    Sprite.BackColor = Color.Transparent;
+                    Sprite.SizeMode = PictureBoxSizeMode.Zoom;
+                }
+
+                Sprite.Location = new Point(rand.Next(100, f.Width - 100),
+                    -100);
+
+                EnemyTimer = new System.Windows.Forms.Timer();
+                EnemyTimer.Interval = 20;
+                EnemyTimer.Tick += new System.EventHandler(EnemyTimer_Tick);
+
+                f.Controls.Add(this.Sprite);
+
+                //EnemyTimer.Start();
+            }
+
+            public override void TICK()
+            {
+                if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
+                {
+                    this.Sprite.Top = -1000;
+                    DistanceTravelled = MaxDistanceTravel;
+                    formHandle.Controls.Remove(this.Sprite);
+                    Conf.EnemiesToRemove.Add(this);
+                    //Conf.enemies.Remove(this);
+                    if (bonusHP)
+                    {
+                        hp += 10;
+                        this.formHandle.bonusMedia.controls.play();
+                    }
+                    else if (bonusShield)
+                    {
+                        formHandle.p.shielded = true;
+                        p.Sprite.Image = Properties.Resources.player1shield;
+                        this.formHandle.bonusMedia.controls.play();
+                    }
+                    else
+                    {
+                        if (p.shielded)
+                        {
+                            p.shielded = false;
+                            p.Sprite.Image = Properties.Resources.player1;
+                        }
+                        else
+                        {
+                            hp -= 10;
+                        }
+                    }
+                    Console.WriteLine("hp = " + hp);
+                    this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
+                    p.HPCheck();
+                    this.EnemyTimer.Stop();
+                }
+                if (DistanceTravelled < MaxDistanceTravel)
+                {
+                    DistanceTravelled += EnemySpeed;
+                    this.Sprite.Top += this.EnemySpeed;
+                }
+                if (this.Sprite.Top == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height)
+                {
+                    if (!bonusHP && !bonusShield) // gdy przeleci przeciwnik gracz traci 10hp, co nie stosuje się w przypadku bonusów
+                    {
+                        hp -= 10;
+                    }
+                    Console.WriteLine("hp = " + hp);
+                    this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
+                    this.EnemyTimer.Stop();
+                    p.HPCheck();
+                }
+            }
+
+            public void EnemyTimer_Tick(Object sender, EventArgs e)
+            {
+                if (!Pause)
+                {
+                    if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
+                    {
+                        this.Sprite.Top = -1000;
+                        DistanceTravelled = MaxDistanceTravel;
+                        formHandle.Controls.Remove(this.Sprite);
+                        Conf.enemies.Remove(this);
+                        if (bonusHP)
+                        {
+                            hp += 10;
+                            this.formHandle.bonusMedia.controls.play();
+                        }
+                        else if (bonusShield)
+                        {
+                            p.shielded = true;
+                            p.Sprite.Image = Properties.Resources.player1shield;
+                            this.formHandle.bonusMedia.controls.play();
+                        }
+                        else
+                        {
+                            if (p.shielded)
+                            {
+                                p.shielded = false;
+                                p.Sprite.Image = Properties.Resources.player1;
+                            }
+                            else
+                            {
+                                hp -= 10;
+                            }
+                        }
+                        Console.WriteLine("hp = " + hp);
+                        this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
+                        p.HPCheck();
+                        this.EnemyTimer.Stop();
+                    }
+                    if (DistanceTravelled < MaxDistanceTravel)
+                    {
+                        DistanceTravelled += EnemySpeed;
+                        this.Sprite.Top += this.EnemySpeed;
+                    }
+                    if (this.Sprite.Top == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height)
+                    {
+                        if (!bonusHP && !bonusShield) // gdy przeleci przeciwnik gracz traci 10hp, co nie stosuje się w przypadku bonusów
+                        {
+                            hp -= 10;
+                        }
+                        Console.WriteLine("hp = " + hp);
+                        this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
+                        this.EnemyTimer.Stop();
+                        p.HPCheck();
+                    }
+                }
+            }
+        }
+
+        public class EnemyDreadnought : Enemy
+        {
+            public int HitPoints;
+
+            public bool bonusHP = false; //bonus jest typem przeciwnika
+            public bool BonusHP
+            {
+                get { return bonusHP; }
+            }
+
+            public bool bonusShield = false;
+            public bool BonusShield
+            {
+                get { return bonusShield; }
+            }
+
+            public EnemyDreadnought(Form1 f, Player p)
+            {
+                EnemySpeed = 1;
+                DistanceTravelled = 0;
+                MaxDistanceTravel = f.Height + 200;
+                this.p = p;
+                formHandle = f;
+
+                Sprite = new PictureBox();
+
+                HitPoints = 4;
+
+                int enemyType = rand.Next(10); //losowanie np. 10% szansy, że zamiast przeciwnika będzie bonus hp
+                if (enemyType == 0)
+                {
+                    Sprite.Image = Properties.Resources.bonusHP;
+                    Sprite.Width = Sprite.Height = 30;
+                    Sprite.SizeMode = PictureBoxSizeMode.StretchImage;
+                    bonusHP = true; //sprawdzane przy kolizji z graczem
+                }
+                else if (enemyType == 1)
+                {
+                    Sprite.Image = Properties.Resources.bonusShield;
+                    Sprite.Width = Sprite.Height = 30;
+                    Sprite.SizeMode = PictureBoxSizeMode.StretchImage;
+                    bonusShield = true;
+                }
+                else
+                {
+                    Sprite.Image = Properties.Resources.enemy2;
+                    Sprite.Width = Sprite.Height = 50;
+                    Sprite.BackColor = Color.Transparent;
+                    Sprite.SizeMode = PictureBoxSizeMode.Zoom;
+                }
+
+                Sprite.Location = new Point(rand.Next(100, f.Width - 100),
+                    -100);
+
+
+                f.Controls.Add(this.Sprite);
+            }
+
+            public override void TICK()
+            {
+                if (this.HitPoints <= 0)
+                {
+                    Conf.EnemiesToRemove.Add(this);
+                    this.Sprite.Dispose();
+                }
+                if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
+                {
+                    this.Sprite.Top = -1000;
+                    DistanceTravelled = MaxDistanceTravel;
+                    formHandle.Controls.Remove(this.Sprite);
+                    Conf.EnemiesToRemove.Add(this);
+                    //Conf.enemies.Remove(this);
+                    if (bonusHP)
+                    {
+                        hp += 10;
+                        this.formHandle.bonusMedia.controls.play();
+                    }
+                    else if (bonusShield)
+                    {
+                        formHandle.p.shielded = true;
+                        p.Sprite.Image = Properties.Resources.player1shield;
+                        this.formHandle.bonusMedia.controls.play();
+                    }
+                    else
+                    {
+                        if (p.shielded)
+                        {
+                            p.shielded = false;
+                            p.Sprite.Image = Properties.Resources.player1;
+                        }
+                        else
+                        {
+                            hp -= 30;
+                        }
+                    }
+                    Console.WriteLine("hp = " + hp);
+                    this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
+                    p.HPCheck();
+                    //this.EnemyTimer.Stop();
+                }
+                if (DistanceTravelled < MaxDistanceTravel)
+                {
+                    DistanceTravelled += EnemySpeed;
+                    this.Sprite.Top += this.EnemySpeed;
+                }
+                if (this.Sprite.Top == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height)
+                {
+                    if (!bonusHP && !bonusShield) // gdy przeleci przeciwnik gracz traci 10hp, co nie stosuje się w przypadku bonusów
+                    {
+                        hp -= 30;
+                    }
+                    Console.WriteLine("hp = " + hp);
+                    this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
+                    this.EnemyTimer.Stop();
+                    p.HPCheck();
+                }
+            }
+        }
 
         //Zmiana - Artur
         public class Star : IDisposable

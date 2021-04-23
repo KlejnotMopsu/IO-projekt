@@ -206,7 +206,7 @@ namespace IO_projekt
                 }
             }
 
-            foreach (Player.Enemy en in Conf.enemies)
+            foreach (Enemy en in Conf.enemies)
             {
                 en.TICK();
             }
