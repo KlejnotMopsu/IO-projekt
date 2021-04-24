@@ -218,7 +218,12 @@ namespace IO_projekt
             }
             Conf.CollectBullets();
 
-
+            int roll = Seed.Next(1, 101);
+            if (roll % 50 == 0)
+            {
+                EnemyStandard en = new EnemyStandard(this, this.p);
+                Conf.enemies.Add(en);
+            }
         }
 
         private void Exitbtn_Click(object sender, EventArgs e)

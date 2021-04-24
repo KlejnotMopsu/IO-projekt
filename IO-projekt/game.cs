@@ -166,7 +166,6 @@ namespace IO_projekt
 
                 public void TICK()
                 {
-                    Enemy tmp = null;
                     if (this.Sprite.Top > 0)
                     {
                         foreach (Enemy en in Conf.enemies)
@@ -176,32 +175,9 @@ namespace IO_projekt
                                 Conf.BulletsToRemove.Add(this);
                                 this.Sprite.Dispose();
 
-                                if (en.GetType() == typeof(EnemyDreadnought))
-                                {
-                                    ((EnemyDreadnought)en).HitPoints--;
-                                    continue;
-                                }
-                                //en.Sprite.Top = -1000;
-                                //this.Sprite.Top = -1000;
-                                en.DistanceTravelled = en.MaxDistanceTravel;
-                                tmp = en;
-                                //Conf.bullets.Remove(this);
-                                
+                                en.GetHit();
                             }
                         }
-                    }
-
-                    if (tmp != null)
-                    {
-                        /*
-                        if (!tmp.BonusHP && !tmp.BonusShield) // za zestrzelenie bonusów nie ma punktów
-                        {
-                            score = score + 1;
-                            Console.WriteLine("score = " + score);
-                            this.formHandle.Pointslbl.Text = Convert.ToString(score);
-                        }
-                        */
-                        Conf.enemies.Remove(tmp);
                     }
 
                     if (DistanceTravelled < MaxDistanceTravelled)
@@ -433,7 +409,7 @@ namespace IO_projekt
                 if (!Pause)
                 {
                     Console.WriteLine(OPERATIONS++ + "> " + "Enemy spawned.");
-                    EnemyDreadnought enemy = new EnemyDreadnought(formHandle, this);
+                    Enemy enemy = new EnemyDreadnought(formHandle, this);
                     Conf.enemies.Add(enemy);
                 }
             }
@@ -451,6 +427,7 @@ namespace IO_projekt
             public Form1 formHandle;           
 
             public abstract void TICK();
+            public abstract void GetHit();
         }
 
         public class EnemyStandard : Enemy
@@ -516,10 +493,12 @@ namespace IO_projekt
             {
                 if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
                 {
-                    this.Sprite.Top = -1000;
-                    DistanceTravelled = MaxDistanceTravel;
-                    formHandle.Controls.Remove(this.Sprite);
+                    this.Sprite.Dispose();
                     Conf.EnemiesToRemove.Add(this);
+                    
+                    //this.Sprite.Top = -1000;
+                    DistanceTravelled = MaxDistanceTravel;
+
                     //Conf.enemies.Remove(this);
                     if (bonusHP)
                     {
@@ -565,6 +544,12 @@ namespace IO_projekt
                     this.EnemyTimer.Stop();
                     p.HPCheck();
                 }
+            }
+
+            public override void GetHit()
+            {
+                this.Sprite.Dispose();
+                Conf.EnemiesToRemove.Add(this);
             }
 
             public void EnemyTimer_Tick(Object sender, EventArgs e)
@@ -653,29 +638,12 @@ namespace IO_projekt
 
                 HitPoints = 4;
 
-                int enemyType = rand.Next(10); //losowanie np. 10% szansy, że zamiast przeciwnika będzie bonus hp
-                if (enemyType == 0)
-                {
-                    Sprite.Image = Properties.Resources.bonusHP;
-                    Sprite.Width = Sprite.Height = 30;
-                    Sprite.SizeMode = PictureBoxSizeMode.StretchImage;
-                    bonusHP = true; //sprawdzane przy kolizji z graczem
-                }
-                else if (enemyType == 1)
-                {
-                    Sprite.Image = Properties.Resources.bonusShield;
-                    Sprite.Width = Sprite.Height = 30;
-                    Sprite.SizeMode = PictureBoxSizeMode.StretchImage;
-                    bonusShield = true;
-                }
-                else
-                {
-                    Sprite.Image = Properties.Resources.enemy2;
-                    Sprite.Width = Sprite.Height = 50;
-                    Sprite.BackColor = Color.Transparent;
-                    Sprite.SizeMode = PictureBoxSizeMode.Zoom;
-                }
-
+                
+               Sprite.Image = Properties.Resources.enemy2;
+               Sprite.Width = Sprite.Height = 50;
+               Sprite.BackColor = Color.Transparent;
+               Sprite.SizeMode = PictureBoxSizeMode.Zoom;
+                
                 Sprite.Location = new Point(rand.Next(100, f.Width - 100),
                     -100);
 
@@ -685,11 +653,7 @@ namespace IO_projekt
 
             public override void TICK()
             {
-                if (this.HitPoints <= 0)
-                {
-                    Conf.EnemiesToRemove.Add(this);
-                    this.Sprite.Dispose();
-                }
+                
                 if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
                 {
                     this.Sprite.Top = -1000;
@@ -697,29 +661,17 @@ namespace IO_projekt
                     formHandle.Controls.Remove(this.Sprite);
                     Conf.EnemiesToRemove.Add(this);
                     //Conf.enemies.Remove(this);
-                    if (bonusHP)
+                    
+                    if (p.shielded)
                     {
-                        hp += 10;
-                        this.formHandle.bonusMedia.controls.play();
-                    }
-                    else if (bonusShield)
-                    {
-                        formHandle.p.shielded = true;
-                        p.Sprite.Image = Properties.Resources.player1shield;
-                        this.formHandle.bonusMedia.controls.play();
+                        p.shielded = false;
+                        p.Sprite.Image = Properties.Resources.player1;
                     }
                     else
                     {
-                        if (p.shielded)
-                        {
-                            p.shielded = false;
-                            p.Sprite.Image = Properties.Resources.player1;
-                        }
-                        else
-                        {
-                            hp -= 30;
-                        }
+                        hp -= 30;
                     }
+                    
                     Console.WriteLine("hp = " + hp);
                     this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
                     p.HPCheck();
@@ -731,15 +683,23 @@ namespace IO_projekt
                     this.Sprite.Top += this.EnemySpeed;
                 }
                 if (this.Sprite.Top == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height)
-                {
-                    if (!bonusHP && !bonusShield) // gdy przeleci przeciwnik gracz traci 10hp, co nie stosuje się w przypadku bonusów
-                    {
-                        hp -= 30;
-                    }
+                {                  
+                    hp -= 30;
+                    
                     Console.WriteLine("hp = " + hp);
                     this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
                     this.EnemyTimer.Stop();
                     p.HPCheck();
+                }
+            }
+
+            public override void GetHit()
+            {
+                this.HitPoints--;
+                if (this.HitPoints <= 0)
+                {
+                    this.Sprite.Dispose();
+                    Conf.EnemiesToRemove.Add(this);
                 }
             }
         }
