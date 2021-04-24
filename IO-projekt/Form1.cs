@@ -66,7 +66,6 @@ namespace IO_projekt
             bonusMedia.settings.volume = 4;
 
             gameMedia.controls.play();
-            //Adam - pełny ekran i schowanie kursora myszy
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
             Cursor.Hide();
@@ -104,7 +103,6 @@ namespace IO_projekt
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-                Console.WriteLine("cos kliknelo...");
                 if (e.KeyCode == Keys.Right)
                 {
                 if (!Pause)
@@ -218,11 +216,23 @@ namespace IO_projekt
             }
             Conf.CollectBullets();
 
+            foreach (EnemyBullet bl in Conf.enemyBullets)
+            {
+                bl.TICK();
+            }
+            Conf.CollectEnemyBullets();
+
             int roll = Seed.Next(1, 101);
-            if (roll % 50 == 0)
+            //if (roll % 50 == 0)
+            if(roll == 1)
             {
                 EnemyStandard en = new EnemyStandard(this, this.p);
                 Conf.enemies.Add(en);
+            }
+            if (roll == 2)
+            {
+                EnemyRifleman er = new EnemyRifleman(this, this.p);
+                Conf.enemies.Add(er);
             }
         }
 
@@ -231,7 +241,6 @@ namespace IO_projekt
             this.Close();
         }
 
-        //Adam - przycisk replay
         private void Replaybtn_Click(object sender, EventArgs e)
         {
             score = 0;

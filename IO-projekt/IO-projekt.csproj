@@ -191,5 +191,17 @@
   <ItemGroup>
     <None Include="Resources\space_music.wav" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\enemy2dmg1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\enemy2dmg2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\enemy2dmg3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\enemy3.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
