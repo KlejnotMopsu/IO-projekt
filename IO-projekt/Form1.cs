@@ -24,6 +24,10 @@ namespace IO_projekt
         Star[] StarArray;
         int StarCount;
 
+        static int lowest = 0;
+        static int[] scoreList = new int[11];
+        
+
         Panel GamePanel;
 
         WindowsMediaPlayer gameMedia;
@@ -70,6 +74,8 @@ namespace IO_projekt
             WindowState = FormWindowState.Maximized;
             Cursor.Hide();
             this.Shown += Form1_shown;
+
+            SrvField();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -142,6 +148,7 @@ namespace IO_projekt
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
+            Form1 formHandle;
             if (e.KeyCode == Keys.Right)
             {
                 p.MoveRightStop();
@@ -174,16 +181,23 @@ namespace IO_projekt
                         Cursor.Hide();
                         pauseLabel.Visible = false;
                         Exitbtn.Visible = false;
+                        //Playbtn.Visible = false;
+                        //Scorebtn.Visible = false;
                         Pause = false;
                     }
                     else
                     {
                         pauseLabel.Text = "Pause";
                         pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 170, 109);
-                        Exitbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 270);
+                        //ScoreView.Visible = true;
+                        //Playbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 240);
+                        Exitbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 320);
+                        //Scorebtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 400);
                         Cursor.Show();
                         pauseLabel.Visible = true;
+                        //Playbtn.Visible = true;
                         Exitbtn.Visible = true;
+                        //Scorebtn.Visible = true;
                         MainTimer.Stop();
                         Pause = true;
                     }
@@ -254,6 +268,7 @@ namespace IO_projekt
             Cursor.Hide();
             pauseLabel.Visible = false;
             Exitbtn.Visible = false;
+            Scorebtn.Visible = false;
             Replaybtn.Visible = false;
             this.ActiveControl = null;
             p.MoveRightStop();
@@ -275,6 +290,40 @@ namespace IO_projekt
                 }
                 return ms.ToArray();
             }
+        }
+
+        private void Scorebtn_Click(object sender, EventArgs e)
+        {
+            ScoreView.Size = new Size(327, 334);
+            ScoreView.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 163, 250);
+            ClScorebtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 590);
+            Scorebtn.Visible = false;
+            Replaybtn.Visible = false;
+            Exitbtn.Visible = false;
+            //Playbtn.Visible = false;
+            ScoreView.Visible = true;
+            ClScorebtn.Visible = true;
+        }
+
+        private void ClScorebtn_Click(object sender, EventArgs e)
+        {
+            ScoreView.Visible = false;
+            ClScorebtn.Visible = false;
+            Replaybtn.Visible = true;
+            //Playbtn.Visible = true;
+            Scorebtn.Visible = true;
+            Exitbtn.Visible = true;
+        }
+
+        private void Playbtn_Click(object sender, EventArgs e)
+        {
+            MainTimer.Start();
+            Cursor.Hide();
+            pauseLabel.Visible = false;
+            Exitbtn.Visible = false;
+            Scorebtn.Visible = false;
+            Pause = false;
+            Playbtn.Visible = false;
         }
     }
 }

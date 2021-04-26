@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 using WMPLib;
 using System.Drawing;
 using System.Threading;
@@ -154,6 +155,7 @@ namespace IO_projekt
                 int BulletSpeed;
                 System.Windows.Forms.Timer BulletTimer;
                 public PictureBox Sprite;
+                
                 //zmiana - Artur
                 Form1 formHandle;
 
@@ -262,12 +264,20 @@ namespace IO_projekt
                     Sprite.Top = -1000;
                     GameOver = true;
                     formHandle.pauseLabel.Text = "Game Over";
+                    if (Int32.Parse(formHandle.Pointslbl.Text) > lowest)
+                    {
+                        formHandle.ScoreView.Clear();
+                        formHandle.SrvField();
+                    }
+
                     formHandle.pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 285, 100);
                     formHandle.Exitbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 270);
+                    formHandle.Scorebtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 470);
                     formHandle.Replaybtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 370);
                     Cursor.Show();
                     formHandle.pauseLabel.Visible = true;
                     formHandle.Exitbtn.Visible = true;
+                    formHandle.Scorebtn.Visible = true;
                     formHandle.Replaybtn.Visible = true;
                     formHandle.MainTimer.Stop();
                     Pause = true;
@@ -429,7 +439,7 @@ namespace IO_projekt
             }
         }
 
-                
+
 
         //Zmiana - Artur
         public class Star : IDisposable
@@ -465,5 +475,98 @@ namespace IO_projekt
                 this.formHandle.Controls.Remove(this.Sprite);
             }
         }
+
+
+        public void SrvField()
+        {
+            StreamReader sr;
+            StreamWriter sw;
+            string path = @"ScoreFile.txt";
+
+            ScoreView.Columns.Add("Positioncl");
+            ScoreView.Columns.Add("Scorecl");
+            ScoreView.Columns[0].Width = 155;
+            ScoreView.Columns[1].Width = 155;
+
+            if (!File.Exists(path))
+            {
+                sw = File.CreateText(path);
+                Console.WriteLine("plik został utworzony");
+                sw.Close();
+            }
+
+            if (Int32.Parse(Pointslbl.Text) > lowest)
+            {
+
+                scoreList[0] = Int32.Parse(Pointslbl.Text);
+
+                for (int b = 0; b < 11; b++)
+                {
+                    for (int c = b + 1; c < 11; c++)
+                    {
+                        if (scoreList[c] == scoreList[b]) scoreList[c] = 0;
+                    }
+                }
+
+                Array.Sort(scoreList);
+
+                sw = new StreamWriter(path, false);
+                Console.WriteLine("plik został otwarty");
+
+                int i = 10;//
+                while (scoreList[i] != 0 && i > 0)//
+                {
+                    sw.WriteLine(scoreList[i].ToString());
+                    Console.WriteLine("dodano: " + scoreList[i].ToString());
+                    i--;
+                }
+                sw.Close();
+                Console.WriteLine("plik został zamkniety");
+
+            }
+
+            var fi = new FileInfo(path);
+
+            sr = File.OpenText(path);
+            if (fi.Length != 0)
+            {
+                for (int c = 0; c < 11; c++)
+                {
+                    scoreList[c] = 0;
+                }
+                lowest = 10000;
+                string s;
+                int i = 0;
+                while ((s = sr.ReadLine()) != null && i < 10)
+                {
+                    scoreList[i] = Int32.Parse(s);
+                    i++;
+                }
+            }
+            sr.Close();
+
+            Array.Reverse(scoreList);
+
+
+            for (int i = 10; i > 0; i--)
+            {
+                if (scoreList[i] == 0) lowest = 0;
+            }
+
+            int k = 0;
+            for (int n = 10; n > 0; n--)//
+            {
+
+                if ((scoreList[n] < lowest && scoreList[n] != 0) && lowest != 0) lowest = scoreList[n];
+                if (scoreList[n] > 0)
+                {
+                    ScoreView.Items.Add(new ListViewItem(new string[] { "               " + (k + 1).ToString() + ".", "      " + scoreList[n].ToString() })); Console.WriteLine("tab dod: " + scoreList[n].ToString());
+                }
+                else ScoreView.Items.Add(new ListViewItem(new string[] { "               " + (k + 1).ToString() + "." }));//
+                k++;
+            }
+
+        }
+       
     }
 }
