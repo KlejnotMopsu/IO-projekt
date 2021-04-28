@@ -374,7 +374,7 @@ namespace IO_projekt
 
             private void EnemyShootTimer_Tick(object sender, EventArgs e)
             {
-                if (this.Sprite.Top > 0)
+                if (this.Sprite.Top > 0 && !Pause)
                 {
                     Console.WriteLine(OPERATIONS++ + "> " + "Enemy bullet shot.");
                     EnemyBullet b = new EnemyBullet(formHandle, p, this);
