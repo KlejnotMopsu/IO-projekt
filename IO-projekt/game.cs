@@ -85,7 +85,7 @@ namespace IO_projekt
                 Position = new Point(x, y);
                 Sprite.Location = Position;
                 Console.WriteLine("Sprite.Location = " + "(" + Sprite.Location.X + "," + Sprite.Location.Y + ")");
-                f.Controls.Add(this.Sprite);
+                f.GamePanel.Controls.Add(this.Sprite);
 
                 MovementSpeed = 20;
 
@@ -175,7 +175,7 @@ namespace IO_projekt
                     BulletTimer.Interval = 20;
                     BulletTimer.Tick += new System.EventHandler(BulletTimer_Tick);
 
-                    f.Controls.Add(this.Sprite);
+                    f.GamePanel.Controls.Add(this.Sprite);
 
                     //BulletTimer.Start();
 
@@ -462,7 +462,7 @@ namespace IO_projekt
                 this.Sprite.Left = Seed.Next(0, this.formHandle.Width);
                 this.Sprite.Width = this.Sprite.Height = Seed.Next(4, 10);
                 this.Sprite.Top = -10;
-                this.formHandle.Controls.Add(this.Sprite);
+                this.formHandle.GamePanel.Controls.Add(this.Sprite);
             }
 
             public void Move()

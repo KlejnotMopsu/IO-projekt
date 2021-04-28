@@ -29,6 +29,7 @@ namespace IO_projekt
         
 
         Panel GamePanel;
+        Panel PausePanel;
 
         WindowsMediaPlayer gameMedia;
         WindowsMediaPlayer shootMedia;
@@ -48,6 +49,17 @@ namespace IO_projekt
             LifePointslbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 60, 13);
             LifePointslbl.Text = hp.ToString();
 
+            this.PausePanel = new Panel();
+            this.PausePanel.Width = this.Width;
+            this.PausePanel.Height = this.Height;
+            this.PausePanel.BackColor = Color.Red;
+            this.Controls.Add(this.PausePanel);
+            this.PausePanel.Visible = false;
+
+            this.GamePanel = new Panel();
+            this.Controls.Add(this.GamePanel);
+
+           
             
             gameMedia = new WindowsMediaPlayer();
             shootMedia = new WindowsMediaPlayer();
@@ -104,7 +116,8 @@ namespace IO_projekt
         
         private void Form1_shown(object sender, EventArgs e)
         {
-
+            this.GamePanel.Width = this.Width;
+            this.GamePanel.Height = this.Height;
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -177,6 +190,9 @@ namespace IO_projekt
                 {
                     if (Pause)
                     {
+                        this.PausePanel.Visible = false;
+                        //this.GamePanel.Visible = true;
+
                         MainTimer.Start();
                         Cursor.Hide();
                         pauseLabel.Visible = false;
@@ -187,6 +203,9 @@ namespace IO_projekt
                     }
                     else
                     {
+                        //this.GamePanel.Visible = false;
+                        this.PausePanel.Visible = true;
+
                         pauseLabel.Text = "Pause";
                         pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 170, 109);
                         //ScoreView.Visible = true;

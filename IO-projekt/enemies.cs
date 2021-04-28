@@ -82,7 +82,7 @@ namespace IO_projekt
                 EnemyTimer.Interval = 20;
                 EnemyTimer.Tick += new System.EventHandler(EnemyTimer_Tick);
 
-                f.Controls.Add(this.Sprite);
+                f.GamePanel.Controls.Add(this.Sprite);
 
                 //EnemyTimer.Start();
             }
@@ -247,7 +247,7 @@ namespace IO_projekt
                 Sprite.BackColor = Color.Red;
                 Sprite.Location = new Point(e.Sprite.Location.X + e.Sprite.Width / 2 - this.Sprite.Width / 2, e.Sprite.Location.Y);
 
-                f.Controls.Add(this.Sprite);
+                f.GamePanel.Controls.Add(this.Sprite);
             }
 
             public void TICK()
@@ -317,7 +317,7 @@ namespace IO_projekt
                 EnemyShootTimer.Interval = 5000;
                 EnemyShootTimer.Start();
 
-                f.Controls.Add(this.Sprite);
+                f.GamePanel.Controls.Add(this.Sprite);
             }
 
             public override void TICK()
@@ -415,7 +415,7 @@ namespace IO_projekt
                     -100);
 
 
-                f.Controls.Add(this.Sprite);
+                f.GamePanel.Controls.Add(this.Sprite);
             }
 
             public override void TICK()
