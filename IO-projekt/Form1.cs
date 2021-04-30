@@ -49,12 +49,23 @@ namespace IO_projekt
             LifePointslbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 60, 13);
             LifePointslbl.Text = hp.ToString();
 
+            Font DefaultFont = new Font("Arial", 24, FontStyle.Bold);
+            //PAUSE PANEL
             this.PausePanel = new Panel();
             this.PausePanel.Width = this.Width;
             this.PausePanel.Height = this.Height;
             this.PausePanel.BackColor = Color.Red;
             this.Controls.Add(this.PausePanel);
             this.PausePanel.Visible = false;
+
+            //KONTROLKI PAUSE PANEL
+            Button ExitButton = new Button();
+            this.PausePanel.Controls.Add(ExitButton);
+            ExitButton.Font = DefaultFont;
+            ExitButton.Text = "EXIT";
+            ExitButton.AutoSize = true;
+            //ExitButton.BackColor = Color.Blue;
+
 
             this.GamePanel = new Panel();
             this.Controls.Add(this.GamePanel);
@@ -118,6 +129,9 @@ namespace IO_projekt
         {
             this.GamePanel.Width = this.Width;
             this.GamePanel.Height = this.Height;
+
+            this.PausePanel.Left = this.Width / 2;
+            this.PausePanel.Top = this.Height / 2;
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
