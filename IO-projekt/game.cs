@@ -117,6 +117,27 @@ namespace IO_projekt
                 //stopwatch = new System.Diagnostics.Stopwatch();
             }
 
+            public void xMoveLeft()
+            {
+                if (this.Sprite.Left > this.Sprite.Width)
+                    this.Sprite.Left -= MovementSpeed;
+            }
+            public void xMoveRight()
+            {
+                if (this.Sprite.Left < this.formHandle.Width - this.Sprite.Width)
+                    this.Sprite.Left += MovementSpeed;
+            }
+            public void xMoveUp()
+            {
+                if (this.Sprite.Top < this.Sprite.Height)
+                    this.Sprite.Top -= MovementSpeed;
+            }
+            public void xMoveDown()
+            {
+                if (this.Sprite.Top > this.formHandle.Height - this.Sprite.Height)
+                    this.Sprite.Top += MovementSpeed;
+            }
+
             public void ResetGame()
             {                
                 Sprite.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width/2, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height - 100);

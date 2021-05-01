@@ -19,7 +19,7 @@ namespace IO_projekt
 
         Player p;
         //Zmiana - Artur
-        Timer MainTimer;
+        public Timer MainTimer;
         Random Seed;
         Star[] StarArray;
         int StarCount;
@@ -28,8 +28,9 @@ namespace IO_projekt
         static int[] scoreList = new int[11];
         
 
-        Panel GamePanel;
-        Panel PausePanel;
+        public Panel GamePanel;
+
+        PauseMenuPanel PauseMenu;
 
         WindowsMediaPlayer gameMedia;
         WindowsMediaPlayer shootMedia;
@@ -49,27 +50,11 @@ namespace IO_projekt
             LifePointslbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 60, 13);
             LifePointslbl.Text = hp.ToString();
 
-            Font DefaultFont = new Font("Arial", 24, FontStyle.Bold);
-            //PAUSE PANEL
-            this.PausePanel = new Panel();
-            this.PausePanel.Width = this.Width;
-            this.PausePanel.Height = this.Height;
-            this.PausePanel.BackColor = Color.Red;
-            this.Controls.Add(this.PausePanel);
-            this.PausePanel.Visible = false;
-
-            //KONTROLKI PAUSE PANEL
-            Button ExitButton = new Button();
-            this.PausePanel.Controls.Add(ExitButton);
-            ExitButton.Font = DefaultFont;
-            ExitButton.Text = "EXIT";
-            ExitButton.AutoSize = true;
-            //ExitButton.BackColor = Color.Blue;
 
 
             this.GamePanel = new Panel();
             this.Controls.Add(this.GamePanel);
-
+            PauseMenu = new PauseMenuPanel(this);
            
             
             gameMedia = new WindowsMediaPlayer();
@@ -130,24 +115,23 @@ namespace IO_projekt
             this.GamePanel.Width = this.Width;
             this.GamePanel.Height = this.Height;
 
-            this.PausePanel.Left = this.Width / 2;
-            this.PausePanel.Top = this.Height / 2;
+            this.PauseMenu.Reposition();
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
                 if (e.KeyCode == Keys.Right)
                 {
-                if (!Pause)
-                {
-                    p.MoveRight();
-                }
+                    if (!Pause)
+                    {
+                        p.MoveRight();
+                    }
                 }
                 if (e.KeyCode == Keys.Left)
                 {
                     if (!Pause)
                     {
-                    p.MoveLeft();                    
+                        p.MoveLeft();                    
                     }
                 }
                 if (e.KeyCode == Keys.Up)
@@ -175,7 +159,6 @@ namespace IO_projekt
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            Form1 formHandle;
             if (e.KeyCode == Keys.Right)
             {
                 p.MoveRightStop();
@@ -204,9 +187,6 @@ namespace IO_projekt
                 {
                     if (Pause)
                     {
-                        this.PausePanel.Visible = false;
-                        //this.GamePanel.Visible = true;
-
                         MainTimer.Start();
                         Cursor.Hide();
                         pauseLabel.Visible = false;
@@ -217,19 +197,18 @@ namespace IO_projekt
                     }
                     else
                     {
-                        //this.GamePanel.Visible = false;
-                        this.PausePanel.Visible = true;
+                        this.PauseMenu.BringUp();
 
-                        pauseLabel.Text = "Pause";
-                        pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 170, 109);
+                        //pauseLabel.Text = "Pause";
+                        //pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 170, 109);
                         //ScoreView.Visible = true;
                         //Playbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 240);
-                        Exitbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 320);
+                        //Exitbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 320);
                         //Scorebtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 400);
                         Cursor.Show();
-                        pauseLabel.Visible = true;
+                        //pauseLabel.Visible = true;
                         //Playbtn.Visible = true;
-                        Exitbtn.Visible = true;
+                        //Exitbtn.Visible = true;
                         //Scorebtn.Visible = true;
                         MainTimer.Stop();
                         Pause = true;
@@ -241,6 +220,8 @@ namespace IO_projekt
         //Zmiana - Artur
         public void MainTimer_Tick(object sender, EventArgs e)
         {
+
+
             for (int i = 0; i < StarCount; i++)
             {
                 StarArray[i].Move();
