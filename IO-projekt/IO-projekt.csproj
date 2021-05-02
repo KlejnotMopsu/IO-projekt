@@ -213,5 +213,14 @@
   <ItemGroup>
     <None Include="Resources\SelectionMarker2.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\boss.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\rocket.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\rocket1.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

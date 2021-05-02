@@ -17,6 +17,7 @@ namespace IO_projekt
         public static List<Form1.Enemy> enemies = new List<Form1.Enemy>();
         public static List<Form1.Player.Bullet> bullets = new List<Form1.Player.Bullet>();
         public static List<Form1.EnemyBullet> enemyBullets = new List<Form1.EnemyBullet>();
+        public static List<Form1.Bonus> bonuses = new List<Form1.Bonus>();
 
         public static List<Form1.Enemy> EnemiesToRemove = new List<Form1.Enemy>();
         public static void CollectEnemies()
@@ -44,6 +45,15 @@ namespace IO_projekt
                 enemyBullets.Remove(bl);
             }
         }
+
+        public static List<Form1.Bonus> BonusesToRemove = new List<Form1.Bonus>();
+        public static void CollectBonuses()
+        {
+            foreach (Form1.Bonus bl in BonusesToRemove)
+            {
+                bonuses.Remove(bl);
+            }
+        }
     }
 
     public partial class Form1 : Form
@@ -67,11 +77,7 @@ namespace IO_projekt
             System.Windows.Forms.Timer MoveLeftTimer;
             System.Windows.Forms.Timer MoveUpTimer;
             System.Windows.Forms.Timer MoveDownTimer;
-            System.Windows.Forms.Timer ShootTimer;
-            System.Windows.Forms.Timer EnemyTimer;            
-            //System.Diagnostics.Stopwatch stopwatch;
-
-            
+            System.Windows.Forms.Timer ShootTimer;            
 
             public Player(Form1 f, int x = 0, int y = 0)
             {
@@ -108,13 +114,6 @@ namespace IO_projekt
                 ShootTimer = new System.Windows.Forms.Timer();
                 ShootTimer.Tick += new System.EventHandler(ShootTimer_Tick);
                 ShootTimer.Interval = 200;
-
-                EnemyTimer = new System.Windows.Forms.Timer();
-                EnemyTimer.Tick += new System.EventHandler(EnemyTimer_Tick);
-                EnemyTimer.Interval = 5000;
-                EnemyTimer.Start();
-
-                //stopwatch = new System.Diagnostics.Stopwatch();
             }
 
             public void xMoveLeft()
@@ -166,7 +165,15 @@ namespace IO_projekt
                     b.DistanceTravelled = b.MaxDistanceTravelled;
                     formHandle.Controls.Remove(b.Sprite);
                 }
-                Conf.enemyBullets.Clear();                
+                Conf.enemyBullets.Clear();
+
+                foreach (Bonus b in Conf.bonuses)
+                {
+                    b.Sprite.Top = -1000;
+                    b.DistanceTravelled = b.MaxDistanceTravel;
+                    formHandle.Controls.Remove(b.Sprite);
+                }
+                Conf.bonuses.Clear();
             }            
 
             public class Bullet
@@ -214,6 +221,17 @@ namespace IO_projekt
                                 this.Sprite.Dispose();
 
                                 en.GetHit();
+                            }
+                        }
+
+                        foreach (Bonus b in Conf.bonuses)
+                        {
+                            if (this.Sprite.Bounds.IntersectsWith(b.Sprite.Bounds))
+                            {
+                                Conf.BulletsToRemove.Add(this);
+                                this.Sprite.Dispose();
+
+                                b.GetHit();
                             }
                         }
                     }
@@ -283,27 +301,12 @@ namespace IO_projekt
                 if(hp <= 0)
                 {
                     Sprite.Top = -1000;
-                    GameOver = true;
-                    formHandle.pauseLabel.Text = "Game Over";
-                    if (Int32.Parse(formHandle.Pointslbl.Text) > lowest)
-                    {
-                        formHandle.ScoreView.Clear();
-                        formHandle.SrvField();
-                    }
 
-                    formHandle.pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 285, 100);
-                    formHandle.Exitbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 270);
-                    formHandle.Scorebtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 470);
-                    formHandle.Replaybtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 370);
-                    Cursor.Show();
-                    formHandle.pauseLabel.Visible = true;
-                    formHandle.Exitbtn.Visible = true;
-                    formHandle.Scorebtn.Visible = true;
-                    formHandle.Replaybtn.Visible = true;
-                    formHandle.MainTimer.Stop();
-                    Pause = true;
+                    formHandle.showGameOver("Game Over");                    
                 }
             }
+
+            
 
             public void MoveRight()
             {
@@ -448,16 +451,6 @@ namespace IO_projekt
                 
                 Conf.bullets.Add(b);
             }            
-
-            private void EnemyTimer_Tick(object sender, EventArgs e)
-            {
-                if (!Pause)
-                {
-                    Console.WriteLine(OPERATIONS++ + "> " + "Enemy spawned.");
-                    Enemy enemy = new EnemyDreadnought(formHandle, this);
-                    Conf.enemies.Add(enemy);
-                }
-            }
         }
 
 
@@ -534,8 +527,8 @@ namespace IO_projekt
                 sw = new StreamWriter(path, false);
                 Console.WriteLine("plik został otwarty");
 
-                int i = 10;//
-                while (scoreList[i] != 0 && i > 0)//
+                int i = 10;
+                while (scoreList[i] != 0 && i > 0)
                 {
                     sw.WriteLine(scoreList[i].ToString());
                     Console.WriteLine("dodano: " + scoreList[i].ToString());
@@ -575,7 +568,7 @@ namespace IO_projekt
             }
 
             int k = 0;
-            for (int n = 10; n > 0; n--)//
+            for (int n = 10; n > 0; n--)
             {
 
                 if ((scoreList[n] < lowest && scoreList[n] != 0) && lowest != 0) lowest = scoreList[n];
@@ -583,7 +576,7 @@ namespace IO_projekt
                 {
                     ScoreView.Items.Add(new ListViewItem(new string[] { "               " + (k + 1).ToString() + ".", "      " + scoreList[n].ToString() })); Console.WriteLine("tab dod: " + scoreList[n].ToString());
                 }
-                else ScoreView.Items.Add(new ListViewItem(new string[] { "               " + (k + 1).ToString() + "." }));//
+                else ScoreView.Items.Add(new ListViewItem(new string[] { "               " + (k + 1).ToString() + "." }));
                 k++;
             }
 

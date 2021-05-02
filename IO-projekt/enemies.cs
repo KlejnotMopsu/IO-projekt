@@ -28,7 +28,7 @@ namespace IO_projekt
             public abstract void GetHit();
         }
 
-        public class EnemyStandard : Enemy
+        public class Bonus : Enemy
         {
             public bool bonusHP = false;
             public bool BonusHP
@@ -42,9 +42,9 @@ namespace IO_projekt
                 get { return bonusShield; }
             }
 
-            public EnemyStandard(Form1 f, Player p)
+            public Bonus(Form1 f, Player p)
             {
-                EnemySpeed = 4;
+                EnemySpeed = 5;
                 DistanceTravelled = 0;
                 MaxDistanceTravel = f.Height + 200;
                 this.p = p;
@@ -52,7 +52,7 @@ namespace IO_projekt
 
                 Sprite = new PictureBox();
 
-                int enemyType = rand.Next(10);
+                int enemyType = rand.Next(2);
                 if (enemyType == 0)
                 {
                     Sprite.Image = Properties.Resources.bonusHP;
@@ -67,24 +67,72 @@ namespace IO_projekt
                     Sprite.SizeMode = PictureBoxSizeMode.StretchImage;
                     bonusShield = true;
                 }
-                else
-                {
-                    Sprite.Image = Properties.Resources.enemy1;
-                    Sprite.Width = Sprite.Height = 50;
-                    Sprite.BackColor = Color.Transparent;
-                    Sprite.SizeMode = PictureBoxSizeMode.Zoom;
-                }
 
-                Sprite.Location = new Point(rand.Next(100, f.Width - 100),
-                    -100);
-
-                EnemyTimer = new System.Windows.Forms.Timer();
-                EnemyTimer.Interval = 20;
-                EnemyTimer.Tick += new System.EventHandler(EnemyTimer_Tick);
+                Sprite.Location = new Point(rand.Next(100, f.Width - 100), -100);
 
                 f.GamePanel.Controls.Add(this.Sprite);
+            }
 
-                //EnemyTimer.Start();
+            public override void TICK()
+            {
+                if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
+                {
+                    this.Sprite.Dispose();
+                    Conf.BonusesToRemove.Add(this);
+                    DistanceTravelled = MaxDistanceTravel;
+                    this.formHandle.bonusMedia.controls.play();
+
+                    if (bonusHP)
+                    {
+                        hp += 10;
+                        this.formHandle.LifePointslbl.Text = Convert.ToString(hp);                        
+                    }
+                    else if (bonusShield)
+                    {
+                        formHandle.p.shielded = true;
+                        p.Sprite.Image = Properties.Resources.player1shield;
+                    }
+                }
+                if (DistanceTravelled < MaxDistanceTravel)
+                {
+                    DistanceTravelled += EnemySpeed;
+                    this.Sprite.Top += this.EnemySpeed;
+                }
+                if (this.Sprite.Top >= System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height)
+                {
+                    this.Sprite.Dispose();
+                    Conf.BonusesToRemove.Add(this);
+                    DistanceTravelled = MaxDistanceTravel;
+                }
+            }
+
+            public override void GetHit()
+            {
+                this.Sprite.Dispose();
+                Conf.BonusesToRemove.Add(this);
+            }            
+        }
+
+        public class EnemyStandard : Enemy
+        {
+            public EnemyStandard(Form1 f, Player p)
+            {
+                EnemySpeed = 4;
+                DistanceTravelled = 0;
+                MaxDistanceTravel = f.Height + 200;
+                this.p = p;
+                formHandle = f;
+
+                Sprite = new PictureBox();
+
+                Sprite.Image = Properties.Resources.enemy1;
+                Sprite.Width = Sprite.Height = 50;
+                Sprite.BackColor = Color.Transparent;
+                Sprite.SizeMode = PictureBoxSizeMode.Zoom;
+
+                Sprite.Location = new Point(rand.Next(100, f.Width - 100), -100);
+
+                f.GamePanel.Controls.Add(this.Sprite);
             }
 
             public override void TICK()
@@ -93,53 +141,34 @@ namespace IO_projekt
                 {
                     this.Sprite.Dispose();
                     Conf.EnemiesToRemove.Add(this);
-
-                    //this.Sprite.Top = -1000;
                     DistanceTravelled = MaxDistanceTravel;
 
-                    //Conf.enemies.Remove(this);
-                    if (bonusHP)
+                    if (p.shielded)
                     {
-                        hp += 10;
-                        this.formHandle.bonusMedia.controls.play();
-                    }
-                    else if (bonusShield)
-                    {
-                        formHandle.p.shielded = true;
-                        p.Sprite.Image = Properties.Resources.player1shield;
-                        this.formHandle.bonusMedia.controls.play();
+                        p.shielded = false;
+                        p.Sprite.Image = Properties.Resources.player1;
                     }
                     else
                     {
-                        if (p.shielded)
-                        {
-                            p.shielded = false;
-                            p.Sprite.Image = Properties.Resources.player1;
-                        }
-                        else
-                        {
-                            hp -= 10;
-                        }
+                        hp -= 10;
                     }
+
                     Console.WriteLine("hp = " + hp);
                     this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
                     p.HPCheck();
-                    this.EnemyTimer.Stop();
                 }
                 if (DistanceTravelled < MaxDistanceTravel)
                 {
                     DistanceTravelled += EnemySpeed;
                     this.Sprite.Top += this.EnemySpeed;
                 }
-                if (this.Sprite.Top == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height)
+                if (this.Sprite.Top >= System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height)
                 {
-                    if (!bonusHP && !bonusShield)
-                    {
-                        hp -= 10;
-                    }
-                    Console.WriteLine("hp = " + hp);
+                    this.Sprite.Dispose();
+                    Conf.EnemiesToRemove.Add(this);
+                    DistanceTravelled = MaxDistanceTravel;
+                    hp -= 10;
                     this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
-                    this.EnemyTimer.Stop();
                     p.HPCheck();
                 }
             }
@@ -148,149 +177,11 @@ namespace IO_projekt
             {
                 this.Sprite.Dispose();
                 Conf.EnemiesToRemove.Add(this);
-                if (!BonusHP && !BonusShield)
-                {
-                    score++;
-                    Console.WriteLine("score = " + score);
-                    this.formHandle.Pointslbl.Text = Convert.ToString(score);
-                }
-            }
-
-            public void EnemyTimer_Tick(Object sender, EventArgs e)
-            {
-                if (!Pause)
-                {
-                    if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
-                    {
-                        this.Sprite.Top = -1000;
-                        DistanceTravelled = MaxDistanceTravel;
-                        formHandle.Controls.Remove(this.Sprite);
-                        Conf.enemies.Remove(this);
-                        if (bonusHP)
-                        {
-                            hp += 10;
-                            this.formHandle.bonusMedia.controls.play();
-                        }
-                        else if (bonusShield)
-                        {
-                            p.shielded = true;
-                            p.Sprite.Image = Properties.Resources.player1shield;
-                            this.formHandle.bonusMedia.controls.play();
-                        }
-                        else
-                        {
-                            if (p.shielded)
-                            {
-                                p.shielded = false;
-                                p.Sprite.Image = Properties.Resources.player1;
-                            }
-                            else
-                            {
-                                hp -= 10;
-                            }
-                        }
-                        Console.WriteLine("hp = " + hp);
-                        this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
-                        p.HPCheck();
-                        this.EnemyTimer.Stop();
-                    }
-                    if (DistanceTravelled < MaxDistanceTravel)
-                    {
-                        DistanceTravelled += EnemySpeed;
-                        this.Sprite.Top += this.EnemySpeed;
-                    }
-                    if (this.Sprite.Top == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height)
-                    {
-                        if (!bonusHP && !bonusShield)
-                        {
-                            hp -= 10;
-                        }
-                        Console.WriteLine("hp = " + hp);
-                        this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
-                        this.EnemyTimer.Stop();
-                        p.HPCheck();
-                    }
-                }
-            }
-        }
-
-        public class EnemyBullet
-        {
-            public int DistanceTravelled;
-            public int MaxDistanceTravelled;
-            int BulletSpeed;
-            int BulletSpeedHorizontal;
-            public PictureBox Sprite;
-            Form1 formHandle;
-            Player p;
-
-            public EnemyBullet(Form1 f, Player p, EnemyRifleman e)
-            {
-                formHandle = f;
-                this.p = p;
-                BulletSpeed = 10;
-                Random Seed = new Random();
-                int direction = Seed.Next(2);
-                if (direction == 0)
-                {
-                    BulletSpeedHorizontal = 10;
-                }
-                else
-                {
-                    BulletSpeedHorizontal = -10;
-                }
-
-                DistanceTravelled = 0;
-                MaxDistanceTravelled = f.Height + 2000;
-                Sprite = new PictureBox();
-                Sprite.Width = Sprite.Height = 10;
-                Sprite.BackColor = Color.Red;
-                Sprite.Location = new Point(e.Sprite.Location.X + e.Sprite.Width / 2 - this.Sprite.Width / 2, e.Sprite.Location.Y);
-
-                f.GamePanel.Controls.Add(this.Sprite);
-            }
-
-            public void TICK()
-            {
-                if (this.Sprite.Top > 0)
-                {
-                    if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
-                    {
-                        DistanceTravelled = MaxDistanceTravelled;
-                        formHandle.Controls.Remove(this.Sprite);
-                        Conf.EnemyBulletsToRemove.Add(this);
-                        if (p.shielded)
-                        {
-                            p.shielded = false;
-                            p.Sprite.Image = Properties.Resources.player1;
-                        }
-                        else
-                        {
-                            hp -= 10;
-                        }
-                        Console.WriteLine("hp = " + hp);
-                        this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
-                        p.HPCheck();
-                    }
-                }
-
-                if (DistanceTravelled < MaxDistanceTravelled)
-                {
-                    DistanceTravelled += BulletSpeed;
-                    this.Sprite.Top += this.BulletSpeed;
-                    this.Sprite.Left += this.BulletSpeedHorizontal;
-                    if (this.Sprite.Left >= System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width || this.Sprite.Left <= 0)
-                    {
-                        BulletSpeedHorizontal = -BulletSpeedHorizontal;
-                    }
-                }
-                else if (this.DistanceTravelled >= this.MaxDistanceTravelled)
-                {
-                    formHandle.Controls.Remove(this.Sprite);
-                    Conf.EnemyBulletsToRemove.Add(this);
-                }
-            }
-        }
+                score++;
+                Console.WriteLine("score = " + score);
+                this.formHandle.Pointslbl.Text = Convert.ToString(score);
+            }            
+        }        
 
         public class EnemyRifleman : Enemy
         {
@@ -314,7 +205,7 @@ namespace IO_projekt
 
                 EnemyShootTimer = new System.Windows.Forms.Timer();
                 EnemyShootTimer.Tick += new System.EventHandler(EnemyShootTimer_Tick);
-                EnemyShootTimer.Interval = 5000;
+                EnemyShootTimer.Interval = 2500;
                 EnemyShootTimer.Start();
 
                 f.GamePanel.Controls.Add(this.Sprite);
@@ -377,7 +268,7 @@ namespace IO_projekt
                 if (this.Sprite.Top > 0 && !Pause)
                 {
                     Console.WriteLine(OPERATIONS++ + "> " + "Enemy bullet shot.");
-                    EnemyBullet b = new EnemyBullet(formHandle, p, this);
+                    EnemyBullet b = new EnemyBullet(formHandle, p, this, "side", this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y + this.Sprite.Height);                    
 
                     using (SoundPlayer sp = new SoundPlayer(Properties.Resources.laser))
                     {
@@ -385,6 +276,221 @@ namespace IO_projekt
                     }
 
                     Conf.enemyBullets.Add(b);
+                }
+            }
+        }
+
+        public class EnemyBullet
+        {
+            public int DistanceTravelled;
+            public int MaxDistanceTravelled;
+            int BulletSpeed;
+            int BulletSpeedHorizontal;
+            public PictureBox Sprite;
+            Form1 formHandle;
+            Player p;
+
+            public EnemyBullet(Form1 f, Player p, Enemy e, String type, int x, int y)
+            {
+                formHandle = f;
+                this.p = p;
+
+                BulletSpeed = 20;
+                DistanceTravelled = 0;
+                MaxDistanceTravelled = f.Height + 2000;
+
+                if(type == "straight")
+                {
+                    BulletSpeedHorizontal = 0;
+                }
+                else if(type == "left")
+                {
+                    BulletSpeedHorizontal = -10;
+                }
+                else if(type == "right")
+                {
+                    BulletSpeedHorizontal = 10;
+                }
+                else
+                {
+                    Random Seed = new Random();
+                    int direction = Seed.Next(2);
+                    if (direction == 0)
+                    {
+                        BulletSpeedHorizontal = 10;
+                    }
+                    else
+                    {
+                        BulletSpeedHorizontal = -10;
+                    }
+                }                
+                
+                Sprite = new PictureBox();
+                Sprite.Width = Sprite.Height = 10;
+                Sprite.BackColor = Color.Red;
+                Sprite.Location = new Point(x - this.Sprite.Width / 2, y);
+
+                f.GamePanel.Controls.Add(this.Sprite);
+            }
+
+            public void TICK()
+            {
+                if (this.Sprite.Top > 0)
+                {
+                    if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
+                    {
+                        DistanceTravelled = MaxDistanceTravelled;
+                        this.Sprite.Top = -1000;
+                        formHandle.Controls.Remove(this.Sprite);
+                        Conf.EnemyBulletsToRemove.Add(this);
+                        if (p.shielded)
+                        {
+                            p.shielded = false;
+                            p.Sprite.Image = Properties.Resources.player1;
+                        }
+                        else
+                        {
+                            hp -= 10;
+                        }
+                        Console.WriteLine("hp = " + hp);
+                        this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
+                        p.HPCheck();
+                    }
+                }
+
+                if (DistanceTravelled < MaxDistanceTravelled)
+                {
+                    DistanceTravelled += BulletSpeed;
+                    this.Sprite.Top += this.BulletSpeed;
+                    this.Sprite.Left += this.BulletSpeedHorizontal;
+                    if (this.Sprite.Left >= System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width || this.Sprite.Left <= 0)
+                    {
+                        BulletSpeedHorizontal = -BulletSpeedHorizontal;
+                    }
+                }
+                else if (this.DistanceTravelled >= this.MaxDistanceTravelled)
+                {
+                    formHandle.Controls.Remove(this.Sprite);
+                    Conf.EnemyBulletsToRemove.Add(this);
+                }
+            }
+        }        
+
+        public class EnemyBoss : Enemy
+        {
+            int HitPoints;
+            int phase;
+            System.Windows.Forms.Timer BossShootTimer;
+
+            public EnemyBoss(Form1 f, Player p)
+            {
+                HitPoints = 50;
+                EnemySpeed = 5;
+                DistanceTravelled = 0;
+                MaxDistanceTravel = 300;
+                phase = 1;
+
+                this.p = p;
+                formHandle = f;
+
+                Sprite = new PictureBox();
+                Sprite.Image = Properties.Resources.boss;
+                Sprite.Width = 168;
+                Sprite.Height = 251;
+                Sprite.BackColor = Color.Transparent;
+                Sprite.SizeMode = PictureBoxSizeMode.Zoom;
+
+                Sprite.Location = new Point(f.Width / 2 - Sprite.Width / 2, -251);
+
+                BossShootTimer = new System.Windows.Forms.Timer();
+                BossShootTimer.Tick += new System.EventHandler(BossShootTimer_Tick);
+                BossShootTimer.Interval = 1000;
+                BossShootTimer.Start();
+
+                f.GamePanel.Controls.Add(this.Sprite);
+            }
+
+            private void BossShootTimer_Tick(object sender, EventArgs e)
+            {
+                if(Sprite.Top > 0)
+                {
+                    if (!Pause && phase >= 1)
+                    {
+                        EnemyBullet b = new EnemyBullet(formHandle, p, this, "straight", this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y + this.Sprite.Height);
+                        Conf.enemyBullets.Add(b);
+                    }
+                    if (!Pause && phase == 2)
+                    {
+                        EnemyBullet b1 = new EnemyBullet(formHandle, p, this, "left", this.Sprite.Location.X + this.Sprite.Width / 4, this.Sprite.Location.Y + this.Sprite.Height);
+                        Conf.enemyBullets.Add(b1);
+                        EnemyBullet b2 = new EnemyBullet(formHandle, p, this, "right", this.Sprite.Location.X + this.Sprite.Width / 2 + this.Sprite.Width / 4, this.Sprite.Location.Y + this.Sprite.Height);
+                        Conf.enemyBullets.Add(b2);
+                    }
+
+                    if (!Pause)
+                    {
+                        using (SoundPlayer sp = new SoundPlayer(Properties.Resources.laser))
+                        {
+                            sp.Play();
+                        }
+                    }
+                }                
+            }
+
+            public override void TICK()
+            {
+                if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
+                {
+                    Conf.EnemiesToRemove.Add(this);
+                    BossShootTimer.Stop();
+
+                    hp = 0;
+
+                    Console.WriteLine("hp = " + hp);
+                    this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
+                    p.HPCheck();
+                }
+
+                if (DistanceTravelled < MaxDistanceTravel)
+                {
+                    DistanceTravelled += EnemySpeed;
+                    this.Sprite.Top += this.EnemySpeed;
+                }
+                else
+                {
+                    Sprite.Left += EnemySpeed;
+                    if (Sprite.Left > formHandle.Width - Sprite.Width)
+                    {
+                        Sprite.Left = formHandle.Width - Sprite.Width;
+                        EnemySpeed = -EnemySpeed;
+                    }
+                    else if(Sprite.Left < 0)
+                    {
+                        Sprite.Left = 0;
+                        EnemySpeed = -EnemySpeed;
+                    }                    
+                }
+            }
+
+            public override void GetHit()
+            {
+                HitPoints--;
+               
+                if(HitPoints <= 0)
+                {
+                    this.Sprite.Dispose();
+                    Conf.EnemiesToRemove.Add(this);
+                    score += 100;
+                    Console.WriteLine("score = " + score);
+                    formHandle.Pointslbl.Text = Convert.ToString(score);
+
+                    formHandle.showGameOver("You win");
+                }
+                else if(HitPoints <= 25 && phase == 1)
+                {
+                    phase = 2;
+                    DistanceTravelled -= 250;
+                    EnemySpeed = 5;
                 }
             }
         }
@@ -436,7 +542,7 @@ namespace IO_projekt
                     }
                     else
                     {
-                        hp -= 30;
+                        hp -= 10;
                     }
 
                     Console.WriteLine("hp = " + hp);
@@ -451,7 +557,7 @@ namespace IO_projekt
                 }
                 if (this.Sprite.Top == System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height)
                 {
-                    hp -= 30;
+                    hp -= 10;
 
                     Console.WriteLine("hp = " + hp);
                     this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
@@ -467,7 +573,7 @@ namespace IO_projekt
                 {
                     this.Sprite.Dispose();
                     Conf.EnemiesToRemove.Add(this);
-                    score += 4;
+                    score ++;
                     Console.WriteLine("score = " + score);
                     this.formHandle.Pointslbl.Text = Convert.ToString(score);
                 }

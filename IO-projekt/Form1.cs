@@ -12,13 +12,11 @@ using WMPLib;
 
 namespace IO_projekt
 {
-
     public partial class Form1 : Form
     {
         public static uint OPERATIONS;
 
         Player p;
-        //Zmiana - Artur
         public Timer MainTimer;
         Random Seed;
         Star[] StarArray;
@@ -38,10 +36,11 @@ namespace IO_projekt
 
         static int score = 0;
         static int hp = 100;
-
+        static int level = 1;
 
         static bool Pause;
         static bool GameOver;
+        static bool BossLevel;
 
         public Form1()
         {
@@ -50,12 +49,9 @@ namespace IO_projekt
             LifePointslbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 60, 13);
             LifePointslbl.Text = hp.ToString();
 
-
-
             this.GamePanel = new Panel();
             this.Controls.Add(this.GamePanel);
-            PauseMenu = new PauseMenuPanel(this);
-           
+            PauseMenu = new PauseMenuPanel(this);           
             
             gameMedia = new WindowsMediaPlayer();
             shootMedia = new WindowsMediaPlayer();
@@ -70,7 +66,6 @@ namespace IO_projekt
             gameMedia.URL = @"sound\space_music.wav";
             //shootMedia.URL = @"sound\laser.wav";
             bonusMedia.URL = @"sound\bonus.wav";
-
 
             gameMedia.settings.setMode("loop", true);
             gameMedia.settings.volume = 7;
@@ -91,6 +86,7 @@ namespace IO_projekt
             OPERATIONS = 0;
             Pause = false;
             GameOver = false;
+            BossLevel = false;
 
             Console.WriteLine(OPERATIONS++ + "> " + "Loading form...", OPERATIONS);
             p = new Player(this, this.Width / 2, this.Height - 100);
@@ -221,7 +217,6 @@ namespace IO_projekt
         public void MainTimer_Tick(object sender, EventArgs e)
         {
 
-
             for (int i = 0; i < StarCount; i++)
             {
                 StarArray[i].Move();
@@ -250,17 +245,54 @@ namespace IO_projekt
             }
             Conf.CollectEnemyBullets();
 
-            int roll = Seed.Next(1, 101);
-            //if (roll % 50 == 0)
-            if(roll == 1)
+            foreach (Bonus bl in Conf.bonuses)
+            {
+                bl.TICK();
+            }
+            Conf.CollectBonuses();
+
+            if (score > 75)
+            {
+                level = 4;
+            }
+            else if(score > 25)
+            {
+                level = 3;
+            }
+            else if(score > 10)
+            {
+                level = 2;
+            }
+
+            int roll = Seed.Next(125);
+            if((roll == 0 || roll == 1)  && level >= 1 && !BossLevel)
             {
                 EnemyStandard en = new EnemyStandard(this, this.p);
                 Conf.enemies.Add(en);
             }
-            if (roll == 2)
+            else if(roll == 2 && level >= 2 && !BossLevel)
+            {
+                EnemyDreadnought en = new EnemyDreadnought(this, this.p);
+                Conf.enemies.Add(en);
+            }
+            else if(roll == 3 && level >= 3 && !BossLevel)
             {
                 EnemyRifleman er = new EnemyRifleman(this, this.p);
                 Conf.enemies.Add(er);
+            }            
+            else if(level >= 4 && !BossLevel)
+            {
+                BossLevel = true;
+                level = 0;
+                EnemyBoss eb = new EnemyBoss(this, this.p);
+                Conf.enemies.Add(eb);
+            }
+
+            roll = Seed.Next(500);
+            if (roll == 0 && !BossLevel)
+            {
+                Bonus b = new Bonus(this, this.p);
+                Conf.bonuses.Add(b);
             }
         }
 
@@ -272,6 +304,7 @@ namespace IO_projekt
         private void Replaybtn_Click(object sender, EventArgs e)
         {
             score = 0;
+            level = 1;
             Pointslbl.Text = Convert.ToString(score);
             hp = 100;
             LifePointslbl.Text = Convert.ToString(hp);
@@ -338,6 +371,47 @@ namespace IO_projekt
             Scorebtn.Visible = false;
             Pause = false;
             Playbtn.Visible = false;
+        }
+
+        public void showGameOver(string message)
+        {
+            GameOver = true;
+            Pause = true;            
+
+            if (Int32.Parse(Pointslbl.Text) > lowest)
+            {
+                ScoreView.Clear();
+                SrvField();
+            }
+
+            pauseLabel.Text = message;
+
+            if(pauseLabel.Text == "You win")
+            {
+                pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 210, 100);
+            }
+            else
+            {
+                pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 285, 100);
+            }            
+            
+            Exitbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 270);
+            Scorebtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 470);
+            Replaybtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 370);                       
+            
+            pauseLabel.Visible = true;
+            Exitbtn.Visible = true;
+            Scorebtn.Visible = true;
+            Replaybtn.Visible = true;
+
+            p.MoveRightStop();
+            p.MoveLeftStop();
+            p.MoveUpStop();
+            p.MoveDownStop();
+            p.ShootStop();
+
+            MainTimer.Stop();
+            Cursor.Show();
         }
     }
 }
