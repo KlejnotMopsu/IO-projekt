@@ -28,20 +28,14 @@ namespace IO_projekt
         public PauseMenuPanel(Form1 fh)
         {
             FormHandle = fh;
-            //Grid = new TableLayoutPanel();
-            
 
             this.ColumnCount = 3;
             this.RowCount = 3;
 
-            //this.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
             this.ColumnStyles.Clear();
             this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
             this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
             this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
-
-            //this.RowStyles.Clear();
-            //this.RowStyles.Add(new RowStyle(SizeType.Absolute, 20));
 
             ContinueLabel = new Label();
             this.Controls.Add(ContinueLabel, 1, 0);
@@ -72,11 +66,12 @@ namespace IO_projekt
             this.BackColor = Color.Transparent;
             this.Visible = false;
 
+            this.SetSelection();
             this.KeyDown += PauseMenu_KeyDown;
         }
 
         public void BringUp()
-        {
+        {        
             this.Visible = true;
             this.Focus();
             this.BringToFront();
@@ -152,6 +147,269 @@ namespace IO_projekt
             {
                 ConfirmSelection();
             }
+        }
+    }
+
+    public class MainMenuPanel : TableLayoutPanel
+    {
+        string[] Selections = { "start", "view score", "exit" };
+        List<Label> SelectionList;
+        Form1 FormHandle;
+        int CurrentSelection;
+        int MaxSelection = 2;
+
+        public MainMenuPanel(Form1 fh)
+        {
+            FormHandle = fh;
+            SelectionList = new List<Label>();
+            CurrentSelection = 0;
+
+            this.ColumnCount = 3;
+            this.RowCount = 1;
+
+            //this.BackColor = Color.DarkRed;
+
+            this.ColumnStyles.Clear();
+            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
+            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
+            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
+
+            foreach (string s in Selections)
+            {
+                this.AddSelection(s);
+            }
+
+            this.SetSelection();
+
+            FormHandle.Controls.Add(this);
+
+            this.Visible = true;
+            this.BringToFront();
+            this.Focus();
+
+            this.Reposition();
+
+            this.KeyDown += MainMenu_KeyDown;
+        }
+
+        private void SetSelection()
+        {
+            for (int i = 0; i < this.RowCount - 1; i++)
+            {
+                ((PictureBox)this.GetControlFromPosition(0, i)).Image = null;
+                ((PictureBox)this.GetControlFromPosition(2, i)).Image = null;
+            }
+
+            ((PictureBox)this.GetControlFromPosition(0, CurrentSelection)).Image = Properties.Resources.LeftSelectionMarker;
+            ((PictureBox)this.GetControlFromPosition(2, CurrentSelection)).Image = Properties.Resources.RightSelectionMarker;
+        }
+
+        public void Reposition()
+        {
+            this.Width = this.FormHandle.Width / 2;
+            this.Height = this.FormHandle.Height / 2;
+
+            this.Top = this.FormHandle.Height / 2 - this.Height / 2;
+            this.Left = this.FormHandle.Width / 2 - this.Width / 2;
+        }
+
+        private void AddSelection(string text)
+        {
+            this.Controls.Add(new Label() { Text=Selections[this.RowCount-1], Font=MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.None }, 1, this.RowCount-1);
+            this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 0, this.RowCount - 1);
+            this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 2, this.RowCount - 1);
+
+            this.RowCount++;
+        }
+
+        private void ConfirmSelection()
+        {
+            switch (Selections[CurrentSelection])
+            {
+                case "start":
+                    FormHandle.MainTimer.Start();
+                    this.Dispose();
+                    FormHandle.Focus();
+
+                    FormHandle.gameMedia.controls.play();
+                    break;
+
+                case "view score":
+                    ScoreTable st = new ScoreTable(FormHandle, this);
+                    break;
+
+                case "exit":
+                    FormHandle.Close();
+                    break;
+            }
+        }
+
+        private void MainMenu_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Down)
+            {
+                CurrentSelection++;
+                if (CurrentSelection > MaxSelection)
+                    CurrentSelection = 0;
+                SetSelection();
+            }
+            if (e.KeyCode == Keys.Up)
+            {
+                CurrentSelection--;
+                if (CurrentSelection < 0)
+                    CurrentSelection = MaxSelection;
+                SetSelection();
+            }
+
+            if (e.KeyCode == Keys.Enter)
+            {
+                ConfirmSelection();
+            }
+        }
+    }
+
+    public class ScoreTable : TableLayoutPanel
+    {
+        Form1 FormHandle;
+        Panel parent;
+        string[] FileContent;
+        private class ScoreEntry
+        {
+            public int Score;
+            public string Name;
+
+            public ScoreEntry(int s, string n)
+            {
+                Score = s;
+                Name = n;
+            }
+        }
+        List<ScoreEntry> Scores;
+
+        public ScoreTable(Form1 fh, Panel p)
+        {
+            FormHandle = fh;
+            parent = p;
+            Scores = new List<ScoreEntry>();
+
+            this.ColumnCount = 2;
+            this.RowCount = 1;
+            this.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
+
+            this.RowStyles.Clear();
+            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
+            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
+
+            this.BackColor = Color.Purple;
+
+            FileContent = File.ReadAllLines(@"scores.txt");
+            foreach (string s in FileContent)
+            {
+                Console.WriteLine("LINE: " + s);
+
+                string[] line = s.Split('-');
+                Scores.Add(new ScoreEntry(Convert.ToInt32(line[0]), line[1]));
+            }
+
+            foreach (ScoreEntry se in Scores)
+            {
+                this.AddEntry(se.Score, se.Name);
+            }
+
+            FormHandle.Controls.Add(this);
+            this.Visible = true;
+            this.BringToFront();
+            this.Focus();
+            this.Reposition();
+
+            this.KeyPress += ScoreTable_KeyPress;
+        }
+
+        private void AddEntry(int score, string name)
+        {
+            this.Controls.Add(new Label() { Text = Convert.ToString(score), Font=MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.Right }, 0, this.RowCount - 1);
+            this.Controls.Add(new Label() { Text = name, Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize=true, Anchor=AnchorStyles.Left }, 1, this.RowCount - 1);
+
+            this.RowCount++;
+        }
+
+        public void Reposition()
+        {
+            this.Width = this.FormHandle.Width / 2;
+            this.Height = this.FormHandle.Height;
+
+            this.Top = this.FormHandle.Height / 2 - this.Height / 2;
+            this.Left = this.FormHandle.Width / 2 - this.Width / 2;
+        }
+
+        private void ScoreTable_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Escape)
+            {
+                parent.Focus();
+                this.Dispose();
+            }
+        }
+    }
+
+    public class ScoreEntry : FlowLayoutPanel
+    {
+        Form1 FormHandle;
+        string PlayerName;
+        Label NameLabel;
+
+        public ScoreEntry(Form1 fh)
+        {
+            FormHandle = fh;
+
+            FormHandle.Controls.Add(this);
+
+            this.BackColor = Color.DarkRed;
+            this.AutoSize = true;
+            this.BorderStyle = BorderStyle.Fixed3D;
+
+            this.FlowDirection = FlowDirection.TopDown;
+            this.Controls.Add(new Label() { Text = "Your score:", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize=true, Anchor = AnchorStyles.None });
+            this.Controls.Add(new Label() { Text = Convert.ToString(Form1.score), Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor= AnchorStyles.None});
+            this.Controls.Add(new Label() { Text = "Enter your name:", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None });
+
+            PlayerName = "";
+            NameLabel = new Label();
+            NameLabel.Font = MenusConfig.DefaultFont;
+            NameLabel.ForeColor = Color.White;
+            NameLabel.AutoSize = true;
+            NameLabel.Anchor = AnchorStyles.None;
+            this.Controls.Add(NameLabel);
+            
+
+            this.KeyPress += ScoreEntry_KeyDown;
+            this.Focus();
+            this.Reposition();
+            this.Visible = true;
+            this.BringToFront();
+        }
+
+        public void Reposition()
+        {
+            this.Top = this.FormHandle.Height / 2 - this.Height / 2;
+            this.Left = this.FormHandle.Width / 2 - this.Width / 2;
+        }
+
+        private void ScoreEntry_KeyDown(object sender, KeyPressEventArgs e)
+        {         
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                File.AppendAllText(@"scores.txt", Convert.ToString(Form1.score) + '-' + PlayerName + '\n');
+
+                this.Dispose();
+            }
+            if (e.KeyChar == (char)Keys.Escape)
+            {
+                this.Dispose();
+            }
+
+             PlayerName += e.KeyChar;
+             NameLabel.Text = PlayerName;
         }
     }
 }

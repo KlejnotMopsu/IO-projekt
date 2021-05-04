@@ -29,12 +29,14 @@ namespace IO_projekt
         public Panel GamePanel;
 
         PauseMenuPanel PauseMenu;
+        MainMenuPanel MainMenu;
+        ScoreEntry xScoreEntry;
 
-        WindowsMediaPlayer gameMedia;
+        public WindowsMediaPlayer gameMedia;
         WindowsMediaPlayer shootMedia;
         WindowsMediaPlayer bonusMedia;
 
-        static int score = 0;
+        public static int score = 0;
         static int hp = 100;
         static int level = 1;
 
@@ -72,7 +74,8 @@ namespace IO_projekt
             shootMedia.settings.volume = 4;
             bonusMedia.settings.volume = 4;
 
-            gameMedia.controls.play();
+            //gameMedia.controls.play();
+            gameMedia.controls.stop();
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
             Cursor.Hide();
@@ -94,7 +97,7 @@ namespace IO_projekt
             //Zmiana - Artur
             MainTimer = new Timer();
             MainTimer.Interval = 10;
-            MainTimer.Start();
+           // MainTimer.Start();
             MainTimer.Tick += new System.EventHandler(MainTimer_Tick);
 
             Seed = new Random();
@@ -112,6 +115,8 @@ namespace IO_projekt
             this.GamePanel.Height = this.Height;
 
             this.PauseMenu.Reposition();
+
+            this.MainMenu = new MainMenuPanel(this);
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -176,6 +181,10 @@ namespace IO_projekt
             {
                 p.ShootStop();
             }
+            if (e.KeyCode == Keys.S)
+            {
+                xScoreEntry = new ScoreEntry(this);
+            }
 
             if (e.KeyCode == Keys.Escape)
             {
@@ -216,7 +225,13 @@ namespace IO_projekt
         //Zmiana - Artur
         public void MainTimer_Tick(object sender, EventArgs e)
         {
-
+            /*
+            if (hp <= 0)
+            {
+                MainTimer.Stop();
+                xScoreEntry = new ScoreEntry(this);
+            }
+            */
             for (int i = 0; i < StarCount; i++)
             {
                 StarArray[i].Move();
@@ -376,7 +391,9 @@ namespace IO_projekt
         public void showGameOver(string message)
         {
             GameOver = true;
-            Pause = true;            
+            Pause = true;
+
+            xScoreEntry = new ScoreEntry(this);
 
             if (Int32.Parse(Pointslbl.Text) > lowest)
             {
