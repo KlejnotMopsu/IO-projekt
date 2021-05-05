@@ -26,7 +26,7 @@ namespace IO_projekt
         static int[] scoreList = new int[11];
         
 
-        public Panel GamePanel;
+        public GamePanel xGamePanel;
 
         PauseMenuPanel PauseMenu;
         MainMenuPanel MainMenu;
@@ -51,8 +51,9 @@ namespace IO_projekt
             LifePointslbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 60, 13);
             LifePointslbl.Text = hp.ToString();
 
-            this.GamePanel = new Panel();
-            this.Controls.Add(this.GamePanel);
+            p = new Player(this);
+            this.xGamePanel = new SecondArea(this, p);
+            this.Controls.Add(this.xGamePanel);
             PauseMenu = new PauseMenuPanel(this);           
             
             gameMedia = new WindowsMediaPlayer();
@@ -92,7 +93,7 @@ namespace IO_projekt
             BossLevel = false;
 
             Console.WriteLine(OPERATIONS++ + "> " + "Loading form...", OPERATIONS);
-            p = new Player(this, this.Width / 2, this.Height - 100);
+            
 
             //Zmiana - Artur
             MainTimer = new Timer();
@@ -111,8 +112,8 @@ namespace IO_projekt
         
         private void Form1_shown(object sender, EventArgs e)
         {
-            this.GamePanel.Width = this.Width;
-            this.GamePanel.Height = this.Height;
+            this.xGamePanel.Width = this.Width;
+            this.xGamePanel.Height = this.Height;
 
             this.PauseMenu.Reposition();
 

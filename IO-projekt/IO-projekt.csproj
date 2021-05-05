@@ -73,8 +73,9 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="game.cs">
-      <SubType>Form</SubType>
+    <Compile Include="game.cs" />
+    <Compile Include="gamepanels.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="menus.cs" />
     <Compile Include="Pointslbl\Text.cs" />

@@ -70,7 +70,7 @@ namespace IO_projekt
 
                 Sprite.Location = new Point(rand.Next(100, f.Width - 100), -100);
 
-                f.GamePanel.Controls.Add(this.Sprite);
+                f.xGamePanel.Controls.Add(this.Sprite);
             }
 
             public override void TICK()
@@ -132,7 +132,7 @@ namespace IO_projekt
 
                 Sprite.Location = new Point(rand.Next(100, f.Width - 100), -100);
 
-                f.GamePanel.Controls.Add(this.Sprite);
+                f.xGamePanel.Controls.Add(this.Sprite);
             }
 
             public override void TICK()
@@ -208,7 +208,7 @@ namespace IO_projekt
                 EnemyShootTimer.Interval = 2500;
                 EnemyShootTimer.Start();
 
-                f.GamePanel.Controls.Add(this.Sprite);
+                f.xGamePanel.Controls.Add(this.Sprite);
             }
 
             public override void TICK()
@@ -330,7 +330,7 @@ namespace IO_projekt
                 Sprite.BackColor = Color.Red;
                 Sprite.Location = new Point(x - this.Sprite.Width / 2, y);
 
-                f.GamePanel.Controls.Add(this.Sprite);
+                f.xGamePanel.Controls.Add(this.Sprite);
             }
 
             public void TICK()
@@ -407,7 +407,7 @@ namespace IO_projekt
                 BossShootTimer.Interval = 1000;
                 BossShootTimer.Start();
 
-                f.GamePanel.Controls.Add(this.Sprite);
+                f.xGamePanel.Controls.Add(this.Sprite);
             }
 
             private void BossShootTimer_Tick(object sender, EventArgs e)
@@ -521,7 +521,7 @@ namespace IO_projekt
                     -100);
 
 
-                f.GamePanel.Controls.Add(this.Sprite);
+                f.xGamePanel.Controls.Add(this.Sprite);
             }
 
             public override void TICK()

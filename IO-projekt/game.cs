@@ -19,6 +19,14 @@ namespace IO_projekt
         public static List<Form1.EnemyBullet> enemyBullets = new List<Form1.EnemyBullet>();
         public static List<Form1.Bonus> bonuses = new List<Form1.Bonus>();
 
+        public static void ClearAll()
+        {
+            enemies.Clear();
+            bullets.Clear();
+            enemyBullets.Clear();
+            bonuses.Clear();
+        }
+
         public static List<Form1.Enemy> EnemiesToRemove = new List<Form1.Enemy>();
         public static void CollectEnemies()
         {
@@ -79,7 +87,7 @@ namespace IO_projekt
             System.Windows.Forms.Timer MoveDownTimer;
             System.Windows.Forms.Timer ShootTimer;            
 
-            public Player(Form1 f, int x = 0, int y = 0)
+            public Player(Form1 f)
             {
                 Console.WriteLine("Player() - f.Width: " + f.Width + "  f.Height: " + f.Height);
 
@@ -88,10 +96,10 @@ namespace IO_projekt
                 Sprite.Height = Sprite.Width = 50;
                 Sprite.Image = Properties.Resources.player1;
                 Sprite.BackColor = Color.Transparent;
-                Position = new Point(x, y);
+                Position = new Point(formHandle.Width/2, formHandle.Height-this.Sprite.Height-50);
                 Sprite.Location = Position;
                 Console.WriteLine("Sprite.Location = " + "(" + Sprite.Location.X + "," + Sprite.Location.Y + ")");
-                f.GamePanel.Controls.Add(this.Sprite);
+                //f.GamePanel.Controls.Add(this.Sprite);
 
                 MovementSpeed = 20;
 
@@ -203,7 +211,7 @@ namespace IO_projekt
                     BulletTimer.Interval = 20;
                     BulletTimer.Tick += new System.EventHandler(BulletTimer_Tick);
 
-                    f.GamePanel.Controls.Add(this.Sprite);
+                    f.xGamePanel.Controls.Add(this.Sprite);
 
                     //BulletTimer.Start();
 
@@ -476,7 +484,7 @@ namespace IO_projekt
                 this.Sprite.Left = Seed.Next(0, this.formHandle.Width);
                 this.Sprite.Width = this.Sprite.Height = Seed.Next(4, 10);
                 this.Sprite.Top = -10;
-                this.formHandle.GamePanel.Controls.Add(this.Sprite);
+                this.formHandle.xGamePanel.Controls.Add(this.Sprite);
             }
 
             public void Move()
