@@ -75,6 +75,10 @@ namespace IO_projekt
 
             int MovementSpeed;
 
+            bool IsGunLockOpen;
+            int NeededGunCooldown = 500;
+            int GunCooldown;
+
             public bool shielded = false;
             public bool Shielded
             {
@@ -84,8 +88,7 @@ namespace IO_projekt
             System.Windows.Forms.Timer MoveRightTimer;
             System.Windows.Forms.Timer MoveLeftTimer;
             System.Windows.Forms.Timer MoveUpTimer;
-            System.Windows.Forms.Timer MoveDownTimer;
-            System.Windows.Forms.Timer ShootTimer;            
+            System.Windows.Forms.Timer MoveDownTimer;          
 
             public Player(Form1 f)
             {
@@ -103,6 +106,9 @@ namespace IO_projekt
 
                 MovementSpeed = 20;
 
+                IsGunLockOpen = false;
+                GunCooldown = 0;
+
                 MoveRightTimer = new System.Windows.Forms.Timer();
                 MoveRightTimer.Tick += new System.EventHandler(MoveRightTimer_Tick);
                 MoveRightTimer.Interval = 10;
@@ -118,10 +124,23 @@ namespace IO_projekt
                 MoveDownTimer = new System.Windows.Forms.Timer();
                 MoveDownTimer.Tick += new System.EventHandler(MoveDownTimer_Tick);
                 MoveDownTimer.Interval = 10;
+            }
 
-                ShootTimer = new System.Windows.Forms.Timer();
-                ShootTimer.Tick += new System.EventHandler(ShootTimer_Tick);
-                ShootTimer.Interval = 200;
+            public void TICK()
+            {
+                if (GunCooldown > 0)
+                    GunCooldown -= 20;
+                if (IsGunLockOpen)
+                    this.Shoot();
+            }
+
+            public void OpenGunLock()
+            {
+                IsGunLockOpen = true;
+            }
+            public void CloseGunLock()
+            {
+                IsGunLockOpen = false;
             }
 
             public void xMoveLeft()
@@ -382,11 +401,21 @@ namespace IO_projekt
             }
             public void Shoot()
             {
-                ShootTimer.Start();
-            }
-            public void ShootStop()
-            {
-                ShootTimer.Stop();
+
+                if (IsGunLockOpen)
+                {
+                    if (GunCooldown <= 0)
+                    {
+                        GunCooldown = NeededGunCooldown;
+
+                        using (SoundPlayer sp = new SoundPlayer(Properties.Resources.laser))
+                        {
+                            sp.Play();
+                        }
+
+                        Conf.bullets.Add(new Bullet(formHandle, this));
+                    }
+                }
             }
 
             private void MoveRightTimer_Tick(object sender, EventArgs e)
@@ -421,44 +450,7 @@ namespace IO_projekt
                     Console.WriteLine(OPERATIONS++ + "> " + "Ticking MoveDownTimer");
                     Sprite.Top += MovementSpeed;
                 }
-            }
-            private void ShootTimer_Tick(object sender, EventArgs e)
-            {
-                Console.WriteLine(OPERATIONS++ + "> " + "Bullet shot.");
-                Bullet b = new Bullet(formHandle, this);
-               // this.formHandle.shootMedia.controls.play();
-
-                //Thread - aplikacja wywala po kilkunastu strzalach
-                /*
-                Thread th = new Thread(() => {
-                    using (WindowsMediaPlayer laserWMP = new WindowsMediaPlayer())
-                    {
-                        laserWMP.URL = @"sound\laser.wav";
-                        laserWMP.controls.play();
-                    }
-                });
-                th.Start();
-                */
-
-                //Task<TResult> - dziala, ale buguje sie co kilkanascie strzalow
-                /*
-                var t = Task<int>.Run(() => {
-                    WindowsMediaPlayer laserWMP = new WindowsMediaPlayer();
-                    laserWMP.URL = @"sound\laser.wav";
-                    laserWMP.controls.play();
-                    return 0;
-                });
-                */
-
-                //SoundPlayer - dziala, nie ma regulacji glosnosci
-                
-                using (SoundPlayer sp = new SoundPlayer(Properties.Resources.laser))
-                {
-                    sp.Play();
-                }
-                
-                Conf.bullets.Add(b);
-            }            
+            }           
         }
 
 

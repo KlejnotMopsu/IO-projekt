@@ -154,7 +154,7 @@ namespace IO_projekt
                 {
                     if (!Pause)
                     {
-                        p.Shoot();
+                        p.OpenGunLock();
                     }
                 }           
         }
@@ -180,7 +180,7 @@ namespace IO_projekt
 
             if (e.KeyCode == Keys.Space)
             {
-                p.ShootStop();
+                p.CloseGunLock();
             }
             if (e.KeyCode == Keys.S)
             {
@@ -226,6 +226,7 @@ namespace IO_projekt
         //Zmiana - Artur
         public void MainTimer_Tick(object sender, EventArgs e)
         {
+            p.TICK();
             /*
             if (hp <= 0)
             {
@@ -338,7 +339,6 @@ namespace IO_projekt
             p.MoveLeftStop();
             p.MoveUpStop();
             p.MoveDownStop();
-            p.ShootStop();
         }
 
         public static byte[] StreamToByteArr(Stream input)
@@ -426,7 +426,6 @@ namespace IO_projekt
             p.MoveLeftStop();
             p.MoveUpStop();
             p.MoveDownStop();
-            p.ShootStop();
 
             MainTimer.Stop();
             Cursor.Show();
