@@ -76,7 +76,7 @@ namespace IO_projekt
             int MovementSpeed;
 
             bool IsGunLockOpen;
-            int NeededGunCooldown = 500;
+            int NeededGunCooldown = 250;
             int GunCooldown;
 
             public bool shielded = false;
@@ -129,7 +129,7 @@ namespace IO_projekt
             public void TICK()
             {
                 if (GunCooldown > 0)
-                    GunCooldown -= 20;
+                    GunCooldown -= 10;
                 if (IsGunLockOpen)
                     this.Shoot();
             }
@@ -217,7 +217,7 @@ namespace IO_projekt
                 public Bullet(Form1 f, Player p)
                 {
                     formHandle = f;
-                    BulletSpeed = 10;
+                    BulletSpeed = 15;
                     DistanceTravelled = 0;
                     MaxDistanceTravelled = f.Height + 200;
                     Sprite = new PictureBox();

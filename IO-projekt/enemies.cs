@@ -379,12 +379,14 @@ namespace IO_projekt
         public class EnemyBoss : Enemy
         {
             int HitPoints;
+            int MaxHitPoints = 50;
             int phase;
             System.Windows.Forms.Timer BossShootTimer;
+            PictureBox hpBar;
 
             public EnemyBoss(Form1 f, Player p)
             {
-                HitPoints = 50;
+                HitPoints = MaxHitPoints;
                 EnemySpeed = 5;
                 DistanceTravelled = 0;
                 MaxDistanceTravel = 300;
@@ -399,8 +401,14 @@ namespace IO_projekt
                 Sprite.Height = 251;
                 Sprite.BackColor = Color.Transparent;
                 Sprite.SizeMode = PictureBoxSizeMode.Zoom;
-
                 Sprite.Location = new Point(f.Width / 2 - Sprite.Width / 2, -251);
+
+                hpBar = new PictureBox();
+                hpBar.Width = Sprite.Width;
+                hpBar.Height = 10;
+                hpBar.BackColor = Color.Red;
+                hpBar.BorderStyle = BorderStyle.Fixed3D;
+                hpBar.Location = new Point(Sprite.Left, Sprite.Top-(hpBar.Height+5));
 
                 BossShootTimer = new System.Windows.Forms.Timer();
                 BossShootTimer.Tick += new System.EventHandler(BossShootTimer_Tick);
@@ -408,6 +416,7 @@ namespace IO_projekt
                 BossShootTimer.Start();
 
                 f.xGamePanel.Controls.Add(this.Sprite);
+                f.xGamePanel.Controls.Add(this.hpBar);
             }
 
             private void BossShootTimer_Tick(object sender, EventArgs e)
@@ -455,18 +464,22 @@ namespace IO_projekt
                 {
                     DistanceTravelled += EnemySpeed;
                     this.Sprite.Top += this.EnemySpeed;
+                    this.hpBar.Top += this.EnemySpeed;
                 }
                 else
                 {
                     Sprite.Left += EnemySpeed;
+                    hpBar.Left += EnemySpeed;
                     if (Sprite.Left > formHandle.Width - Sprite.Width)
                     {
                         Sprite.Left = formHandle.Width - Sprite.Width;
+                        hpBar.Left = Sprite.Left + (Sprite.Width - hpBar.Width) / 2;
                         EnemySpeed = -EnemySpeed;
                     }
                     else if(Sprite.Left < 0)
                     {
                         Sprite.Left = 0;
+                        hpBar.Left = Sprite.Left + (Sprite.Width - hpBar.Width) / 2;
                         EnemySpeed = -EnemySpeed;
                     }                    
                 }
@@ -475,10 +488,15 @@ namespace IO_projekt
             public override void GetHit()
             {
                 HitPoints--;
-               
-                if(HitPoints <= 0)
+                hpBar.Width = Sprite.Width * HitPoints / MaxHitPoints;
+                hpBar.Left = Sprite.Left + (Sprite.Width - hpBar.Width) / 2;
+                formHandle.xGamePanel.Controls.Remove(this.hpBar);
+                formHandle.xGamePanel.Controls.Add(this.hpBar);                
+
+                if (HitPoints <= 0)
                 {
                     this.Sprite.Dispose();
+                    this.hpBar.Dispose();
                     Conf.EnemiesToRemove.Add(this);
                     score += 100;
                     Console.WriteLine("score = " + score);

@@ -268,11 +268,11 @@ namespace IO_projekt
             }
             Conf.CollectBonuses();
 
-            if (score > 75)
+            if (score > 50)
             {
                 level = 4;
             }
-            else if(score > 25)
+            else if(score > 20)
             {
                 level = 3;
             }
@@ -281,7 +281,7 @@ namespace IO_projekt
                 level = 2;
             }
 
-            int roll = Seed.Next(125);
+            int roll = Seed.Next(200);
             if((roll == 0 || roll == 1)  && level >= 1 && !BossLevel)
             {
                 EnemyStandard en = new EnemyStandard(this, this.p);
@@ -305,7 +305,7 @@ namespace IO_projekt
                 Conf.enemies.Add(eb);
             }
 
-            roll = Seed.Next(500);
+            roll = Seed.Next(600);
             if (roll == 0 && !BossLevel)
             {
                 Bonus b = new Bonus(this, this.p);
