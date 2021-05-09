@@ -72,9 +72,29 @@ namespace IO_projekt.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap bonusDoubleShoot {
+            get {
+                object obj = ResourceManager.GetObject("bonusDoubleShoot", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap bonusHP {
             get {
                 object obj = ResourceManager.GetObject("bonusHP", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bonusMultiplier {
+            get {
+                object obj = ResourceManager.GetObject("bonusMultiplier", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

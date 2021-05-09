@@ -79,6 +79,13 @@ namespace IO_projekt
             int NeededGunCooldown = 250;
             int GunCooldown;
 
+            int doubleShootTime;
+            public int DoubleShootTime
+            {
+                get { return doubleShootTime;  }
+                set { doubleShootTime = value; }
+            }
+
             public bool shielded = false;
             public bool Shielded
             {
@@ -109,6 +116,8 @@ namespace IO_projekt
                 IsGunLockOpen = false;
                 GunCooldown = 0;
 
+                doubleShootTime = 0;
+
                 MoveRightTimer = new System.Windows.Forms.Timer();
                 MoveRightTimer.Tick += new System.EventHandler(MoveRightTimer_Tick);
                 MoveRightTimer.Interval = 10;
@@ -130,6 +139,8 @@ namespace IO_projekt
             {
                 if (GunCooldown > 0)
                     GunCooldown -= 10;
+                if (doubleShootTime > 0)
+                    doubleShootTime -= 10;
                 if (IsGunLockOpen)
                     this.Shoot();
             }
@@ -169,6 +180,7 @@ namespace IO_projekt
                 Sprite.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width/2, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height - 100);
                 Sprite.Image = Properties.Resources.player1;
                 shielded = false;
+                doubleShootTime = 0;
 
                 foreach (Enemy en in Conf.enemies)
                 {
@@ -208,13 +220,11 @@ namespace IO_projekt
                 public int DistanceTravelled;
                 public int MaxDistanceTravelled;
                 int BulletSpeed;
-                System.Windows.Forms.Timer BulletTimer;
                 public PictureBox Sprite;
                 
-                //zmiana - Artur
                 Form1 formHandle;
 
-                public Bullet(Form1 f, Player p)
+                public Bullet(Form1 f, Player p, int x, int y)
                 {
                     formHandle = f;
                     BulletSpeed = 15;
@@ -223,17 +233,9 @@ namespace IO_projekt
                     Sprite = new PictureBox();
                     Sprite.Width = Sprite.Height = 10;
                     Sprite.BackColor = Color.Yellow;
-                    Sprite.Location = new Point(p.Sprite.Location.X + p.Sprite.Width / 2 - this.Sprite.Width / 2,
-                        p.Sprite.Location.Y);
-
-                    BulletTimer = new System.Windows.Forms.Timer();
-                    BulletTimer.Interval = 20;
-                    BulletTimer.Tick += new System.EventHandler(BulletTimer_Tick);
+                    Sprite.Location = new Point(x - this.Sprite.Width / 2, y);
 
                     f.xGamePanel.Controls.Add(this.Sprite);
-
-                    //BulletTimer.Start();
-
                 }
 
                 public void TICK()
@@ -271,56 +273,9 @@ namespace IO_projekt
                     else if (this.DistanceTravelled >= this.MaxDistanceTravelled)
                     {
                         formHandle.Controls.Remove(this.Sprite);
-                        //Conf.bullets.Remove(this);
                         Conf.BulletsToRemove.Add(this);
                     }
-                }
-                
-                public void BulletTimer_Tick(Object sender, EventArgs e)
-                {
-                    if (!Pause)
-                    {
-                        Enemy tmp = null;
-                        if (this.Sprite.Top > 0)
-                        {
-                            foreach (Enemy en in Conf.enemies)
-                            {
-                                if (this.Sprite.Bounds.IntersectsWith(en.Sprite.Bounds))
-                                {
-                                    en.Sprite.Top = -1000;
-                                    this.Sprite.Top = -1000;
-                                    en.DistanceTravelled = en.MaxDistanceTravel;
-                                    tmp = en;
-                                    //Conf.bullets.Remove(this);
-                                    Conf.BulletsToRemove.Add(this);
-                                }
-                            }
-                        }
-
-                        if (tmp != null)
-                        {/*
-                            if (!tmp.BonusHP && !tmp.BonusShield) // za zestrzelenie bonusów nie ma punktów
-                            {
-                                score = score + 1;
-                                Console.WriteLine("score = " + score);
-                                this.formHandle.Pointslbl.Text = Convert.ToString(score);
-                            } */                           
-                            Conf.enemies.Remove(tmp);
-                        }
-
-                        if (DistanceTravelled < MaxDistanceTravelled)
-                        {
-                            DistanceTravelled += BulletSpeed;
-                            this.Sprite.Top -= this.BulletSpeed;
-                        }
-                        else if (this.DistanceTravelled >= this.MaxDistanceTravelled)
-                        {
-                            formHandle.Controls.Remove(this.Sprite);
-                            //Conf.bullets.Remove(this);
-                            Conf.BulletsToRemove.Add(this);
-                        }                                             
-                    }                    
-                }                
+                }                              
             }
 
             public void HPCheck()
@@ -332,9 +287,7 @@ namespace IO_projekt
                     formHandle.showGameOver("Game Over");                    
                 }
             }
-
-            
-
+           
             public void MoveRight()
             {
                 if (shielded)
@@ -413,7 +366,15 @@ namespace IO_projekt
                             sp.Play();
                         }
 
-                        Conf.bullets.Add(new Bullet(formHandle, this));
+                        if(doubleShootTime > 0)
+                        {
+                            Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 4, this.Sprite.Location.Y));
+                            Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 2 + this.Sprite.Width / 4, this.Sprite.Location.Y));
+                        }
+                        else
+                        {
+                            Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y));
+                        }
                     }
                 }
             }

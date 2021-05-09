@@ -223,5 +223,11 @@
   <ItemGroup>
     <None Include="graphic\rocket1.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\bonusDoubleShoot.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\bonusMultiplier.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

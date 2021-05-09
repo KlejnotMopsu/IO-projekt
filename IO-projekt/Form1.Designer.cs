@@ -41,6 +41,8 @@ namespace IO_projekt
             this.Scorebtn = new System.Windows.Forms.Button();
             this.ClScorebtn = new System.Windows.Forms.Button();
             this.Playbtn = new System.Windows.Forms.Button();
+            this.scoreMultiplierTimeLabel = new System.Windows.Forms.Label();
+            this.doubleShootTimeLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // pauseLabel
@@ -50,9 +52,10 @@ namespace IO_projekt
             this.pauseLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.pauseLabel.Font = new System.Drawing.Font("Stencil", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pauseLabel.ForeColor = System.Drawing.Color.Red;
-            this.pauseLabel.Location = new System.Drawing.Point(441, 50);
+            this.pauseLabel.Location = new System.Drawing.Point(331, 41);
+            this.pauseLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.pauseLabel.Name = "pauseLabel";
-            this.pauseLabel.Size = new System.Drawing.Size(433, 142);
+            this.pauseLabel.Size = new System.Drawing.Size(348, 114);
             this.pauseLabel.TabIndex = 0;
             this.pauseLabel.Text = "Pause";
             this.pauseLabel.Visible = false;
@@ -61,10 +64,10 @@ namespace IO_projekt
             // 
             this.Replaybtn.BackColor = System.Drawing.Color.MintCream;
             this.Replaybtn.Font = new System.Drawing.Font("Stencil", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Replaybtn.Location = new System.Drawing.Point(445, 226);
-            this.Replaybtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Replaybtn.Location = new System.Drawing.Point(334, 184);
+            this.Replaybtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Replaybtn.Name = "Replaybtn";
-            this.Replaybtn.Size = new System.Drawing.Size(221, 82);
+            this.Replaybtn.Size = new System.Drawing.Size(166, 67);
             this.Replaybtn.TabIndex = 1;
             this.Replaybtn.Text = "replay";
             this.Replaybtn.UseVisualStyleBackColor = false;
@@ -75,10 +78,10 @@ namespace IO_projekt
             // 
             this.Exitbtn.BackColor = System.Drawing.Color.MintCream;
             this.Exitbtn.Font = new System.Drawing.Font("Stencil", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Exitbtn.Location = new System.Drawing.Point(677, 226);
-            this.Exitbtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Exitbtn.Location = new System.Drawing.Point(508, 184);
+            this.Exitbtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Exitbtn.Name = "Exitbtn";
-            this.Exitbtn.Size = new System.Drawing.Size(221, 82);
+            this.Exitbtn.Size = new System.Drawing.Size(166, 67);
             this.Exitbtn.TabIndex = 2;
             this.Exitbtn.Text = "exit";
             this.Exitbtn.UseVisualStyleBackColor = false;
@@ -90,9 +93,10 @@ namespace IO_projekt
             this.Scorelbl.BackColor = System.Drawing.Color.Transparent;
             this.Scorelbl.Font = new System.Drawing.Font("Stencil", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Scorelbl.ForeColor = System.Drawing.Color.Gainsboro;
-            this.Scorelbl.Location = new System.Drawing.Point(13, 14);
+            this.Scorelbl.Location = new System.Drawing.Point(10, 11);
+            this.Scorelbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Scorelbl.Name = "Scorelbl";
-            this.Scorelbl.Size = new System.Drawing.Size(113, 34);
+            this.Scorelbl.Size = new System.Drawing.Size(94, 28);
             this.Scorelbl.TabIndex = 3;
             this.Scorelbl.Text = "Score:";
             // 
@@ -101,9 +105,10 @@ namespace IO_projekt
             this.Pointslbl.BackColor = System.Drawing.Color.Transparent;
             this.Pointslbl.Font = new System.Drawing.Font("Stencil", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Pointslbl.ForeColor = System.Drawing.Color.Gainsboro;
-            this.Pointslbl.Location = new System.Drawing.Point(115, 14);
+            this.Pointslbl.Location = new System.Drawing.Point(99, 11);
+            this.Pointslbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Pointslbl.Name = "Pointslbl";
-            this.Pointslbl.Size = new System.Drawing.Size(68, 39);
+            this.Pointslbl.Size = new System.Drawing.Size(185, 28);
             this.Pointslbl.TabIndex = 4;
             this.Pointslbl.Text = "0";
             // 
@@ -112,9 +117,10 @@ namespace IO_projekt
             this.Lifelbl.BackColor = System.Drawing.Color.Transparent;
             this.Lifelbl.Font = new System.Drawing.Font("Stencil", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Lifelbl.ForeColor = System.Drawing.Color.Gainsboro;
-            this.Lifelbl.Location = new System.Drawing.Point(904, 14);
+            this.Lifelbl.Location = new System.Drawing.Point(678, 11);
+            this.Lifelbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Lifelbl.Name = "Lifelbl";
-            this.Lifelbl.Size = new System.Drawing.Size(109, 34);
+            this.Lifelbl.Size = new System.Drawing.Size(82, 28);
             this.Lifelbl.TabIndex = 5;
             this.Lifelbl.Text = "Life:";
             // 
@@ -123,9 +129,10 @@ namespace IO_projekt
             this.LifePointslbl.BackColor = System.Drawing.Color.Transparent;
             this.LifePointslbl.Font = new System.Drawing.Font("Stencil", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LifePointslbl.ForeColor = System.Drawing.Color.Gainsboro;
-            this.LifePointslbl.Location = new System.Drawing.Point(981, 14);
+            this.LifePointslbl.Location = new System.Drawing.Point(736, 11);
+            this.LifePointslbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LifePointslbl.Name = "LifePointslbl";
-            this.LifePointslbl.Size = new System.Drawing.Size(71, 39);
+            this.LifePointslbl.Size = new System.Drawing.Size(53, 28);
             this.LifePointslbl.TabIndex = 6;
             this.LifePointslbl.Text = "100";
             // 
@@ -137,9 +144,10 @@ namespace IO_projekt
             this.ScoreView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.ScoreView.HideSelection = false;
             this.ScoreView.LabelWrap = false;
-            this.ScoreView.Location = new System.Drawing.Point(31, 79);
+            this.ScoreView.Location = new System.Drawing.Point(15, 315);
+            this.ScoreView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.ScoreView.Name = "ScoreView";
-            this.ScoreView.Size = new System.Drawing.Size(311, 366);
+            this.ScoreView.Size = new System.Drawing.Size(234, 298);
             this.ScoreView.TabIndex = 7;
             this.ScoreView.UseCompatibleStateImageBehavior = false;
             this.ScoreView.View = System.Windows.Forms.View.Details;
@@ -149,9 +157,10 @@ namespace IO_projekt
             // 
             this.Scorebtn.BackColor = System.Drawing.Color.MintCream;
             this.Scorebtn.Font = new System.Drawing.Font("Stencil", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Scorebtn.Location = new System.Drawing.Point(445, 324);
+            this.Scorebtn.Location = new System.Drawing.Point(334, 263);
+            this.Scorebtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Scorebtn.Name = "Scorebtn";
-            this.Scorebtn.Size = new System.Drawing.Size(221, 82);
+            this.Scorebtn.Size = new System.Drawing.Size(166, 67);
             this.Scorebtn.TabIndex = 8;
             this.Scorebtn.Text = "Best score";
             this.Scorebtn.UseVisualStyleBackColor = false;
@@ -162,9 +171,10 @@ namespace IO_projekt
             // 
             this.ClScorebtn.BackColor = System.Drawing.Color.MintCream;
             this.ClScorebtn.Font = new System.Drawing.Font("Stencil", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ClScorebtn.Location = new System.Drawing.Point(679, 324);
+            this.ClScorebtn.Location = new System.Drawing.Point(509, 263);
+            this.ClScorebtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.ClScorebtn.Name = "ClScorebtn";
-            this.ClScorebtn.Size = new System.Drawing.Size(221, 82);
+            this.ClScorebtn.Size = new System.Drawing.Size(166, 67);
             this.ClScorebtn.TabIndex = 9;
             this.ClScorebtn.Text = "close";
             this.ClScorebtn.UseVisualStyleBackColor = false;
@@ -175,21 +185,50 @@ namespace IO_projekt
             // 
             this.Playbtn.BackColor = System.Drawing.Color.MintCream;
             this.Playbtn.Font = new System.Drawing.Font("Stencil", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Playbtn.Location = new System.Drawing.Point(445, 425);
+            this.Playbtn.Location = new System.Drawing.Point(334, 345);
+            this.Playbtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Playbtn.Name = "Playbtn";
-            this.Playbtn.Size = new System.Drawing.Size(221, 82);
+            this.Playbtn.Size = new System.Drawing.Size(166, 67);
             this.Playbtn.TabIndex = 10;
             this.Playbtn.Text = "play";
             this.Playbtn.UseVisualStyleBackColor = false;
             this.Playbtn.Visible = false;
             this.Playbtn.Click += new System.EventHandler(this.Playbtn_Click);
             // 
+            // scoreMultiplierTimeLabel
+            // 
+            this.scoreMultiplierTimeLabel.BackColor = System.Drawing.Color.Transparent;
+            this.scoreMultiplierTimeLabel.Font = new System.Drawing.Font("Stencil", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.scoreMultiplierTimeLabel.ForeColor = System.Drawing.Color.Gainsboro;
+            this.scoreMultiplierTimeLabel.Location = new System.Drawing.Point(10, 39);
+            this.scoreMultiplierTimeLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.scoreMultiplierTimeLabel.Name = "scoreMultiplierTimeLabel";
+            this.scoreMultiplierTimeLabel.Size = new System.Drawing.Size(274, 28);
+            this.scoreMultiplierTimeLabel.TabIndex = 11;
+            this.scoreMultiplierTimeLabel.Text = "Double Points: 0s";
+            this.scoreMultiplierTimeLabel.Visible = false;
+            // 
+            // doubleShootTimeLabel
+            // 
+            this.doubleShootTimeLabel.BackColor = System.Drawing.Color.Transparent;
+            this.doubleShootTimeLabel.Font = new System.Drawing.Font("Stencil", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.doubleShootTimeLabel.ForeColor = System.Drawing.Color.Gainsboro;
+            this.doubleShootTimeLabel.Location = new System.Drawing.Point(10, 67);
+            this.doubleShootTimeLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.doubleShootTimeLabel.Name = "doubleShootTimeLabel";
+            this.doubleShootTimeLabel.Size = new System.Drawing.Size(274, 28);
+            this.doubleShootTimeLabel.TabIndex = 12;
+            this.doubleShootTimeLabel.Text = "Double Shoot: 0s";
+            this.doubleShootTimeLabel.Visible = false;
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Desktop;
-            this.ClientSize = new System.Drawing.Size(1067, 554);
+            this.ClientSize = new System.Drawing.Size(987, 624);
+            this.Controls.Add(this.doubleShootTimeLabel);
+            this.Controls.Add(this.scoreMultiplierTimeLabel);
             this.Controls.Add(this.Playbtn);
             this.Controls.Add(this.ClScorebtn);
             this.Controls.Add(this.Scorebtn);
@@ -201,7 +240,6 @@ namespace IO_projekt
             this.Controls.Add(this.Exitbtn);
             this.Controls.Add(this.Replaybtn);
             this.Controls.Add(this.pauseLabel);
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -225,6 +263,8 @@ namespace IO_projekt
         private Button Scorebtn;
         private Button ClScorebtn;
         private Button Playbtn;
+        private Label scoreMultiplierTimeLabel;
+        private Label doubleShootTimeLabel;
     }
 }
 

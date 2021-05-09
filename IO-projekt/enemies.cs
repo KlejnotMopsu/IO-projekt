@@ -23,6 +23,7 @@ namespace IO_projekt
             public Random rand = new Random();
             public Player p;
             public Form1 formHandle;
+            public bool alreadyShot;
 
             public abstract void TICK();
             public abstract void GetHit();
@@ -42,6 +43,18 @@ namespace IO_projekt
                 get { return bonusShield; }
             }
 
+            public bool bonusDoubleShoot = false;
+            public bool BonusDoubleShoot
+            {
+                get { return bonusDoubleShoot; }
+            }
+
+            public bool bonusMultiplier = false;
+            public bool BonusMultiplier
+            {
+                get { return bonusMultiplier; }
+            }
+
             public Bonus(Form1 f, Player p)
             {
                 EnemySpeed = 5;
@@ -52,7 +65,7 @@ namespace IO_projekt
 
                 Sprite = new PictureBox();
 
-                int enemyType = rand.Next(2);
+                int enemyType = rand.Next(4);
                 if (enemyType == 0)
                 {
                     Sprite.Image = Properties.Resources.bonusHP;
@@ -66,6 +79,20 @@ namespace IO_projekt
                     Sprite.Width = Sprite.Height = 30;
                     Sprite.SizeMode = PictureBoxSizeMode.StretchImage;
                     bonusShield = true;
+                }
+                else if(enemyType == 2)
+                {
+                    Sprite.Image = Properties.Resources.bonusDoubleShoot;
+                    Sprite.Width = Sprite.Height = 30;
+                    Sprite.SizeMode = PictureBoxSizeMode.StretchImage;
+                    bonusDoubleShoot = true;
+                }
+                else if(enemyType == 3)
+                {
+                    Sprite.Image = Properties.Resources.bonusMultiplier;
+                    Sprite.Width = Sprite.Height = 30;
+                    Sprite.SizeMode = PictureBoxSizeMode.StretchImage;
+                    bonusMultiplier = true;                                        
                 }
 
                 Sprite.Location = new Point(rand.Next(100, f.Width - 100), -100);
@@ -89,8 +116,35 @@ namespace IO_projekt
                     }
                     else if (bonusShield)
                     {
-                        formHandle.p.shielded = true;
+                        p.shielded = true;
                         p.Sprite.Image = Properties.Resources.player1shield;
+                    }
+                    else if(bonusDoubleShoot)
+                    {
+                        if(p.DoubleShootTime <= 0)
+                        {
+                            formHandle.doubleShootTimeLabel.Top = labelTopOffset;
+                            if (formHandle.scoreMultiplierTimeLabel.Visible)
+                            {
+                                formHandle.doubleShootTimeLabel.Top += formHandle.scoreMultiplierTimeLabel.Height;
+                            }
+                            formHandle.doubleShootTimeLabel.Visible = true;
+                        }
+                        p.DoubleShootTime = 10000;                        
+                    }
+                    else if(bonusMultiplier)
+                    {
+                        if(scoreMultiplierTime <= 0)
+                        {
+                            formHandle.scoreMultiplierTimeLabel.Top = labelTopOffset;
+                            if (formHandle.doubleShootTimeLabel.Visible)
+                            {
+                                formHandle.scoreMultiplierTimeLabel.Top += formHandle.doubleShootTimeLabel.Height;
+                            }
+                            formHandle.scoreMultiplierTimeLabel.Visible = true;
+                        }
+                        scoreMultiplier = 2;
+                        scoreMultiplierTime = 10000;                        
                     }
                 }
                 if (DistanceTravelled < MaxDistanceTravel)
@@ -122,14 +176,13 @@ namespace IO_projekt
                 MaxDistanceTravel = f.Height + 200;
                 this.p = p;
                 formHandle = f;
+                alreadyShot = false;
 
                 Sprite = new PictureBox();
-
                 Sprite.Image = Properties.Resources.enemy1;
                 Sprite.Width = Sprite.Height = 50;
                 Sprite.BackColor = Color.Transparent;
                 Sprite.SizeMode = PictureBoxSizeMode.Zoom;
-
                 Sprite.Location = new Point(rand.Next(100, f.Width - 100), -100);
 
                 f.xGamePanel.Controls.Add(this.Sprite);
@@ -175,11 +228,15 @@ namespace IO_projekt
 
             public override void GetHit()
             {
-                this.Sprite.Dispose();
-                Conf.EnemiesToRemove.Add(this);
-                score++;
-                Console.WriteLine("score = " + score);
-                this.formHandle.Pointslbl.Text = Convert.ToString(score);
+                if (!alreadyShot)
+                {
+                    this.Sprite.Dispose();
+                    Conf.EnemiesToRemove.Add(this);
+                    score += scoreMultiplier;
+                    Console.WriteLine("score = " + score);
+                    this.formHandle.Pointslbl.Text = Convert.ToString(score);
+                    alreadyShot = true;
+                }                
             }            
         }        
 
@@ -193,6 +250,7 @@ namespace IO_projekt
                 MaxDistanceTravel = f.Height + 200;
                 this.p = p;
                 formHandle = f;
+                alreadyShot = false;
 
                 Sprite = new PictureBox();
 
@@ -255,12 +313,16 @@ namespace IO_projekt
 
             public override void GetHit()
             {
-                EnemyShootTimer.Stop();
-                this.Sprite.Dispose();
-                Conf.EnemiesToRemove.Add(this);
-                score++;
-                Console.WriteLine("score = " + score);
-                this.formHandle.Pointslbl.Text = Convert.ToString(score);
+                if(!alreadyShot)
+                {
+                    EnemyShootTimer.Stop();
+                    this.Sprite.Dispose();
+                    Conf.EnemiesToRemove.Add(this);
+                    score += scoreMultiplier;
+                    Console.WriteLine("score = " + score);
+                    this.formHandle.Pointslbl.Text = Convert.ToString(score);
+                    alreadyShot = true;
+                }                
             }
 
             private void EnemyShootTimer_Tick(object sender, EventArgs e)
@@ -498,7 +560,7 @@ namespace IO_projekt
                     this.Sprite.Dispose();
                     this.hpBar.Dispose();
                     Conf.EnemiesToRemove.Add(this);
-                    score += 100;
+                    score += 50 * scoreMultiplier;
                     Console.WriteLine("score = " + score);
                     formHandle.Pointslbl.Text = Convert.ToString(score);
 
@@ -524,6 +586,7 @@ namespace IO_projekt
                 MaxDistanceTravel = f.Height + 200;
                 this.p = p;
                 formHandle = f;
+                alreadyShot = false;
 
                 Sprite = new PictureBox();
 
@@ -589,11 +652,15 @@ namespace IO_projekt
                 this.HitPoints--;
                 if (this.HitPoints <= 0)
                 {
-                    this.Sprite.Dispose();
-                    Conf.EnemiesToRemove.Add(this);
-                    score ++;
-                    Console.WriteLine("score = " + score);
-                    this.formHandle.Pointslbl.Text = Convert.ToString(score);
+                    if(!alreadyShot)
+                    {
+                        this.Sprite.Dispose();
+                        Conf.EnemiesToRemove.Add(this);
+                        score += scoreMultiplier;
+                        Console.WriteLine("score = " + score);
+                        this.formHandle.Pointslbl.Text = Convert.ToString(score);
+                        alreadyShot = true;
+                    }                    
                 }
                 else if (this.HitPoints == 3)
                 {

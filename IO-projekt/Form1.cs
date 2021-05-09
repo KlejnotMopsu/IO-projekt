@@ -37,6 +37,9 @@ namespace IO_projekt
         WindowsMediaPlayer bonusMedia;
 
         public static int score = 0;
+        public static int scoreMultiplier = 1;
+        public static int scoreMultiplierTime;
+        
         static int hp = 100;
         static int level = 1;
 
@@ -44,12 +47,14 @@ namespace IO_projekt
         static bool GameOver;
         static bool BossLevel;
 
+        static int labelTopOffset;
+
         public Form1()
         {
             InitializeComponent();
             Lifelbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 120, 13);
             LifePointslbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 60, 13);
-            LifePointslbl.Text = hp.ToString();
+            LifePointslbl.Text = hp.ToString();            
 
             p = new Player(this);
             this.xGamePanel = new SecondArea(this, p);
@@ -82,6 +87,8 @@ namespace IO_projekt
             Cursor.Hide();
             this.Shown += Form1_shown;
 
+            labelTopOffset = scoreMultiplierTimeLabel.Top;
+
             SrvField();
         }
 
@@ -92,13 +99,12 @@ namespace IO_projekt
             GameOver = false;
             BossLevel = false;
 
+            scoreMultiplierTime = 0;
+
             Console.WriteLine(OPERATIONS++ + "> " + "Loading form...", OPERATIONS);
             
-
-            //Zmiana - Artur
             MainTimer = new Timer();
             MainTimer.Interval = 10;
-           // MainTimer.Start();
             MainTimer.Tick += new System.EventHandler(MainTimer_Tick);
 
             Seed = new Random();
@@ -281,7 +287,7 @@ namespace IO_projekt
                 level = 2;
             }
 
-            int roll = Seed.Next(200);
+            int roll = Seed.Next(150);
             if((roll == 0 || roll == 1)  && level >= 1 && !BossLevel)
             {
                 EnemyStandard en = new EnemyStandard(this, this.p);
@@ -305,11 +311,39 @@ namespace IO_projekt
                 Conf.enemies.Add(eb);
             }
 
-            roll = Seed.Next(600);
+            roll = Seed.Next(750);
             if (roll == 0 && !BossLevel)
             {
                 Bonus b = new Bonus(this, this.p);
                 Conf.bonuses.Add(b);
+            }
+
+            if(scoreMultiplierTime > 0)
+            {                
+                scoreMultiplierTimeLabel.Text = "Double Points: " + (scoreMultiplierTime / 1000.0).ToString() + "s";
+                scoreMultiplierTime -= MainTimer.Interval;                
+            }
+            else
+            {
+                scoreMultiplier = 1;
+                scoreMultiplierTimeLabel.Visible = false;
+                if(doubleShootTimeLabel.Visible)
+                {
+                    doubleShootTimeLabel.Top = labelTopOffset;
+                }
+            }
+
+            if(p.DoubleShootTime > 0)
+            {
+                doubleShootTimeLabel.Text = "Double Shoot: " + (p.DoubleShootTime / 1000.0).ToString() + "s";
+            }
+            else
+            {
+                doubleShootTimeLabel.Visible = false;
+                if(scoreMultiplierTimeLabel.Visible)
+                {
+                    scoreMultiplierTimeLabel.Top = labelTopOffset;
+                }
             }
         }
 
@@ -322,6 +356,7 @@ namespace IO_projekt
         {
             score = 0;
             level = 1;
+            scoreMultiplierTime = 0;
             Pointslbl.Text = Convert.ToString(score);
             hp = 100;
             LifePointslbl.Text = Convert.ToString(hp);
