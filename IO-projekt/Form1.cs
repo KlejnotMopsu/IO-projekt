@@ -42,6 +42,7 @@ namespace IO_projekt
         
         static int hp = 100;
         static int level = 1;
+        public static int CurrentLevel = 1;
 
         static bool Pause;
         static bool GameOver;
@@ -57,7 +58,7 @@ namespace IO_projekt
             LifePointslbl.Text = hp.ToString();            
 
             p = new Player(this);
-            this.xGamePanel = new SecondArea(this, p);
+            this.xGamePanel = new FirstArea(this, p);
             this.Controls.Add(this.xGamePanel);
             PauseMenu = new PauseMenuPanel(this);           
             
@@ -191,6 +192,18 @@ namespace IO_projekt
             if (e.KeyCode == Keys.S)
             {
                 xScoreEntry = new ScoreEntry(this);
+            }
+            if (e.KeyCode == Keys.I)
+            {
+                p.NeededGunCooldown = 20;
+            }
+            if (e.KeyCode == Keys.O)
+            {
+                Conf.bonuses.Add(new Bonus(this, p));
+            }
+            if (e.KeyCode == Keys.P)
+            {
+                this.NextLevel();
             }
 
             if (e.KeyCode == Keys.Escape)

@@ -44,6 +44,9 @@ namespace IO_projekt
             this.BackColor = ColorTranslator.FromHtml("#033806");
 
             this.Controls.Add(PlayerHandle.Sprite);
+
+            this.Width = FormHandle.Width;
+            this.Height = FormHandle.Height;
         }
     }
 }

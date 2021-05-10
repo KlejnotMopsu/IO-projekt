@@ -76,7 +76,7 @@ namespace IO_projekt
             int MovementSpeed;
 
             bool IsGunLockOpen;
-            int NeededGunCooldown = 250;
+            public int NeededGunCooldown = 250;
             int GunCooldown;
 
             int doubleShootTime;
