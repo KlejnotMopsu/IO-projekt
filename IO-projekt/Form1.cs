@@ -16,7 +16,7 @@ namespace IO_projekt
     {
         public static uint OPERATIONS;
 
-        Player p;
+        public Player p;
         public Timer MainTimer;
         Random Seed;
         Star[] StarArray;
@@ -41,12 +41,12 @@ namespace IO_projekt
         public static int scoreMultiplierTime;
         
         static int hp = 100;
-        static int level = 1;
+        public static int level = 1;
         public static int CurrentLevel = 1;
 
         static bool Pause;
         static bool GameOver;
-        static bool BossLevel;
+        public static bool BossLevel;
 
         static int labelTopOffset;
 
@@ -205,6 +205,10 @@ namespace IO_projekt
             {
                 this.NextLevel();
             }
+            if (e.KeyCode == Keys.U)
+            {
+                Conf.enemies.Add(new EnemyDreadnought(this, this.p));
+            }
 
             if (e.KeyCode == Keys.Escape)
             {
@@ -216,25 +220,15 @@ namespace IO_projekt
                         Cursor.Hide();
                         pauseLabel.Visible = false;
                         Exitbtn.Visible = false;
-                        //Playbtn.Visible = false;
-                        //Scorebtn.Visible = false;
+
                         Pause = false;
                     }
                     else
                     {
                         this.PauseMenu.BringUp();
 
-                        //pauseLabel.Text = "Pause";
-                        //pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 170, 109);
-                        //ScoreView.Visible = true;
-                        //Playbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 240);
-                        //Exitbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 320);
-                        //Scorebtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 400);
                         Cursor.Show();
-                        //pauseLabel.Visible = true;
-                        //Playbtn.Visible = true;
-                        //Exitbtn.Visible = true;
-                        //Scorebtn.Visible = true;
+
                         MainTimer.Stop();
                         Pause = true;
                     }
@@ -475,7 +469,7 @@ namespace IO_projekt
             p.MoveUpStop();
             p.MoveDownStop();
 
-            MainTimer.Stop();
+            //MainTimer.Stop();
             Cursor.Show();
         }
     }

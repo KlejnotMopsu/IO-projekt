@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-
 namespace IO_projekt
 {
     public static class MenusConfig
@@ -222,7 +221,7 @@ namespace IO_projekt
             this.RowCount++;
         }
 
-        private void ConfirmSelection()
+        async private void ConfirmSelection()
         {
             switch (Selections[CurrentSelection])
             {
@@ -230,6 +229,14 @@ namespace IO_projekt
                     FormHandle.MainTimer.Start();
                     this.Dispose();
                     FormHandle.Focus();
+
+                    FormHandle.p.Sprite.Left = this.FormHandle.Width / 2 - FormHandle.p.Sprite.Width / 2;
+                    FormHandle.p.Sprite.Top = this.FormHandle.Height + FormHandle.p.Sprite.Height;
+                    while (FormHandle.p.Sprite.Top > this.FormHandle.Height - FormHandle.p.Sprite.Height - 50)
+                    {
+                        FormHandle.p.Sprite.Top -= 10;
+                        await System.Threading.Tasks.Task.Delay(30);
+                    }
 
                     FormHandle.gameMedia.controls.play();
                     break;
@@ -273,34 +280,34 @@ namespace IO_projekt
         Form1 FormHandle;
         Panel parent;
         string[] FileContent;
-        private class ScoreEntry
+        private class ScorePosition
         {
             public int Score;
             public string Name;
 
-            public ScoreEntry(int s, string n)
+            public ScorePosition(int s, string n)
             {
                 Score = s;
                 Name = n;
             }
         }
-        List<ScoreEntry> Scores;
+        List<ScorePosition> Scores;
 
         public ScoreTable(Form1 fh, Panel p)
         {
             FormHandle = fh;
             parent = p;
-            Scores = new List<ScoreEntry>();
+            Scores = new List<ScorePosition>();
 
             this.ColumnCount = 2;
             this.RowCount = 1;
-            this.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
+            //this.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
 
             this.RowStyles.Clear();
             this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
             this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
 
-            this.BackColor = Color.Purple;
+            this.BackColor = Color.Black;
 
             FileContent = File.ReadAllLines(@"scores.txt");
             foreach (string s in FileContent)
@@ -308,10 +315,11 @@ namespace IO_projekt
                 Console.WriteLine("LINE: " + s);
 
                 string[] line = s.Split('-');
-                Scores.Add(new ScoreEntry(Convert.ToInt32(line[0]), line[1]));
+                Scores.Add(new ScorePosition(Convert.ToInt32(line[0]), line[1]));
             }
 
-            foreach (ScoreEntry se in Scores)
+            List<ScorePosition> SortedScores = Scores.OrderByDescending(o => o.Score).ToList();
+            foreach (ScorePosition se in SortedScores)
             {
                 this.AddEntry(se.Score, se.Name);
             }

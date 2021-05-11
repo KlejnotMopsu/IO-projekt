@@ -13,6 +13,22 @@ namespace IO_projekt
     {
         public Form1 FormHandle;
         public Form1.Player PlayerHandle;
+
+        public async void SpawnPlayer()
+        {
+            PlayerHandle.Sprite.Left = this.FormHandle.Width / 2 - PlayerHandle.Sprite.Width / 2;
+            PlayerHandle.Sprite.Top = this.FormHandle.Height + PlayerHandle.Sprite.Height;
+
+            //PlayerHandle.Sprite.Left = 1000;
+            //PlayerHandle.Sprite.Top = 1000;
+
+            while (PlayerHandle.Sprite.Top > this.Height - PlayerHandle.Sprite.Height - 50)
+            {
+                PlayerHandle.Sprite.Top -= 10;
+                await Task.Delay(30);
+                Console.WriteLine("awaiting");
+            }
+        }
     }
 
     public class FirstArea : GamePanel
@@ -27,6 +43,11 @@ namespace IO_projekt
             this.BackColor = Color.Black;
 
             this.Controls.Add(PlayerHandle.Sprite);
+
+            this.Width = FormHandle.Width;
+            this.Height = FormHandle.Height;
+
+            this.SpawnPlayer();
         }
 
 
@@ -47,6 +68,8 @@ namespace IO_projekt
 
             this.Width = FormHandle.Width;
             this.Height = FormHandle.Height;
+
+            this.SpawnPlayer();
         }
     }
 }

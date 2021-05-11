@@ -106,8 +106,8 @@ namespace IO_projekt
                 Sprite.Height = Sprite.Width = 50;
                 Sprite.Image = Properties.Resources.player1;
                 Sprite.BackColor = Color.Transparent;
-                Position = new Point(formHandle.Width/2, formHandle.Height-this.Sprite.Height-50);
-                Sprite.Location = Position;
+                //Position = new Point(formHandle.Width/2, formHandle.Height-this.Sprite.Height-50);
+                //Sprite.Location = Position;
                 Console.WriteLine("Sprite.Location = " + "(" + Sprite.Location.X + "," + Sprite.Location.Y + ")");
                 //f.GamePanel.Controls.Add(this.Sprite);
 

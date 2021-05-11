@@ -13,10 +13,12 @@ namespace IO_projekt
     {
 
 
-        async void NextLevel()
+        public async void NextLevel()
         {
             MainTimer.Stop();
             CurrentLevel++;
+            level = 1;
+            BossLevel = false;
 
             Panel BlackScreen = new Panel();
             BlackScreen.BackColor = Color.Black;
@@ -48,6 +50,12 @@ namespace IO_projekt
             xGamePanel.Visible = false;
             switch (CurrentLevel)
             {
+                case 1:
+                    {
+                        xGamePanel = new FirstArea(this, p);
+                        this.Controls.Add(xGamePanel);
+                    }
+                    break;
                 case 2:
                     {
                         xGamePanel = new SecondArea(this, p);
@@ -55,7 +63,7 @@ namespace IO_projekt
                     }
                     break;
             }
-            Console.WriteLine("Reached here...");
+
             while (BlackScreen.Left < BlackScreen.Width)
             {
                 BlackScreen.Left += 50;
