@@ -232,7 +232,8 @@ namespace IO_projekt
                     MaxDistanceTravelled = f.Height + 200;
                     Sprite = new PictureBox();
                     Sprite.Width = Sprite.Height = 10;
-                    Sprite.BackColor = Color.Yellow;
+                    Sprite.BackColor = Color.Transparent;
+                    Sprite.Image = Properties.Resources.BulletPic;
                     Sprite.Location = new Point(x - this.Sprite.Width / 2, y);
 
                     f.xGamePanel.Controls.Add(this.Sprite);

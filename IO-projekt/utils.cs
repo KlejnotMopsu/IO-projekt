@@ -12,13 +12,10 @@ namespace IO_projekt
     public partial class Form1 : Form
     {
 
-
         public async void NextLevel()
         {
             MainTimer.Stop();
             CurrentLevel++;
-            level = 1;
-            BossLevel = false;
 
             Panel BlackScreen = new Panel();
             BlackScreen.BackColor = Color.Black;

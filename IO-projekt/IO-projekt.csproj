@@ -232,5 +232,14 @@
   <ItemGroup>
     <None Include="graphic\bonusMultiplier.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BulletIMG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Meteorite.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EnemyLocustPic.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

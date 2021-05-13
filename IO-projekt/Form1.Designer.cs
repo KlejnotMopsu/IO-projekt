@@ -65,7 +65,7 @@ namespace IO_projekt
             this.Replaybtn.BackColor = System.Drawing.Color.MintCream;
             this.Replaybtn.Font = new System.Drawing.Font("Stencil", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Replaybtn.Location = new System.Drawing.Point(334, 184);
-            this.Replaybtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Replaybtn.Margin = new System.Windows.Forms.Padding(2);
             this.Replaybtn.Name = "Replaybtn";
             this.Replaybtn.Size = new System.Drawing.Size(166, 67);
             this.Replaybtn.TabIndex = 1;
@@ -79,7 +79,7 @@ namespace IO_projekt
             this.Exitbtn.BackColor = System.Drawing.Color.MintCream;
             this.Exitbtn.Font = new System.Drawing.Font("Stencil", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Exitbtn.Location = new System.Drawing.Point(508, 184);
-            this.Exitbtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Exitbtn.Margin = new System.Windows.Forms.Padding(2);
             this.Exitbtn.Name = "Exitbtn";
             this.Exitbtn.Size = new System.Drawing.Size(166, 67);
             this.Exitbtn.TabIndex = 2;
@@ -145,7 +145,7 @@ namespace IO_projekt
             this.ScoreView.HideSelection = false;
             this.ScoreView.LabelWrap = false;
             this.ScoreView.Location = new System.Drawing.Point(15, 315);
-            this.ScoreView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ScoreView.Margin = new System.Windows.Forms.Padding(2);
             this.ScoreView.Name = "ScoreView";
             this.ScoreView.Size = new System.Drawing.Size(234, 298);
             this.ScoreView.TabIndex = 7;
@@ -158,7 +158,7 @@ namespace IO_projekt
             this.Scorebtn.BackColor = System.Drawing.Color.MintCream;
             this.Scorebtn.Font = new System.Drawing.Font("Stencil", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Scorebtn.Location = new System.Drawing.Point(334, 263);
-            this.Scorebtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Scorebtn.Margin = new System.Windows.Forms.Padding(2);
             this.Scorebtn.Name = "Scorebtn";
             this.Scorebtn.Size = new System.Drawing.Size(166, 67);
             this.Scorebtn.TabIndex = 8;
@@ -172,7 +172,7 @@ namespace IO_projekt
             this.ClScorebtn.BackColor = System.Drawing.Color.MintCream;
             this.ClScorebtn.Font = new System.Drawing.Font("Stencil", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ClScorebtn.Location = new System.Drawing.Point(509, 263);
-            this.ClScorebtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ClScorebtn.Margin = new System.Windows.Forms.Padding(2);
             this.ClScorebtn.Name = "ClScorebtn";
             this.ClScorebtn.Size = new System.Drawing.Size(166, 67);
             this.ClScorebtn.TabIndex = 9;
@@ -186,7 +186,7 @@ namespace IO_projekt
             this.Playbtn.BackColor = System.Drawing.Color.MintCream;
             this.Playbtn.Font = new System.Drawing.Font("Stencil", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Playbtn.Location = new System.Drawing.Point(334, 345);
-            this.Playbtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Playbtn.Margin = new System.Windows.Forms.Padding(2);
             this.Playbtn.Name = "Playbtn";
             this.Playbtn.Size = new System.Drawing.Size(166, 67);
             this.Playbtn.TabIndex = 10;
@@ -263,8 +263,8 @@ namespace IO_projekt
         private Button Scorebtn;
         private Button ClScorebtn;
         private Button Playbtn;
-        private Label scoreMultiplierTimeLabel;
-        private Label doubleShootTimeLabel;
+        public Label scoreMultiplierTimeLabel;
+        public Label doubleShootTimeLabel;
     }
 }
 

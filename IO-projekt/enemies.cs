@@ -678,6 +678,57 @@ namespace IO_projekt
                 }
             }
         }
+
+        public class EnemyLocust : Enemy
+        {
+            int CurrentOffset = 0;
+            int MaxOffset = 100;
+            int OffsetInterval = 7;
+
+            public EnemyLocust(Form1 fh, Player ph)
+            {
+                formHandle = fh;
+                this.p = ph;
+                EnemySpeed = 8;
+
+                Sprite = new PictureBox();
+                Sprite.Width = Sprite.Height = 35;
+                Sprite.Image = Properties.Resources.EnemyLocustPic;
+                Sprite.BackColor = Color.Transparent;
+                Sprite.SizeMode = PictureBoxSizeMode.Zoom;
+
+                Random r = new Random();
+                Sprite.Top = -Sprite.Height;
+                Sprite.Left = r.Next(0, formHandle.Width-Sprite.Width);
+
+                formHandle.xGamePanel.Controls.Add(Sprite);
+            }
+
+            public override void TICK()
+            {
+                Sprite.Top += this.EnemySpeed;
+
+                Sprite.Left += OffsetInterval;
+                CurrentOffset += System.Math.Abs(OffsetInterval);
+
+                if (CurrentOffset >= MaxOffset)
+                {
+                    OffsetInterval = -OffsetInterval;
+                    CurrentOffset = 0;
+                }
+
+                if (Sprite.Top > formHandle.Height)
+                {
+                    Sprite.Dispose();
+                    Conf.EnemiesToRemove.Add(this);
+                }
+            }
+
+            public override void GetHit()
+            {
+                
+            }
+        }
     }
 
 }

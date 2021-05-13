@@ -48,7 +48,7 @@ namespace IO_projekt
         static bool GameOver;
         public static bool BossLevel;
 
-        static int labelTopOffset;
+        public static int labelTopOffset;
 
         public Form1()
         {
@@ -294,64 +294,7 @@ namespace IO_projekt
                 level = 2;
             }
 
-            int roll = Seed.Next(150);
-            if((roll == 0 || roll == 1)  && level >= 1 && !BossLevel)
-            {
-                EnemyStandard en = new EnemyStandard(this, this.p);
-                Conf.enemies.Add(en);
-            }
-            else if(roll == 2 && level >= 2 && !BossLevel)
-            {
-                EnemyDreadnought en = new EnemyDreadnought(this, this.p);
-                Conf.enemies.Add(en);
-            }
-            else if(roll == 3 && level >= 3 && !BossLevel)
-            {
-                EnemyRifleman er = new EnemyRifleman(this, this.p);
-                Conf.enemies.Add(er);
-            }            
-            else if(level >= 4 && !BossLevel)
-            {
-                BossLevel = true;
-                level = 0;
-                EnemyBoss eb = new EnemyBoss(this, this.p);
-                Conf.enemies.Add(eb);
-            }
-
-            roll = Seed.Next(750);
-            if (roll == 0 && !BossLevel)
-            {
-                Bonus b = new Bonus(this, this.p);
-                Conf.bonuses.Add(b);
-            }
-
-            if(scoreMultiplierTime > 0)
-            {                
-                scoreMultiplierTimeLabel.Text = "Double Points: " + (scoreMultiplierTime / 1000.0).ToString() + "s";
-                scoreMultiplierTime -= MainTimer.Interval;                
-            }
-            else
-            {
-                scoreMultiplier = 1;
-                scoreMultiplierTimeLabel.Visible = false;
-                if(doubleShootTimeLabel.Visible)
-                {
-                    doubleShootTimeLabel.Top = labelTopOffset;
-                }
-            }
-
-            if(p.DoubleShootTime > 0)
-            {
-                doubleShootTimeLabel.Text = "Double Shoot: " + (p.DoubleShootTime / 1000.0).ToString() + "s";
-            }
-            else
-            {
-                doubleShootTimeLabel.Visible = false;
-                if(scoreMultiplierTimeLabel.Visible)
-                {
-                    scoreMultiplierTimeLabel.Top = labelTopOffset;
-                }
-            }
+            xGamePanel.TICK();
         }
 
         private void Exitbtn_Click(object sender, EventArgs e)
