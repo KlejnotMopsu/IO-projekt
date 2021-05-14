@@ -157,7 +157,7 @@ namespace IO_projekt
             }
             if (roll > 148)
             {
-                Conf.enemies.Add(new Meteorite(this));
+                Conf.enemies.Add(new Meteorite(this, FormHandle.p));
             }
         }
 
@@ -165,9 +165,10 @@ namespace IO_projekt
         {
             GamePanel GPHandle;          
 
-            public Meteorite(GamePanel gp)
+            public Meteorite(GamePanel gp, Form1.Player ph)
             {
                 GPHandle = gp;
+                p = ph;
                 Sprite = new PictureBox();
 
                 Sprite.Width = Sprite.Height = 50;
@@ -191,6 +192,15 @@ namespace IO_projekt
                 {
                     this.Sprite.Dispose();
                     Conf.EnemiesToRemove.Add(this);
+                }
+
+                if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
+                {
+                    Form1.hp-= 45;
+                    GPHandle.FormHandle.UpdateHpLabel();
+                    this.Sprite.Dispose();
+                    Conf.EnemiesToRemove.Add(this);
+                    p.HPCheck();
                 }
             }
 

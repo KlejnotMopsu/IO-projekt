@@ -41,7 +41,7 @@ namespace IO_projekt
         public static int scoreMultiplier = 1;
         public static int scoreMultiplierTime;
         
-        static int hp = 100;
+        public static int hp = 100;
         public static int level = 1;
         public static int CurrentLevel = 1;
 
@@ -419,5 +419,11 @@ namespace IO_projekt
             //MainTimer.Stop();
             Cursor.Show();
         }
+
+        public void UpdateHpLabel()
+        {
+            this.LifePointslbl.Text = Convert.ToString(hp);
+        }
+
     }
 }

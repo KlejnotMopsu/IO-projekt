@@ -16,10 +16,11 @@ namespace IO_projekt
         public void StartFpsThread()
         {
             Label FpsLabel = new Label();
+            FpsLabel.Font = new Font("Terminal", 20);
             FpsLabel.Text = "FPS: ";
             FpsLabel.ForeColor = Color.White;
             FpsLabel.AutoSize = true;
-            FpsLabel.Top = this.Height - FpsLabel.Height;
+            FpsLabel.Top = this.Height - FpsLabel.Height-10;
 
 
             this.Controls.Add(FpsLabel);

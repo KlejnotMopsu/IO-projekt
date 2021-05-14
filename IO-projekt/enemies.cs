@@ -717,17 +717,31 @@ namespace IO_projekt
                     CurrentOffset = 0;
                 }
 
+                if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
+                {
+                    Sprite.Dispose();
+                    Conf.EnemiesToRemove.Add(this);
+
+                    hp -= 3;
+
+                    this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
+                    p.HPCheck();
+                    return;
+                }
+
                 if (Sprite.Top > formHandle.Height)
                 {
                     Sprite.Dispose();
                     Conf.EnemiesToRemove.Add(this);
+                    hp -= 3;
+                    this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
                 }
             }
 
             public override void GetHit()
             {
                 Sprite.Dispose();
-                Conf.EnemiesToRemove.Add(this);
+                Conf.EnemiesToRemove.Add(this);               
             }
         }
     }
