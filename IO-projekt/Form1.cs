@@ -15,6 +15,7 @@ namespace IO_projekt
     public partial class Form1 : Form
     {
         public static uint OPERATIONS;
+        public volatile int FramesInCurrentSecond = 0;
 
         public Player p;
         public Timer MainTimer;
@@ -55,7 +56,7 @@ namespace IO_projekt
             InitializeComponent();
             Lifelbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 120, 13);
             LifePointslbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 60, 13);
-            LifePointslbl.Text = hp.ToString();            
+            LifePointslbl.Text = hp.ToString();           
 
             p = new Player(this);
             this.xGamePanel = new FirstArea(this, p);
@@ -125,6 +126,8 @@ namespace IO_projekt
             this.PauseMenu.Reposition();
 
             this.MainMenu = new MainMenuPanel(this);
+
+            StartFpsThread();
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -239,6 +242,7 @@ namespace IO_projekt
         //Zmiana - Artur
         public void MainTimer_Tick(object sender, EventArgs e)
         {
+            FramesInCurrentSecond++;
             p.TICK();
             /*
             if (hp <= 0)

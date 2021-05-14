@@ -11,6 +11,47 @@ namespace IO_projekt
 {
     public partial class Form1 : Form
     {
+        System.Threading.Thread FpsThread;
+
+        public void StartFpsThread()
+        {
+            Label FpsLabel = new Label();
+            FpsLabel.Text = "FPS: ";
+            FpsLabel.ForeColor = Color.White;
+            FpsLabel.AutoSize = true;
+            FpsLabel.Top = this.Height - FpsLabel.Height;
+
+
+            this.Controls.Add(FpsLabel);
+            FpsLabel.BringToFront();
+
+            Console.WriteLine("Initializing StartFpsThread()...");
+            FpsThread = new System.Threading.Thread(() =>
+            {
+                Console.WriteLine("Declaring FpsThread...");
+                //public volatile int FramesInCurrentSecond = 0;
+
+                System.Timers.Timer FpsTimer = new System.Timers.Timer(1000);
+                FpsTimer.Enabled = true;
+                FpsTimer.Elapsed += new System.Timers.ElapsedEventHandler(FpsTimer_tick);
+
+                Console.WriteLine("Starting FpsTimer...");
+                FpsTimer.Start();
+
+                void FpsTimer_tick(object sender, System.Timers.ElapsedEventArgs e)
+                {
+                    //Console.WriteLine("Second has passed");
+                    //Console.WriteLine($"FPS: {FramesInCurrentSecond}");
+
+                    FpsLabel.Text = $"FPS: {FramesInCurrentSecond}";
+                    FramesInCurrentSecond = 0;
+                }
+            }
+            );
+
+            Console.WriteLine("Starting FpsThread...");
+            FpsThread.Start();
+        }
 
         public async void NextLevel()
         {

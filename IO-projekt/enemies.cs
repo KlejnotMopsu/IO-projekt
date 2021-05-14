@@ -699,7 +699,7 @@ namespace IO_projekt
 
                 Random r = new Random();
                 Sprite.Top = -Sprite.Height;
-                Sprite.Left = r.Next(0, formHandle.Width-Sprite.Width);
+                Sprite.Left = r.Next(MaxOffset, formHandle.Width-Sprite.Width-MaxOffset);
 
                 formHandle.xGamePanel.Controls.Add(Sprite);
             }
@@ -726,7 +726,8 @@ namespace IO_projekt
 
             public override void GetHit()
             {
-                
+                Sprite.Dispose();
+                Conf.EnemiesToRemove.Add(this);
             }
         }
     }
