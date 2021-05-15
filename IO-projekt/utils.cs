@@ -44,7 +44,7 @@ namespace IO_projekt
                     //Console.WriteLine("Second has passed");
                     //Console.WriteLine($"FPS: {FramesInCurrentSecond}");
 
-                    FpsLabel.Text = $"FPS: {FramesInCurrentSecond}";
+                    //FpsLabel.Text = $"FPS: {FramesInCurrentSecond}";
                     FramesInCurrentSecond = 0;
                 }
             }
@@ -58,6 +58,7 @@ namespace IO_projekt
         {
             MainTimer.Stop();
             CurrentLevel++;
+            BossLevel = false;
 
             Panel BlackScreen = new Panel();
             BlackScreen.BackColor = Color.Black;

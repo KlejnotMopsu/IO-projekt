@@ -57,9 +57,8 @@ namespace IO_projekt
         }
 
         public override void TICK()
-        {
-
-            int roll = Seed.Next(150);
+        {            
+            int roll = Seed.Next(150);         
             if ((roll == 0 || roll == 1) && Form1.level >= 1 && !Form1.BossLevel)
             {
                 Form1.EnemyStandard en = new Form1.EnemyStandard(FormHandle, FormHandle.p);
@@ -145,19 +144,66 @@ namespace IO_projekt
 
         public override void TICK()
         {
-            int roll = Seed.Next(150);
-            if (roll > 135)
+            int roll = Seed.Next(200);
+
+            if ((roll == 0 || roll == 1))
             {
-                //Conf.enemies.Add(new Form1.EnemyRifleman(FormHandle, FormHandle.p));
+                Form1.EnemyStandard en = new Form1.EnemyStandard(FormHandle, FormHandle.p);
+                Conf.enemies.Add(en);
             }
-            if (roll > 145)
+            else if (roll == 2)
             {
-                //Conf.enemies.Add(new Meteorite(this));
+                Form1.EnemyDreadnought en = new Form1.EnemyDreadnought(FormHandle, FormHandle.p);
+                Conf.enemies.Add(en);
+            }
+            else if (roll == 3)
+            {
+                Form1.EnemyRifleman er = new Form1.EnemyRifleman(FormHandle, FormHandle.p);
+                Conf.enemies.Add(er);
+            }
+
+            if (roll > 195)
+            {
                 Conf.enemies.Add(new Form1.EnemyLocust(FormHandle, FormHandle.p));
             }
-            if (roll > 148)
+            if (roll > 198)
             {
                 Conf.enemies.Add(new Meteorite(this, FormHandle.p));
+            }
+
+            roll = Seed.Next(750);
+            if (roll == 0)
+            {
+                Form1.Bonus b = new Form1.Bonus(FormHandle, FormHandle.p);
+                Conf.bonuses.Add(b);
+            }
+
+            if (Form1.scoreMultiplierTime > 0)
+            {
+                FormHandle.scoreMultiplierTimeLabel.Text = "Double Points: " + (Form1.scoreMultiplierTime / 1000.0).ToString() + "s";
+                Form1.scoreMultiplierTime -= FormHandle.MainTimer.Interval;
+            }
+            else
+            {
+                Form1.scoreMultiplier = 1;
+                FormHandle.scoreMultiplierTimeLabel.Visible = false;
+                if (FormHandle.doubleShootTimeLabel.Visible)
+                {
+                    FormHandle.doubleShootTimeLabel.Top = Form1.labelTopOffset;
+                }
+            }
+
+            if (FormHandle.p.DoubleShootTime > 0)
+            {
+                FormHandle.doubleShootTimeLabel.Text = "Double Shoot: " + (FormHandle.p.DoubleShootTime / 1000.0).ToString() + "s";
+            }
+            else
+            {
+                FormHandle.doubleShootTimeLabel.Visible = false;
+                if (FormHandle.scoreMultiplierTimeLabel.Visible)
+                {
+                    FormHandle.scoreMultiplierTimeLabel.Top = Form1.labelTopOffset;
+                }
             }
         }
 

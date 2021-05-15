@@ -564,7 +564,6 @@ namespace IO_projekt
                     Console.WriteLine("score = " + score);
                     formHandle.Pointslbl.Text = Convert.ToString(score);
 
-                    //formHandle.showGameOver("You win");
                     formHandle.NextLevel();
                     BossShootTimer.Stop();
                 }

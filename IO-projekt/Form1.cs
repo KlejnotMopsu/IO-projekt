@@ -298,6 +298,7 @@ namespace IO_projekt
                 level = 2;
             }
 
+            Console.WriteLine("zara wywyolam tika");
             xGamePanel.TICK();
         }
 
