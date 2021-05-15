@@ -45,6 +45,7 @@ namespace IO_projekt
                     //Console.WriteLine($"FPS: {FramesInCurrentSecond}");
 
                     //FpsLabel.Text = $"FPS: {FramesInCurrentSecond}";
+                    FpsLabel.Invoke(new MethodInvoker(delegate { FpsLabel.Text = $"FPS: {FramesInCurrentSecond}"; }));
                     FramesInCurrentSecond = 0;
                 }
             }
