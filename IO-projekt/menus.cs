@@ -432,6 +432,8 @@ namespace IO_projekt
                 File.AppendAllText(@"scores.txt", Convert.ToString(Form1.score) + '-' + PlayerName + '\n');
 
                 this.Dispose();
+                FormHandle.MainMenu = new MainMenuPanel(FormHandle);
+                ScoreTable st = new ScoreTable(FormHandle, FormHandle.MainMenu);
             }
             if (e.KeyChar == (char)Keys.Escape)
             {
