@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using WMPLib;
 
 namespace IO_projekt
 {
@@ -27,6 +28,8 @@ namespace IO_projekt
         public PauseMenuPanel(Form1 fh)
         {
             FormHandle = fh;
+
+            
 
             this.ColumnCount = 3;
             this.RowCount = 3;
@@ -156,13 +159,21 @@ namespace IO_projekt
         Form1 FormHandle;
         int CurrentSelection;
         int MaxSelection = 2;
+        public WindowsMediaPlayer menuMedia;
 
         public MainMenuPanel(Form1 fh)
         {
             FormHandle = fh;
             SelectionList = new List<Label>();
             CurrentSelection = 0;
-           
+
+            menuMedia = new WindowsMediaPlayer();
+
+            File.WriteAllBytes(@"sound\menu_music.wav", Form1.StreamToByteArr(Properties.Resources.menu_music));
+            menuMedia.URL = @"sound\menu_music.wav";
+            menuMedia.settings.setMode("loop", true);
+            menuMedia.settings.volume = 7;
+
             this.ColumnCount = 3;
             this.RowCount = 1;
 
@@ -226,6 +237,7 @@ namespace IO_projekt
             switch (Selections[CurrentSelection])
             {
                 case "start":
+                    menuMedia.controls.stop();
                     FormHandle.MainTimer.Start();
                     this.Dispose();
                     FormHandle.Focus();
@@ -295,6 +307,8 @@ namespace IO_projekt
 
         public ScoreTable(Form1 fh, Panel p)
         {
+            StreamWriter sw;
+            string path = @"Scores.txt";
             FormHandle = fh;
             parent = p;
             Scores = new List<ScorePosition>();
@@ -308,6 +322,13 @@ namespace IO_projekt
             this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
 
             this.BackColor = Color.Black;
+
+            if (!File.Exists(path))
+            {
+                sw = File.CreateText(path);
+                Console.WriteLine("plik został utworzony");
+                sw.Close();
+            }
 
             FileContent = File.ReadAllLines(@"scores.txt");
             foreach (string s in FileContent)
@@ -335,17 +356,16 @@ namespace IO_projekt
 
         private void AddEntry(int score, string name)
         {
-            this.Controls.Add(new Label() { Text = Convert.ToString(score), Font=MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.Right }, 0, this.RowCount - 1);
-            this.Controls.Add(new Label() { Text = name, Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize=true, Anchor=AnchorStyles.Left }, 1, this.RowCount - 1);
+            this.Controls.Add(new Label() { Text = Convert.ToString(score), Font = new Font("Stencil", 26, FontStyle.Bold), ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.Right }, 0, this.RowCount - 1);
+            this.Controls.Add(new Label() { Text = name,Font = new Font("Stencil", 26, FontStyle.Bold), ForeColor = Color.DodgerBlue, AutoSize=true, Anchor=AnchorStyles.Left }, 1, this.RowCount - 1);
 
             this.RowCount++;
         }
 
         public void Reposition()
         {
-            this.Width = this.FormHandle.Width / 2;
-            this.Height = this.FormHandle.Height;
-
+            this.Width = this.FormHandle.Width / 2 ;
+            this.Height = this.FormHandle.Height-400;
             this.Top = this.FormHandle.Height / 2 - this.Height / 2;
             this.Left = this.FormHandle.Width / 2 - this.Width / 2;
         }

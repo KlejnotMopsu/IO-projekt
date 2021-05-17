@@ -62,19 +62,19 @@ namespace IO_projekt
             p = new Player(this);
             this.xGamePanel = new FirstArea(this, p);
             this.Controls.Add(this.xGamePanel);
-            PauseMenu = new PauseMenuPanel(this);           
-            
+            PauseMenu = new PauseMenuPanel(this);
+
             gameMedia = new WindowsMediaPlayer();
             shootMedia = new WindowsMediaPlayer();
             bonusMedia = new WindowsMediaPlayer();
 
             Directory.CreateDirectory("sound");
 
-            File.WriteAllBytes(@"sound\space_music.wav", StreamToByteArr(Properties.Resources.space_music));
+            File.WriteAllBytes(@"sound\game_music.wav", StreamToByteArr(Properties.Resources.game_music));
             File.WriteAllBytes(@"sound\laser.wav", StreamToByteArr(Properties.Resources.laser));
             File.WriteAllBytes(@"sound\bonus.wav", StreamToByteArr(Properties.Resources.bonus));
 
-            gameMedia.URL = @"sound\space_music.wav";
+            gameMedia.URL = @"sound\game_music.wav";
             //shootMedia.URL = @"sound\laser.wav";
             bonusMedia.URL = @"sound\bonus.wav";
 
