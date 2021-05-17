@@ -177,6 +177,7 @@ namespace IO_projekt
             this.ColumnCount = 3;
             this.RowCount = 1;
 
+            //this.BackgroundImage = Properties.Resources.menubg ;
             //this.BackColor = Color.DarkRed;
 
             this.ColumnStyles.Clear();
@@ -290,6 +291,7 @@ namespace IO_projekt
     public class ScoreTable : TableLayoutPanel
     {
         Form1 FormHandle;
+        int clrlvl = 0;
         Panel parent;
         string[] FileContent;
         private class ScorePosition
@@ -311,6 +313,8 @@ namespace IO_projekt
             string path = @"Scores.txt";
             FormHandle = fh;
             parent = p;
+            this.BackgroundImage = Properties.Resources.scorebg;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             Scores = new List<ScorePosition>();
 
             this.ColumnCount = 2;
@@ -323,8 +327,8 @@ namespace IO_projekt
 
             this.BackColor = Color.Black;
 
-            this.Controls.Add(new Label() {Text = "High", Font = new Font("Stencil", 30, FontStyle.Bold), ForeColor =Color.White, AutoSize=true, Anchor=AnchorStyles.Right }, 0, 0);
-            this.Controls.Add(new Label() {Text = "scores", Font = new Font("Stencil", 30, FontStyle.Bold), ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.Left }, 1, 0);
+            this.Controls.Add(new Label() {Text = "High", Font = new Font("Stencil", 60, FontStyle.Bold), BackColor = Color.Transparent, ForeColor =Color.Red, AutoSize=true, Anchor=AnchorStyles.Right }, 0, 0);
+            this.Controls.Add(new Label() {Text = "scores", Font = new Font("Stencil", 60, FontStyle.Bold), BackColor = Color.Transparent, ForeColor = Color.Red, AutoSize = true, Anchor = AnchorStyles.Left }, 1, 0);
 
             if (!File.Exists(path))
             {
@@ -359,9 +363,19 @@ namespace IO_projekt
 
         private void AddEntry(int score, string name)
         {
-            this.Controls.Add(new Label() { Text = Convert.ToString(score), Font = new Font("Stencil", 28, FontStyle.Bold), ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.Right }, 0, this.RowCount - 1);
-            this.Controls.Add(new Label() { Text = name,Font = new Font("Stencil", 28, FontStyle.Bold), ForeColor = Color.DodgerBlue, AutoSize=true, Anchor=AnchorStyles.Left }, 1, this.RowCount - 1);
-
+            if(clrlvl == 1)
+            {
+                this.Controls.Add(new Label() { Text = Convert.ToString(score), Font = new Font("Stencil", 28, FontStyle.Bold), BackColor = Color.Transparent, ForeColor = Color.WhiteSmoke, AutoSize = true, Anchor = AnchorStyles.Right }, 0, this.RowCount - 1);
+                this.Controls.Add(new Label() { Text = name, Font = new Font("Stencil", 28, FontStyle.Bold), BackColor = Color.Transparent, ForeColor = Color.WhiteSmoke, AutoSize = true, Anchor = AnchorStyles.Left }, 1, this.RowCount - 1);
+                clrlvl = 0;
+            }
+            else
+            {
+                this.Controls.Add(new Label() { Text = Convert.ToString(score), Font = new Font("Stencil", 28, FontStyle.Bold), BackColor = Color.Transparent, ForeColor = Color.PowderBlue, AutoSize = true, Anchor = AnchorStyles.Right }, 0, this.RowCount - 1);
+                this.Controls.Add(new Label() { Text = name, Font = new Font("Stencil", 28, FontStyle.Bold), BackColor = Color.Transparent, ForeColor = Color.PowderBlue, AutoSize = true, Anchor = AnchorStyles.Left }, 1, this.RowCount - 1);
+                clrlvl = 1;
+            }
+            
             this.RowCount++;
         }
 
