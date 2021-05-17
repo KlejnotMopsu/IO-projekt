@@ -133,6 +133,7 @@ namespace IO_projekt
             Conf.ClearAll();
 
             this.BackColor = ColorTranslator.FromHtml("#033806");
+            FormHandle.BackColor = ColorTranslator.FromHtml("#033806");
 
             this.Controls.Add(PlayerHandle.Sprite);
 
