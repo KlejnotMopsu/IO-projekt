@@ -253,5 +253,8 @@
   <ItemGroup>
     <None Include="graphic\scorebg.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\menubg2.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
