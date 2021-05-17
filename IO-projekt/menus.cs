@@ -314,14 +314,17 @@ namespace IO_projekt
             Scores = new List<ScorePosition>();
 
             this.ColumnCount = 2;
-            this.RowCount = 1;
+            this.RowCount = 2;
             //this.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
 
             this.RowStyles.Clear();
-            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
-            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
+            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
 
             this.BackColor = Color.Black;
+
+            this.Controls.Add(new Label() {Text = "High", Font=MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.Right }, 0, 0);
+            this.Controls.Add(new Label() {Text = "scores", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.Left }, 1, 0);
 
             if (!File.Exists(path))
             {
@@ -364,10 +367,10 @@ namespace IO_projekt
 
         public void Reposition()
         {
-            this.Width = this.FormHandle.Width / 2 ;
-            this.Height = this.FormHandle.Height-400;
-            this.Top = this.FormHandle.Height / 2 - this.Height / 2;
-            this.Left = this.FormHandle.Width / 2 - this.Width / 2;
+            this.Width = this.FormHandle.Width;
+            this.Height = this.FormHandle.Height;
+            this.Top = 0;
+            this.Left = 0;
         }
 
         private void ScoreTable_KeyPress(object sender, KeyPressEventArgs e)
