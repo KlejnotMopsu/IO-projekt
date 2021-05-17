@@ -323,8 +323,8 @@ namespace IO_projekt
 
             this.BackColor = Color.Black;
 
-            this.Controls.Add(new Label() {Text = "High", Font=MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.Right }, 0, 0);
-            this.Controls.Add(new Label() {Text = "scores", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.Left }, 1, 0);
+            this.Controls.Add(new Label() {Text = "High", Font = new Font("Stencil", 30, FontStyle.Bold), ForeColor =Color.White, AutoSize=true, Anchor=AnchorStyles.Right }, 0, 0);
+            this.Controls.Add(new Label() {Text = "scores", Font = new Font("Stencil", 30, FontStyle.Bold), ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.Left }, 1, 0);
 
             if (!File.Exists(path))
             {
@@ -359,8 +359,8 @@ namespace IO_projekt
 
         private void AddEntry(int score, string name)
         {
-            this.Controls.Add(new Label() { Text = Convert.ToString(score), Font = new Font("Stencil", 26, FontStyle.Bold), ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.Right }, 0, this.RowCount - 1);
-            this.Controls.Add(new Label() { Text = name,Font = new Font("Stencil", 26, FontStyle.Bold), ForeColor = Color.DodgerBlue, AutoSize=true, Anchor=AnchorStyles.Left }, 1, this.RowCount - 1);
+            this.Controls.Add(new Label() { Text = Convert.ToString(score), Font = new Font("Stencil", 28, FontStyle.Bold), ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.Right }, 0, this.RowCount - 1);
+            this.Controls.Add(new Label() { Text = name,Font = new Font("Stencil", 28, FontStyle.Bold), ForeColor = Color.DodgerBlue, AutoSize=true, Anchor=AnchorStyles.Left }, 1, this.RowCount - 1);
 
             this.RowCount++;
         }
@@ -427,7 +427,7 @@ namespace IO_projekt
 
         private void ScoreEntry_KeyDown(object sender, KeyPressEventArgs e)
         {         
-            if (e.KeyChar == (char)Keys.Enter)
+            if (e.KeyChar == (char)Keys.Enter && PlayerName != "")
             {
                 File.AppendAllText(@"scores.txt", Convert.ToString(Form1.score) + '-' + PlayerName + '\n');
 
@@ -437,8 +437,12 @@ namespace IO_projekt
             {
                 this.Dispose();
             }
+            if (e.KeyChar == (char)Keys.Back && PlayerName != "")
+            {
+                PlayerName = PlayerName.Remove(PlayerName.Length - 1);
+            }
 
-             PlayerName += e.KeyChar;
+             if(PlayerName.Length <= 10 && e.KeyChar != (char)Keys.Back) PlayerName += e.KeyChar;
              NameLabel.Text = PlayerName;
         }
     }
