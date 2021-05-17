@@ -384,6 +384,8 @@ namespace IO_projekt
             GameOver = true;
             Pause = true;
 
+            MainTimer.Stop();
+
             xScoreEntry = new ScoreEntry(this);
 
             if (Int32.Parse(Pointslbl.Text) > lowest)

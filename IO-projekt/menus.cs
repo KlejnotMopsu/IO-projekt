@@ -383,7 +383,7 @@ namespace IO_projekt
     public class ScoreEntry : FlowLayoutPanel
     {
         Form1 FormHandle;
-        string PlayerName;
+        string PlayerName = "";
         Label NameLabel;
 
         public ScoreEntry(Form1 fh)
@@ -401,7 +401,6 @@ namespace IO_projekt
             this.Controls.Add(new Label() { Text = Convert.ToString(Form1.score), Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor= AnchorStyles.None});
             this.Controls.Add(new Label() { Text = "Enter your name:", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None });
 
-            PlayerName = "";
             NameLabel = new Label();
             NameLabel.Font = MenusConfig.DefaultFont;
             NameLabel.ForeColor = Color.White;
