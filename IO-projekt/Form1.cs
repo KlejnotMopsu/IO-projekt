@@ -16,6 +16,7 @@ namespace IO_projekt
     {
         public static uint OPERATIONS;
         public volatile int FramesInCurrentSecond = 0;
+        int benc;
 
         public Player p;
         public Timer MainTimer;

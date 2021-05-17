@@ -162,7 +162,7 @@ namespace IO_projekt
             FormHandle = fh;
             SelectionList = new List<Label>();
             CurrentSelection = 0;
-
+           
             this.ColumnCount = 3;
             this.RowCount = 1;
 
