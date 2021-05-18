@@ -249,6 +249,16 @@ namespace IO_projekt.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap menubg2 {
+            get {
+                object obj = ResourceManager.GetObject("menubg2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap MeteoritePic {
             get {
                 object obj = ResourceManager.GetObject("MeteoritePic", resourceCulture);
@@ -322,6 +332,16 @@ namespace IO_projekt.Properties {
         internal static System.Drawing.Bitmap RightSelectionMarker {
             get {
                 object obj = ResourceManager.GetObject("RightSelectionMarker", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap scorebg {
+            get {
+                object obj = ResourceManager.GetObject("scorebg", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
