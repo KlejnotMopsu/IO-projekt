@@ -26,6 +26,40 @@ namespace IO_projekt
             enemyBullets.Clear();
             bonuses.Clear();
         }
+        public static void ClearAndDisposeAll()
+        {
+            foreach (Form1.Enemy e in enemies)
+            {
+                e.Sprite.Dispose();
+                Form1.EnemyRifleman er = e as Form1.EnemyRifleman;
+                if (er != null)
+                {
+                    
+                    er.EnemyShootTimer.Stop();
+                    er.EnemyShootTimer.Dispose();
+                }
+                    
+            }
+            enemies.Clear();
+
+            foreach (Form1.Player.Bullet b in bullets)
+            {
+                b.Sprite.Dispose();
+            }
+            bullets.Clear();
+
+            foreach (Form1.EnemyBullet b in enemyBullets)
+            {
+                b.Sprite.Dispose();
+            }
+            enemyBullets.Clear();
+
+            foreach (Form1.Bonus b in bonuses)
+            {
+                b.Sprite.Dispose();
+            }
+            bonuses.Clear();
+        }
 
         public static List<Form1.Enemy> EnemiesToRemove = new List<Form1.Enemy>();
         public static void CollectEnemies()

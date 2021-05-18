@@ -30,7 +30,7 @@ namespace IO_projekt
         public GamePanel xGamePanel;
 
         PauseMenuPanel PauseMenu;
-        MainMenuPanel MainMenu;
+        public MainMenuPanel MainMenu;
         ScoreEntry xScoreEntry;
 
         public WindowsMediaPlayer gameMedia;
@@ -56,11 +56,12 @@ namespace IO_projekt
             InitializeComponent();
             Lifelbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 120, 13);
             LifePointslbl.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - 60, 13);
-            LifePointslbl.Text = hp.ToString();           
+            LifePointslbl.Text = hp.ToString();
 
-            p = new Player(this);
-            this.xGamePanel = new FirstArea(this, p);
-            this.Controls.Add(this.xGamePanel);
+            xGamePanel = null;
+            //p = new Player(this);
+            //this.xGamePanel = new FirstArea(this, p);
+            //this.Controls.Add(this.xGamePanel);
             PauseMenu = new PauseMenuPanel(this);
 
             gameMedia = new WindowsMediaPlayer();
@@ -114,14 +115,15 @@ namespace IO_projekt
             StarArray = new Star[StarCount];
             for (int i = 0; i < StarCount; i++)
             {
-                StarArray[i] = new Star(this);
+                //StarArray[i] = new Star(this);
+                StarArray[i] = null;
             }
         }      
         
         private void Form1_shown(object sender, EventArgs e)
         {
-            this.xGamePanel.Width = this.Width;
-            this.xGamePanel.Height = this.Height;
+            //this.xGamePanel.Width = this.Width;
+            //this.xGamePanel.Height = this.Height;
 
             this.PauseMenu.Reposition();
 
@@ -222,7 +224,6 @@ namespace IO_projekt
                         MainTimer.Start();
                         Cursor.Hide();
                         pauseLabel.Visible = false;
-                        Exitbtn.Visible = false;
 
                         Pause = false;
                     }
@@ -253,12 +254,16 @@ namespace IO_projekt
             */
             for (int i = 0; i < StarCount; i++)
             {
-                StarArray[i].Move();
+                if (StarArray[i] == null)
+                    StarArray[i] = new Star(this);
+
                 if (StarArray[i].Sprite.Top > this.Height)
                 {
                     StarArray[i].Dispose();
                     StarArray[i] = new Star(this);
                 }
+
+                StarArray[i].Move();
             }
 
             foreach (Enemy en in Conf.enemies)
@@ -298,7 +303,7 @@ namespace IO_projekt
                 level = 2;
             }
 
-            Console.WriteLine("zara wywyolam tika");
+            //Console.WriteLine("zara wywyolam tika");
             xGamePanel.TICK();
         }
 
@@ -321,9 +326,6 @@ namespace IO_projekt
             MainTimer.Start();
             Cursor.Hide();
             pauseLabel.Visible = false;
-            Exitbtn.Visible = false;
-            Scorebtn.Visible = false;
-            Replaybtn.Visible = false;
             this.ActiveControl = null;
             p.MoveRightStop();
             p.MoveLeftStop();
@@ -346,37 +348,27 @@ namespace IO_projekt
         }
 
         private void Scorebtn_Click(object sender, EventArgs e)
-        {
+        {/*
             ScoreView.Size = new Size(327, 334);
             ScoreView.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 163, 250);
-            ClScorebtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 590);
-            Scorebtn.Visible = false;
-            Replaybtn.Visible = false;
-            Exitbtn.Visible = false;
             //Playbtn.Visible = false;
-            ScoreView.Visible = true;
-            ClScorebtn.Visible = true;
+            ScoreView.Visible = true;*/
         }
 
         private void ClScorebtn_Click(object sender, EventArgs e)
-        {
-            ScoreView.Visible = false;
-            ClScorebtn.Visible = false;
-            Replaybtn.Visible = true;
-            //Playbtn.Visible = true;
-            Scorebtn.Visible = true;
-            Exitbtn.Visible = true;
+        {/*
+            ScoreView.Visible = false;*/
         }
 
         private void Playbtn_Click(object sender, EventArgs e)
-        {
+        {/*
             MainTimer.Start();
             Cursor.Hide();
             pauseLabel.Visible = false;
             Exitbtn.Visible = false;
             Scorebtn.Visible = false;
             Pause = false;
-            Playbtn.Visible = false;
+            Playbtn.Visible = false;*/
         }
 
         public void showGameOver(string message)
@@ -404,15 +396,9 @@ namespace IO_projekt
             {
                 pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 285, 100);
             }            
-            
-            Exitbtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 270);
-            Scorebtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 470);
-            Replaybtn.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 85, 370);                       
+                               
             
             pauseLabel.Visible = true;
-            Exitbtn.Visible = true;
-            Scorebtn.Visible = true;
-            Replaybtn.Visible = true;
 
             p.MoveRightStop();
             p.MoveLeftStop();

@@ -242,7 +242,7 @@ namespace IO_projekt
 
         public class EnemyRifleman : Enemy
         {
-            System.Windows.Forms.Timer EnemyShootTimer;
+            public System.Windows.Forms.Timer EnemyShootTimer;
             public EnemyRifleman(Form1 f, Player p)
             {
                 EnemySpeed = 2;
@@ -316,6 +316,7 @@ namespace IO_projekt
                 if(!alreadyShot)
                 {
                     EnemyShootTimer.Stop();
+                    EnemyShootTimer.Dispose();
                     this.Sprite.Dispose();
                     Conf.EnemiesToRemove.Add(this);
                     score += scoreMultiplier;

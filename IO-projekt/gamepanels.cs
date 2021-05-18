@@ -44,15 +44,16 @@ namespace IO_projekt
 
             Seed = new Random();
 
-            Conf.ClearAll();
+            Conf.ClearAndDisposeAll();
 
             this.BackColor = Color.Black;
+            this.FormHandle.BackColor = Color.Black;
 
             this.Controls.Add(PlayerHandle.Sprite);
 
             this.Width = FormHandle.Width;
             this.Height = FormHandle.Height;
-
+ 
             this.SpawnPlayer();
         }
 
@@ -130,7 +131,7 @@ namespace IO_projekt
 
             Seed = new Random();
 
-            Conf.ClearAll();
+            Conf.ClearAndDisposeAll();
 
             this.BackColor = ColorTranslator.FromHtml("#033806");
             FormHandle.BackColor = ColorTranslator.FromHtml("#033806");
@@ -147,23 +148,13 @@ namespace IO_projekt
         {
             int roll = Seed.Next(200);
 
-            if ((roll == 0 || roll == 1))
-            {
-                Form1.EnemyStandard en = new Form1.EnemyStandard(FormHandle, FormHandle.p);
-                Conf.enemies.Add(en);
-            }
-            else if (roll == 2)
-            {
-                Form1.EnemyDreadnought en = new Form1.EnemyDreadnought(FormHandle, FormHandle.p);
-                Conf.enemies.Add(en);
-            }
-            else if (roll == 3)
+            if (roll < 3)
             {
                 Form1.EnemyRifleman er = new Form1.EnemyRifleman(FormHandle, FormHandle.p);
                 Conf.enemies.Add(er);
             }
 
-            if (roll > 195)
+            if (roll > 197)
             {
                 Conf.enemies.Add(new Form1.EnemyLocust(FormHandle, FormHandle.p));
             }

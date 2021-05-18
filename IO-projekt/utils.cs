@@ -55,6 +55,23 @@ namespace IO_projekt
             FpsThread.Start();
         }
 
+        public void StartNewGame()
+        {
+            Conf.ClearAndDisposeAll();
+            p = new Player(this);
+            if (xGamePanel != null)
+                xGamePanel.Dispose();
+            xGamePanel = new FirstArea(this, p);
+            this.Controls.Add(this.xGamePanel);
+            MainTimer.Start();
+            this.Focus();
+            GameOver = false;
+            Pause = false;
+            pauseLabel.Visible = false;
+            hp = 100;
+            UpdateHpLabel();
+        }
+
         public async void NextLevel()
         {
             MainTimer.Stop();
@@ -87,7 +104,7 @@ namespace IO_projekt
 
             await Task.Delay(500);
 
-            Conf.ClearAll();
+            Conf.ClearAndDisposeAll();
             xGamePanel.Visible = false;
             switch (CurrentLevel)
             {

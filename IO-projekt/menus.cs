@@ -24,12 +24,12 @@ namespace IO_projekt
         string[] Selections = { "continue", "exit" };
         int MaxSelection = 1;
         int CurrentSelection = 0;
-
+        
         public PauseMenuPanel(Form1 fh)
         {
             FormHandle = fh;
 
-            
+            MaxSelection = Selections.Length - 1;
 
             this.ColumnCount = 3;
             this.RowCount = 3;
@@ -154,11 +154,11 @@ namespace IO_projekt
 
     public class MainMenuPanel : TableLayoutPanel
     {
-        string[] Selections = { "start", "view score", "exit" };
+        string[] Selections = { "start", "options", "view score", "exit" };
         List<Label> SelectionList;
         Form1 FormHandle;
         int CurrentSelection;
-        int MaxSelection = 2;
+        int MaxSelection = 1;
         public WindowsMediaPlayer menuMedia;
 
         public MainMenuPanel(Form1 fh)
@@ -166,6 +166,7 @@ namespace IO_projekt
             FormHandle = fh;
             SelectionList = new List<Label>();
             CurrentSelection = 0;
+            MaxSelection = Selections.Length - 1;
 
             menuMedia = new WindowsMediaPlayer();
 
@@ -239,9 +240,11 @@ namespace IO_projekt
             {
                 case "start":
                     menuMedia.controls.stop();
+                    menuMedia.close();
                     FormHandle.MainTimer.Start();
                     this.Dispose();
                     FormHandle.Focus();
+                    FormHandle.StartNewGame();
 
                     FormHandle.p.Sprite.Left = this.FormHandle.Width / 2 - FormHandle.p.Sprite.Width / 2;
                     FormHandle.p.Sprite.Top = this.FormHandle.Height + FormHandle.p.Sprite.Height;
@@ -252,6 +255,11 @@ namespace IO_projekt
                     }
 
                     FormHandle.gameMedia.controls.play();
+                    //FormHandle.StartNewGame();
+                    break;
+
+                case "options":
+                    
                     break;
 
                 case "view score":
@@ -307,6 +315,9 @@ namespace IO_projekt
         }
         List<ScorePosition> Scores;
 
+        Label EscLabel;
+        Timer EscLabelTimer;
+
         public ScoreTable(Form1 fh, Panel p)
         {
             StreamWriter sw;
@@ -359,6 +370,23 @@ namespace IO_projekt
             this.Reposition();
 
             this.KeyPress += ScoreTable_KeyPress;
+
+            EscLabel = new Label() { Text="Press esc to quit", Font = MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.Left, BackColor = Color.Transparent };
+            FormHandle.Controls.Add(EscLabel);
+            //this.Controls.Add(EscLabel);
+            //EscLabel.Parent = this;
+            EscLabel.BringToFront();
+
+            EscLabelTimer = new Timer() { Interval=600 };
+            EscLabelTimer.Tick += new EventHandler((object sender, EventArgs e) =>
+                {
+                    if (EscLabel.Visible == true)
+                        EscLabel.Visible = false;
+                    else
+                        EscLabel.Visible = true;
+                }
+            );
+            EscLabelTimer.Start();
         }
 
         private void AddEntry(int score, string name)
@@ -392,6 +420,9 @@ namespace IO_projekt
             if (e.KeyChar == (char)Keys.Escape)
             {
                 parent.Focus();
+                this.EscLabelTimer.Stop();
+                this.EscLabelTimer.Dispose();
+                this.EscLabel.Dispose();
                 this.Dispose();
             }
         }
@@ -446,10 +477,14 @@ namespace IO_projekt
                 File.AppendAllText(@"scores.txt", Convert.ToString(Form1.score) + '-' + PlayerName + '\n');
 
                 this.Dispose();
+                FormHandle.MainMenu = new MainMenuPanel(FormHandle);
+                Conf.ClearAndDisposeAll();
             }
             if (e.KeyChar == (char)Keys.Escape)
             {
                 this.Dispose();
+                FormHandle.MainMenu = new MainMenuPanel(FormHandle);
+                Conf.ClearAndDisposeAll();
             }
             if (e.KeyChar == (char)Keys.Back && PlayerName != "")
             {
