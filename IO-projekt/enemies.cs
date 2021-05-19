@@ -27,6 +27,53 @@ namespace IO_projekt
 
             public abstract void TICK();
             public abstract void GetHit();
+
+            public async void DeathAnim()
+            {
+
+                    try
+                    {
+                        PictureBox expPb = new PictureBox();
+                        expPb.Width = this.Sprite.Width - 10;
+                        expPb.Height = this.Sprite.Height - 10;
+                        expPb.Top = this.Sprite.Top + 5;
+                        expPb.Left = this.Sprite.Left + 5;
+                        expPb.Image = Properties.Resources.ExplosionPic1;
+                        expPb.SizeMode = PictureBoxSizeMode.Zoom;
+                    
+                        this.formHandle.xGamePanel.Invoke(new MethodInvoker(delegate {
+                            formHandle.Controls.Add(expPb);
+                            expPb.BringToFront();
+                        }));
+                    
+                    await Task.Delay(200).ConfigureAwait(false);
+
+                    this.formHandle.xGamePanel.Invoke(new MethodInvoker(delegate {
+                        expPb.Width = this.Sprite.Width + 10;
+                        expPb.Height = this.Sprite.Height + 10;
+                        expPb.Top = this.Sprite.Top - 5;
+                        expPb.Left = this.Sprite.Left - 5;
+                    }));
+
+                    await Task.Delay(200).ConfigureAwait(false);
+                    
+                    this.formHandle.xGamePanel.Invoke(new MethodInvoker(delegate {
+                            formHandle.Controls.Remove(expPb);
+                            expPb.Dispose();
+                        }));
+                    }
+                    catch (System.InvalidOperationException e)
+                    {
+                    Console.WriteLine("Catched Exception!");
+                    }
+               
+                
+            }
+
+            public void PlayDeathAnim()
+            {
+                new Thread(DeathAnim).Start();
+            }
         }
 
         public class Bonus : Enemy
@@ -236,6 +283,7 @@ namespace IO_projekt
                     Console.WriteLine("score = " + score);
                     this.formHandle.Pointslbl.Text = Convert.ToString(score);
                     alreadyShot = true;
+                    this.PlayDeathAnim();
                 }                
             }            
         }        
@@ -323,6 +371,7 @@ namespace IO_projekt
                     Console.WriteLine("score = " + score);
                     this.formHandle.Pointslbl.Text = Convert.ToString(score);
                     alreadyShot = true;
+                    PlayDeathAnim();
                 }                
             }
 
@@ -559,6 +608,7 @@ namespace IO_projekt
                 if (HitPoints <= 0)
                 {
                     this.Sprite.Dispose();
+                    PlayDeathAnim();
                     this.hpBar.Dispose();
                     Conf.EnemiesToRemove.Add(this);
                     score += 50 * scoreMultiplier;
@@ -657,6 +707,7 @@ namespace IO_projekt
                     if(!alreadyShot)
                     {
                         this.Sprite.Dispose();
+                        PlayDeathAnim();
                         Conf.EnemiesToRemove.Add(this);
                         score += scoreMultiplier;
                         Console.WriteLine("score = " + score);
@@ -741,9 +792,134 @@ namespace IO_projekt
             public override void GetHit()
             {
                 Sprite.Dispose();
+                PlayDeathAnim();
                 Conf.EnemiesToRemove.Add(this);               
             }
         }
-    }
 
+        public class EnemyExploder : Enemy
+        {
+            public EnemyExploder(Form1 fh, Player ph)
+            {
+                formHandle = fh;
+                this.p = ph;
+                EnemySpeed = 1;
+                alreadyShot = false;
+
+                Sprite = new PictureBox();
+                Sprite.Width = Sprite.Height = 60;
+                Sprite.Image = Properties.Resources.EnemyExploderPic;
+                Sprite.BackColor = Color.Transparent;
+                Sprite.SizeMode = PictureBoxSizeMode.Zoom;
+
+                Random r = new Random();
+                Sprite.Top = -Sprite.Height;
+                Sprite.Left = r.Next(0, formHandle.Width - Sprite.Width);
+
+                formHandle.xGamePanel.Controls.Add(Sprite);
+            }
+
+            public override void TICK()
+            {
+                if (alreadyShot == true)
+                {
+                    Sprite.Dispose();
+                    PlayDeathAnim();
+                    SpawnFragments();
+                    Conf.EnemiesToRemove.Add(this);
+                }
+                Sprite.Top += EnemySpeed;
+            }
+
+            public override void GetHit()
+            {
+                alreadyShot = true;
+            }
+
+            public void SpawnFragments()
+            {
+                Conf.DelayedAddList.Add(new Fragment(formHandle, p, this, "nw"));
+                Conf.DelayedAddList.Add(new Fragment(formHandle, p, this, "ne"));
+                Conf.DelayedAddList.Add(new Fragment(formHandle, p, this, "sw"));
+                Conf.DelayedAddList.Add(new Fragment(formHandle, p, this, "se"));
+            }
+
+            public class Fragment : Enemy
+            {
+                EnemyExploder hExploder;
+                string Direction;
+
+                public Fragment(Form1 fh, Player ph, EnemyExploder eh, string d)
+                {
+                    formHandle = fh;
+                    this.p = ph;
+                    EnemySpeed = 10;
+                    hExploder = eh;
+                    Direction = d;
+
+                    Sprite = new PictureBox();
+                    Sprite.Width = Sprite.Height = 20;
+                    Sprite.Image = Properties.Resources.ExploderFragmentPic;
+                    Sprite.BackColor = Color.Transparent;
+                    Sprite.SizeMode = PictureBoxSizeMode.Zoom;
+
+                    Random r = new Random();
+                    Sprite.Top = hExploder.Sprite.Top + hExploder.Sprite.Height/2 - Sprite.Height/2;
+                    Sprite.Left = hExploder.Sprite.Left + hExploder.Sprite.Width / 2 - Sprite.Width / 2;
+
+                    formHandle.xGamePanel.Controls.Add(Sprite);
+                }
+
+                public override void TICK()
+                {
+                    switch (Direction)
+                    {
+                        case "nw":
+                            Sprite.Left -= EnemySpeed;
+                            Sprite.Top -= EnemySpeed;
+                            break;
+
+                        case "ne":
+                            Sprite.Left += EnemySpeed;
+                            Sprite.Top -= EnemySpeed;
+                            break;
+
+                        case "sw":
+                            Sprite.Left -= EnemySpeed;
+                            Sprite.Top += EnemySpeed;
+                            break;
+
+                        case "se":
+                            Sprite.Left += EnemySpeed;
+                            Sprite.Top += EnemySpeed;
+                            break;                        
+                    }
+
+                    if (Sprite.Bounds.IntersectsWith(hExploder.p.Sprite.Bounds))
+                    {
+                        hp -= 15;
+                        p.HPCheck();
+                        formHandle.UpdateHpLabel();
+                        Conf.EnemiesToRemove.Add(this);
+                        this.Sprite.Dispose();
+                    }
+
+                    if (Sprite.Top > formHandle.Height
+                        || Sprite.Top < 0
+                        || Sprite.Left > formHandle.Width
+                        || Sprite.Left < 0
+                      )
+                    {
+                        Conf.EnemiesToRemove.Add(this);
+                        this.Sprite.Dispose();
+                    }
+                }
+
+                public override void GetHit()
+                {
+                    return;
+                }
+            }
+        }
+    }
 }

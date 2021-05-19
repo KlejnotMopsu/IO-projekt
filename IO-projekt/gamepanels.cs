@@ -248,4 +248,80 @@ namespace IO_projekt
             }
         }
     }
+
+    public class ThirdArea : GamePanel
+    {
+        Random Seed;
+
+        public ThirdArea(Form1 fh, Form1.Player ph)
+        {
+            FormHandle = fh;
+            PlayerHandle = ph;
+
+            Seed = new Random();
+
+            Conf.ClearAndDisposeAll();
+
+            this.BackColor = ColorTranslator.FromHtml("#2e040c");
+            FormHandle.BackColor = ColorTranslator.FromHtml("#2e040c");
+
+            this.Controls.Add(PlayerHandle.Sprite);
+
+            this.Width = FormHandle.Width;
+            this.Height = FormHandle.Height;
+
+            this.SpawnPlayer();
+        }
+
+        public override void TICK()
+        {
+            int roll = Seed.Next(200);
+
+            if (roll < 3)
+            {
+                Form1.EnemyStandard er = new Form1.EnemyStandard(FormHandle, FormHandle.p);
+                Conf.enemies.Add(er);
+            }
+
+            if (roll > 197)
+            {
+                Conf.enemies.Add(new Form1.EnemyExploder(FormHandle, FormHandle.p));
+            }
+
+            roll = Seed.Next(750);
+            if (roll == 0)
+            {
+                Form1.Bonus b = new Form1.Bonus(FormHandle, FormHandle.p);
+                Conf.bonuses.Add(b);
+            }
+
+            if (Form1.scoreMultiplierTime > 0)
+            {
+                FormHandle.scoreMultiplierTimeLabel.Text = "Double Points: " + (Form1.scoreMultiplierTime / 1000.0).ToString() + "s";
+                Form1.scoreMultiplierTime -= FormHandle.MainTimer.Interval;
+            }
+            else
+            {
+                Form1.scoreMultiplier = 1;
+                FormHandle.scoreMultiplierTimeLabel.Visible = false;
+                if (FormHandle.doubleShootTimeLabel.Visible)
+                {
+                    FormHandle.doubleShootTimeLabel.Top = Form1.labelTopOffset;
+                }
+            }
+
+            if (FormHandle.p.DoubleShootTime > 0)
+            {
+                FormHandle.doubleShootTimeLabel.Text = "Double Shoot: " + (FormHandle.p.DoubleShootTime / 1000.0).ToString() + "s";
+            }
+            else
+            {
+                FormHandle.doubleShootTimeLabel.Visible = false;
+                if (FormHandle.scoreMultiplierTimeLabel.Visible)
+                {
+                    FormHandle.scoreMultiplierTimeLabel.Top = Form1.labelTopOffset;
+                }
+            }
+        }
+    }
 }

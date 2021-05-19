@@ -112,7 +112,7 @@ namespace IO_projekt
             this.ScoreView.HideSelection = false;
             this.ScoreView.LabelWrap = false;
             this.ScoreView.Location = new System.Drawing.Point(15, 315);
-            this.ScoreView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ScoreView.Margin = new System.Windows.Forms.Padding(2);
             this.ScoreView.Name = "ScoreView";
             this.ScoreView.Size = new System.Drawing.Size(234, 298);
             this.ScoreView.TabIndex = 7;
@@ -171,8 +171,6 @@ namespace IO_projekt
         }
 
         #endregion
-
-        private System.Windows.Forms.Label pauseLabel;
         private System.Windows.Forms.Label Scorelbl;
         private System.Windows.Forms.Label Pointslbl;
         private Label Lifelbl;
@@ -180,6 +178,7 @@ namespace IO_projekt
         private ListView ScoreView;
         public Label scoreMultiplierTimeLabel;
         public Label doubleShootTimeLabel;
+        public Label pauseLabel;
     }
 }
 

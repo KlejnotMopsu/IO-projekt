@@ -305,6 +305,8 @@ namespace IO_projekt
 
             //Console.WriteLine("zara wywyolam tika");
             xGamePanel.TICK();
+
+            Conf.DelayedAdd();
         }
 
         private void Exitbtn_Click(object sender, EventArgs e)

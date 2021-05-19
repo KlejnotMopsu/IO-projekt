@@ -167,8 +167,10 @@ namespace IO_projekt
             SelectionList = new List<Label>();
             CurrentSelection = 0;
             MaxSelection = Selections.Length - 1;
+            FormHandle.pauseLabel.Visible = false;
 
             menuMedia = new WindowsMediaPlayer();
+            FormHandle.gameMedia.controls.stop();
 
             File.WriteAllBytes(@"sound\menu_music.wav", Form1.StreamToByteArr(Properties.Resources.menu_music));
             menuMedia.URL = @"sound\menu_music.wav";

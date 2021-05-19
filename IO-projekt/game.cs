@@ -19,6 +19,7 @@ namespace IO_projekt
         public static List<Form1.EnemyBullet> enemyBullets = new List<Form1.EnemyBullet>();
         public static List<Form1.Bonus> bonuses = new List<Form1.Bonus>();
 
+        public static List<object> DelayedAddList = new List<object>();
         public static void ClearAll()
         {
             enemies.Clear();
@@ -95,6 +96,19 @@ namespace IO_projekt
             {
                 bonuses.Remove(bl);
             }
+        }
+
+        public static void DelayedAdd()
+        {
+            foreach (object o in DelayedAddList)
+            {
+                Form1.EnemyExploder.Fragment ef = o as Form1.EnemyExploder.Fragment;
+                if (ef != null)
+                {
+                    enemies.Add(ef);
+                }
+            }
+            DelayedAddList.Clear();
         }
     }
 

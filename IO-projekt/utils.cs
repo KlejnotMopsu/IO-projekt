@@ -114,9 +114,17 @@ namespace IO_projekt
                         this.Controls.Add(xGamePanel);
                     }
                     break;
+
                 case 2:
                     {
                         xGamePanel = new SecondArea(this, p);
+                        this.Controls.Add(xGamePanel);
+                    }
+                    break;
+
+                case 3:
+                    {
+                        xGamePanel = new ThirdArea(this, p);
                         this.Controls.Add(xGamePanel);
                     }
                     break;

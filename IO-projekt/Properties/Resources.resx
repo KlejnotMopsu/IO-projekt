@@ -208,4 +208,13 @@
   <data name="scorebg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\graphic\scorebg.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ExplosionPic1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ExplosionPic1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EnemyExploderPic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EnemyExploderPic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ExploderFragmentPic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ExploderFragmentPic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
