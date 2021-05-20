@@ -30,7 +30,6 @@ namespace IO_projekt
 
             public async void DeathAnim()
             {
-
                     try
                     {
                         PictureBox expPb = new PictureBox();
@@ -210,7 +209,7 @@ namespace IO_projekt
             public override void GetHit()
             {
                 this.Sprite.Dispose();
-                Conf.BonusesToRemove.Add(this);
+                Conf.BonusesToRemove.Add(this);                
             }            
         }
 
@@ -277,6 +276,11 @@ namespace IO_projekt
             {
                 if (!alreadyShot)
                 {
+                    if (new Random().Next(0, 10) > 5 || true)
+                    {
+                        Conf.bonuses2.Add(new Credit(formHandle, this, new Random().Next(0, 50)));
+                    }
+
                     this.Sprite.Dispose();
                     Conf.EnemiesToRemove.Add(this);
                     score += scoreMultiplier;

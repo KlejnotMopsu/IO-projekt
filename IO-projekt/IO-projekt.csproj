@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="bonuses.cs" />
     <Compile Include="enemies.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -264,6 +265,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ExploderFragmentPic.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CreditPic.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

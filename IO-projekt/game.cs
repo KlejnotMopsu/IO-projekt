@@ -18,6 +18,7 @@ namespace IO_projekt
         public static List<Form1.Player.Bullet> bullets = new List<Form1.Player.Bullet>();
         public static List<Form1.EnemyBullet> enemyBullets = new List<Form1.EnemyBullet>();
         public static List<Form1.Bonus> bonuses = new List<Form1.Bonus>();
+        public static List<Bonus2> bonuses2 = new List<Bonus2>();
 
         public static List<object> DelayedAddList = new List<object>();
         public static void ClearAll()
@@ -60,6 +61,12 @@ namespace IO_projekt
                 b.Sprite.Dispose();
             }
             bonuses.Clear();
+
+            foreach (Bonus2 b in bonuses2)
+            {
+                b.Sprite.Dispose();
+            }
+            bonuses2.Clear();
         }
 
         public static List<Form1.Enemy> EnemiesToRemove = new List<Form1.Enemy>();

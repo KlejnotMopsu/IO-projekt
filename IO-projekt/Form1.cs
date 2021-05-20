@@ -290,6 +290,11 @@ namespace IO_projekt
             }
             Conf.CollectBonuses();
 
+            foreach (Bonus2 b in Conf.bonuses2)
+            {
+                b.TICK();
+            }
+
             if (score > 50)
             {
                 level = 4;
@@ -413,6 +418,11 @@ namespace IO_projekt
 
         public void UpdateHpLabel()
         {
+            if (hp < 0)
+            {
+                this.LifePointslbl.Text = Convert.ToString(0);
+                return;
+            }
             this.LifePointslbl.Text = Convert.ToString(hp);
         }
 

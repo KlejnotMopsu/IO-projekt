@@ -497,4 +497,29 @@ namespace IO_projekt
              NameLabel.Text = PlayerName;
         }
     }
+
+    public class ShopPanel : Panel
+    {
+        Form1 hForm;
+        TableLayoutPanel TablePanel;
+
+        public ShopPanel(Form1 fh)
+        {
+            hForm = fh;
+            TablePanel = new TableLayoutPanel();
+
+            this.TablePanel.ColumnCount = 3;
+            this.TablePanel.RowCount = 3;
+
+            this.TablePanel.ColumnStyles.Clear();
+            this.TablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
+            this.TablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
+            this.TablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
+        }
+
+        private void AddSelection(string s, Image img)
+        {
+
+        }
+    }
 }
