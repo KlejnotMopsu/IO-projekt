@@ -220,4 +220,10 @@
   <data name="CreditPic" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CreditPic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="TempPic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TempPic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShopSelectionMarkerPic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ShopSelectionMarkerPic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

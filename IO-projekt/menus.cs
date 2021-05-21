@@ -172,6 +172,9 @@ namespace IO_projekt
             menuMedia = new WindowsMediaPlayer();
             FormHandle.gameMedia.controls.stop();
 
+            BackgroundImage = Properties.Resources.menubg;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+
             File.WriteAllBytes(@"sound\menu_music.wav", Form1.StreamToByteArr(Properties.Resources.menu_music));
             menuMedia.URL = @"sound\menu_music.wav";
             menuMedia.settings.setMode("loop", true);
@@ -184,9 +187,9 @@ namespace IO_projekt
             //this.BackColor = Color.DarkRed;
 
             this.ColumnStyles.Clear();
-            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
-            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
-            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
+            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
+            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40));
+            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
 
             foreach (string s in Selections)
             {
@@ -220,18 +223,18 @@ namespace IO_projekt
 
         public void Reposition()
         {
-            this.Width = this.FormHandle.Width / 2;
-            this.Height = this.FormHandle.Height / 2;
+            this.Width = this.FormHandle.Width;
+            this.Height = this.FormHandle.Height;
 
-            this.Top = this.FormHandle.Height / 2 - this.Height / 2;
-            this.Left = this.FormHandle.Width / 2 - this.Width / 2;
+            this.Top = 0;
+            this.Left = 0;
         }
 
         private void AddSelection(string text)
         {
             this.Controls.Add(new Label() { Text=Selections[this.RowCount-1], Font=MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.None }, 1, this.RowCount-1);
-            this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 0, this.RowCount - 1);
-            this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 2, this.RowCount - 1);
+            this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Right }, 0, this.RowCount - 1);
+            this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Left }, 2, this.RowCount - 1);
 
             this.RowCount++;
         }
@@ -498,28 +501,183 @@ namespace IO_projekt
         }
     }
 
-    public class ShopPanel : Panel
+    public class ShopPanel : FlowLayoutPanel
     {
-        Form1 hForm;
-        TableLayoutPanel TablePanel;
+        Form1 FormHandle;
+        TableLayoutPanel ShopTablePanel;
+        TableLayoutPanel ShopTabTable;
+        Label ExitLabel;
+        PictureBox ShopSelectionMarker;
+
+        string[] ShopTabs = { "Bonuses", "Upgrades" };
+        ShopEntry[] Selections = { new ShopEntry("Shield", Properties.Resources.bonusShield),
+                                   new ShopEntry("Scatter Gun", Properties.Resources.TempPic),
+                                   new ShopEntry("Rocket", Properties.Resources.TempPic),
+                                   new ShopEntry("Rate of Fire+", Properties.Resources.TempPic),
+                                   new ShopEntry("Bullet Speed", Properties.Resources.TempPic) };
+        int CurrentRowSelection = 0;
+        int CurrentColumnSelection = 0;
+        int MaxRowSelection;
+        int MaxColumnSelection;
+
+        private class ShopEntry
+        {
+            public string Name;
+            public Image Img;
+            public ShopEntry(string n, Image i)
+            {
+                Name = n;
+                Img = i;
+            }
+        }
 
         public ShopPanel(Form1 fh)
         {
-            hForm = fh;
-            TablePanel = new TableLayoutPanel();
+            this.FlowDirection = FlowDirection.TopDown;
 
-            this.TablePanel.ColumnCount = 3;
-            this.TablePanel.RowCount = 3;
+            FormHandle = fh;
+            ShopTablePanel = new TableLayoutPanel();
+            //TablePanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
+            BackColor = Color.DarkBlue;
+            ExitLabel = new Label() { Text = "Exit Shop", Font = MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize = true, Anchor=AnchorStyles.None };
 
-            this.TablePanel.ColumnStyles.Clear();
-            this.TablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
-            this.TablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
-            this.TablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
+            ShopTabTable = new TableLayoutPanel();
+            ShopTabTable.ColumnStyles.Clear();
+            ShopTabTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
+            ShopTabTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 34));
+            ShopTabTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
+            ShopTabTable.RowCount = 1;
+            ShopTabTable.ColumnCount = 3;
+            ShopTabTable.Controls.Add(new PictureBox() { Width = Height = 40, BackColor = Color.Transparent, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 0, 0);
+            ShopTabTable.Controls.Add(new Label() { Text = "Bonuses", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, 0);
+            ShopTabTable.Controls.Add(new PictureBox() { Width = Height = 40, BackColor = Color.Transparent, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 2, 0);
+
+            //((PictureBox)ShopTabTable.GetControlFromPosition(0, 0)).Image = Properties.Resources.RightSelectionMarker;
+            ((PictureBox)ShopTabTable.GetControlFromPosition(2, 0)).Image = Properties.Resources.LeftSelectionMarker;
+
+            this.Reposition();
+
+            this.ShopTablePanel.ColumnCount = 4;
+            this.ShopTablePanel.RowCount = 1;
+
+            this.ShopTablePanel.ColumnStyles.Clear();
+            this.ShopTablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
+            this.ShopTablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
+            this.ShopTablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
+            this.ShopTablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
+
+            this.ShopTablePanel.RowStyles.Clear();
+            this.ShopTablePanel.RowStyles.Add(new RowStyle(SizeType.Absolute, this.ShopTablePanel.Width / this.ShopTablePanel.ColumnCount));
+
+
+            AddSelections();
+            this.ShopTablePanel.RowCount++;
+
+
+            FormHandle.Controls.Add(this);
+            this.Controls.Add(ShopTabTable);
+            this.Controls.Add(ShopTablePanel);
+            this.Controls.Add(ExitLabel);
+            this.BringToFront();
+
+            this.KeyPress += ShopPanel_KeyPress;
+            this.Focus();
+
+            this.SetSelection();
+        }
+        public void Reposition()
+        {
+            this.Width = FormHandle.Width;
+            this.Height = FormHandle.Height;
+
+            ShopTabTable.Width = this.Width;
+
+            this.ShopTablePanel.Width = this.Width;
+            this.ShopTablePanel.Height = this.Height - ExitLabel.Height - ShopTabTable.Height - 100;
+        }
+        private void AddSelections()
+        {
+            int ColumnIndex = 0;
+            foreach (ShopEntry s in Selections)
+            {
+
+                Console.WriteLine($"Adding selection {s.Name}");
+
+                this.ShopTablePanel.Controls.Add(new PictureBox()
+                {
+                    Image = s.Img,
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    BackColor = Color.Transparent,
+                    Width = 70,
+                    Height = 70,
+                    Anchor = AnchorStyles.None
+                },
+                    ColumnIndex++, this.ShopTablePanel.RowCount - 1);
+
+                if (ColumnIndex >= 4)
+                {
+                    ColumnIndex = 0;
+                    this.ShopTablePanel.RowCount++;
+                    this.ShopTablePanel.RowStyles.Add(new RowStyle(SizeType.Absolute, this.ShopTablePanel.Width / this.ShopTablePanel.ColumnCount));
+                }
+            }
+
+            MaxColumnSelection = this.ShopTablePanel.ColumnCount - 1;
+            MaxRowSelection = this.ShopTablePanel.RowCount - 1;
         }
 
-        private void AddSelection(string s, Image img)
+        private void SetSelection()
         {
+            ShopSelectionMarker = new PictureBox() { Image=Properties.Resources.ShopSelectionMarkerPic, BackColor=Color.Transparent };
+            ShopSelectionMarker.Parent = ShopTablePanel.GetControlFromPosition(CurrentColumnSelection, CurrentRowSelection);
+            ShopSelectionMarker.Width = ShopSelectionMarker.Parent.Width;
+            ShopSelectionMarker.Height = ShopSelectionMarker.Parent.Height;
+        }
 
+        private void ChangeTab()
+        {
+            
+            ((Label)ShopTabTable.GetControlFromPosition(1,0)).Text = ShopTabs[1];
+            ((PictureBox)ShopTabTable.GetControlFromPosition(0, 0)).Image.Dispose(); ;
+            ((PictureBox)ShopTabTable.GetControlFromPosition(2, 0)).Image = Properties.Resources.LeftSelectionMarker;
+        }
+
+        private void ShopPanel_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            switch (e.KeyChar)
+            {
+                case (char)Keys.Left:
+                    {
+                        if (CurrentColumnSelection > 0)
+                            CurrentColumnSelection--;
+                    }
+                    break;
+
+                case (char)Keys.Right:
+                    {
+                        if (CurrentColumnSelection < MaxColumnSelection)
+                            CurrentColumnSelection++;
+                    }
+                    break;
+
+                case (char)Keys.Down:
+                    {
+                        if (CurrentRowSelection < MaxRowSelection)
+                            CurrentRowSelection++;
+                    }
+                    break;
+
+                case (char)Keys.Up:
+                    {
+                        if (CurrentColumnSelection > 0)
+                            CurrentColumnSelection--;
+                    }
+                    break;
+            }
+
+            CurrentRowSelection = 0;
+            CurrentColumnSelection = 2;
+            SetSelection();
         }
     }
 }

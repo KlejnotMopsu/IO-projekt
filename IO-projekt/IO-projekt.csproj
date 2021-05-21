@@ -269,5 +269,11 @@
   <ItemGroup>
     <None Include="Resources\CreditPic.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TempPic.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ShopSelectionMarkerPic.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
