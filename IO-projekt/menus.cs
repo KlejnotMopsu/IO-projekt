@@ -506,11 +506,13 @@ namespace IO_projekt
         Form1 FormHandle;
         TableLayoutPanel ShopTablePanel;
         TableLayoutPanel ShopTabTable;
+        TableLayoutPanel BottomPanel;
         Label ExitLabel;
+        Label ItemDescriptionLabel;
         PictureBox ShopSelectionMarker;
 
         string[] ShopTabs = { "Bonuses", "Upgrades" };
-        ShopEntry[] Selections = { new ShopEntry("Shield", Properties.Resources.bonusShield),
+        ShopEntry[] BonusesSelections = { new ShopEntry("Shield", Properties.Resources.bonusShield),
                                    new ShopEntry("Scatter Gun", Properties.Resources.TempPic),
                                    new ShopEntry("Rocket", Properties.Resources.TempPic),
                                    new ShopEntry("Rate of Fire+", Properties.Resources.TempPic),
@@ -540,6 +542,7 @@ namespace IO_projekt
             //TablePanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
             BackColor = Color.DarkBlue;
             ExitLabel = new Label() { Text = "Exit Shop", Font = MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize = true, Anchor=AnchorStyles.None };
+            ItemDescriptionLabel = new Label() { Text = "abc", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None };
 
             ShopTabTable = new TableLayoutPanel();
             ShopTabTable.ColumnStyles.Clear();
@@ -551,6 +554,16 @@ namespace IO_projekt
             ShopTabTable.Controls.Add(new PictureBox() { Width = Height = 40, BackColor = Color.Transparent, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 0, 0);
             ShopTabTable.Controls.Add(new Label() { Text = "Bonuses", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, 0);
             ShopTabTable.Controls.Add(new PictureBox() { Width = Height = 40, BackColor = Color.Transparent, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 2, 0);
+
+            BottomPanel = new TableLayoutPanel();
+            BottomPanel.RowCount = 1;
+            BottomPanel.ColumnCount = 2;
+            BottomPanel.ColumnStyles.Clear();
+            BottomPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+            BottomPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+            BottomPanel.Controls.Add(ExitLabel, 0, 0);
+            BottomPanel.Controls.Add(ItemDescriptionLabel, 1, 0);
+            BottomPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
 
             //((PictureBox)ShopTabTable.GetControlFromPosition(0, 0)).Image = Properties.Resources.RightSelectionMarker;
             ((PictureBox)ShopTabTable.GetControlFromPosition(2, 0)).Image = Properties.Resources.LeftSelectionMarker;
@@ -565,10 +578,11 @@ namespace IO_projekt
             this.ShopTablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
             this.ShopTablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
             this.ShopTablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
+            ShopTablePanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
 
             this.ShopTablePanel.RowStyles.Clear();
             this.ShopTablePanel.RowStyles.Add(new RowStyle(SizeType.Absolute, this.ShopTablePanel.Width / this.ShopTablePanel.ColumnCount));
-
+            ShopTabTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
 
             AddSelections();
             this.ShopTablePanel.RowCount++;
@@ -577,13 +591,16 @@ namespace IO_projekt
             FormHandle.Controls.Add(this);
             this.Controls.Add(ShopTabTable);
             this.Controls.Add(ShopTablePanel);
-            this.Controls.Add(ExitLabel);
+            this.Controls.Add(BottomPanel);
+            //this.Controls.Add(ExitLabel);
             this.BringToFront();
 
-            this.KeyPress += ShopPanel_KeyPress;
+            this.KeyDown += ShopPanel_KeyPress;
             this.Focus();
 
             this.SetSelection();
+            Console.WriteLine($"Max COL: {MaxColumnSelection}");
+            Console.WriteLine($"Max ROW: {MaxRowSelection}");
         }
         public void Reposition()
         {
@@ -591,14 +608,19 @@ namespace IO_projekt
             this.Height = FormHandle.Height;
 
             ShopTabTable.Width = this.Width;
+            BottomPanel.Width = this.Width;
 
             this.ShopTablePanel.Width = this.Width;
-            this.ShopTablePanel.Height = this.Height - ExitLabel.Height - ShopTabTable.Height - 100;
+            this.ShopTablePanel.Height = this.Height - BottomPanel.Height - ShopTabTable.Height - 50;
+
+            this.ShopTablePanel.RowStyles.Clear();
+            for (int i=0; i<this.ShopTablePanel.RowCount; i++)
+                this.ShopTablePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
         }
         private void AddSelections()
         {
             int ColumnIndex = 0;
-            foreach (ShopEntry s in Selections)
+            foreach (ShopEntry s in BonusesSelections)
             {
 
                 Console.WriteLine($"Adding selection {s.Name}");
@@ -620,6 +642,10 @@ namespace IO_projekt
                     this.ShopTablePanel.RowCount++;
                     this.ShopTablePanel.RowStyles.Add(new RowStyle(SizeType.Absolute, this.ShopTablePanel.Width / this.ShopTablePanel.ColumnCount));
                 }
+
+                this.ShopTablePanel.RowStyles.Clear();
+                for (int i=0; i<this.ShopTablePanel.RowCount; i++)
+                    this.ShopTablePanel.RowStyles.Add(new RowStyle(SizeType.Absolute, this.ShopTablePanel.Width / this.ShopTablePanel.ColumnCount));
             }
 
             MaxColumnSelection = this.ShopTablePanel.ColumnCount - 1;
@@ -628,10 +654,12 @@ namespace IO_projekt
 
         private void SetSelection()
         {
-            ShopSelectionMarker = new PictureBox() { Image=Properties.Resources.ShopSelectionMarkerPic, BackColor=Color.Transparent };
-            ShopSelectionMarker.Parent = ShopTablePanel.GetControlFromPosition(CurrentColumnSelection, CurrentRowSelection);
-            ShopSelectionMarker.Width = ShopSelectionMarker.Parent.Width;
-            ShopSelectionMarker.Height = ShopSelectionMarker.Parent.Height;
+            Control hParent = ShopTablePanel.GetControlFromPosition(CurrentColumnSelection, CurrentRowSelection);
+            ShopSelectionMarker?.Dispose();
+            ShopSelectionMarker = new PictureBox() { Image=Properties.Resources.ShopSelectionMarkerPic, BackColor=Color.Transparent, SizeMode=PictureBoxSizeMode.Zoom };
+            ShopSelectionMarker.Parent = hParent;
+            ShopSelectionMarker.Width = hParent.Width;
+            ShopSelectionMarker.Height = hParent.Height;
         }
 
         private void ChangeTab()
@@ -642,41 +670,39 @@ namespace IO_projekt
             ((PictureBox)ShopTabTable.GetControlFromPosition(2, 0)).Image = Properties.Resources.LeftSelectionMarker;
         }
 
-        private void ShopPanel_KeyPress(object sender, KeyPressEventArgs e)
+        private void ShopPanel_KeyPress(object sender, KeyEventArgs e)
         {
-            switch (e.KeyChar)
-            {
-                case (char)Keys.Left:
-                    {
-                        if (CurrentColumnSelection > 0)
-                            CurrentColumnSelection--;
-                    }
-                    break;
 
-                case (char)Keys.Right:
+                if(e.KeyCode == Keys.Left)
+                {
+                    if (CurrentColumnSelection > 0 && ShopTablePanel.GetControlFromPosition(CurrentColumnSelection - 1, CurrentRowSelection) != null)
+                        CurrentColumnSelection--;
+                }
+                    
+
+                if (e.KeyCode == Keys.Right)
                     {
-                        if (CurrentColumnSelection < MaxColumnSelection)
+//                Console.WriteLine("Pressing right in shop...");
+                        if (CurrentColumnSelection < MaxColumnSelection && ShopTablePanel.GetControlFromPosition(CurrentColumnSelection + 1, CurrentRowSelection) != null)
                             CurrentColumnSelection++;
                     }
-                    break;
+                    
 
-                case (char)Keys.Down:
+                 if (e.KeyCode == Keys.Down)
                     {
-                        if (CurrentRowSelection < MaxRowSelection)
+                        if (CurrentRowSelection < MaxRowSelection && ShopTablePanel.GetControlFromPosition(CurrentColumnSelection, CurrentRowSelection + 1) != null)
                             CurrentRowSelection++;
                     }
-                    break;
 
-                case (char)Keys.Up:
+
+                if (e.KeyCode == Keys.Up)
                     {
-                        if (CurrentColumnSelection > 0)
-                            CurrentColumnSelection--;
+                        if (CurrentRowSelection > 0 && ShopTablePanel.GetControlFromPosition(CurrentColumnSelection, CurrentRowSelection - 1) != null)
+                            CurrentRowSelection--;
                     }
-                    break;
-            }
 
-            CurrentRowSelection = 0;
-            CurrentColumnSelection = 2;
+            Console.WriteLine($"COL: {CurrentColumnSelection}");
+            Console.WriteLine($"ROW: {CurrentRowSelection}");
             SetSelection();
         }
     }
