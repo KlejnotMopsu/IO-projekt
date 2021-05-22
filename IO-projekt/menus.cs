@@ -659,12 +659,25 @@ namespace IO_projekt
 
         private void SetSelection()
         {
-            Control hParent = ShopTablePanel.GetControlFromPosition(CurrentColumnSelection, CurrentRowSelection);
             ShopSelectionMarker?.Dispose();
-            ShopSelectionMarker = new PictureBox() { Image=Properties.Resources.ShopSelectionMarkerPic, BackColor=Color.Transparent, SizeMode=PictureBoxSizeMode.Zoom };
-            ShopSelectionMarker.Parent = hParent;
-            ShopSelectionMarker.Width = hParent.Width;
-            ShopSelectionMarker.Height = hParent.Height;
+            ShopSelectionMarker = new PictureBox() { Image=Properties.Resources.ShopSelectionMarkerPic, BackColor=Color.Transparent, SizeMode=PictureBoxSizeMode.StretchImage };
+
+            if (CurrentRowSelection <= -1)
+                ShopSelectionMarker.Parent = ShopTabTable.GetControlFromPosition(1, 0);
+            else if(CurrentRowSelection > MaxRowSelection)
+                ShopSelectionMarker.Parent = BottomPanel.GetControlFromPosition(0, 0);
+            else
+                ShopSelectionMarker.Parent = ShopTablePanel.GetControlFromPosition(CurrentColumnSelection, CurrentRowSelection); ;
+
+            ShopSelectionMarker.Width = ShopSelectionMarker.Parent.Width;
+            ShopSelectionMarker.Height = ShopSelectionMarker.Parent.Height;
+
+            if (CurrentRowSelection >= 0 && CurrentRowSelection <= MaxRowSelection)
+            {
+                ItemDescriptionLabel.Text = BonusesSelections[CurrentColumnSelection + this.ShopTablePanel.ColumnCount * CurrentRowSelection].Name;
+            }
+            else
+                ItemDescriptionLabel.Text = "";
         }
 
         private void ChangeTab()
@@ -678,37 +691,69 @@ namespace IO_projekt
         private void ShopPanel_KeyPress(object sender, KeyEventArgs e)
         {
 
-                if(e.KeyCode == Keys.Left)
+            if(e.KeyCode == Keys.Left && CurrentRowSelection >= 0 && CurrentRowSelection <= MaxRowSelection)
+            {
+                if (CurrentColumnSelection > 0 && ShopTablePanel.GetControlFromPosition(CurrentColumnSelection - 1, CurrentRowSelection) != null)
                 {
-                    if (CurrentColumnSelection > 0 && ShopTablePanel.GetControlFromPosition(CurrentColumnSelection - 1, CurrentRowSelection) != null)
-                        CurrentColumnSelection--;
+                    CurrentColumnSelection--;
+                    SetSelection();
                 }
-                    
+            }
+                
 
-                if (e.KeyCode == Keys.Right)
-                    {
-//                Console.WriteLine("Pressing right in shop...");
-                        if (CurrentColumnSelection < MaxColumnSelection && ShopTablePanel.GetControlFromPosition(CurrentColumnSelection + 1, CurrentRowSelection) != null)
-                            CurrentColumnSelection++;
-                    }
-                    
+            if (e.KeyCode == Keys.Right && CurrentRowSelection >= 0 && CurrentRowSelection <= MaxRowSelection)
+            {
+                if (CurrentColumnSelection < MaxColumnSelection && ShopTablePanel.GetControlFromPosition(CurrentColumnSelection + 1, CurrentRowSelection) != null)
+                {
+                    CurrentColumnSelection++;
+                    SetSelection();
+                }
+            }
+                
 
-                 if (e.KeyCode == Keys.Down)
-                    {
-                        if (CurrentRowSelection < MaxRowSelection && ShopTablePanel.GetControlFromPosition(CurrentColumnSelection, CurrentRowSelection + 1) != null)
-                            CurrentRowSelection++;
-                    }
+            if (e.KeyCode == Keys.Down)
+            {
+                if (CurrentRowSelection > MaxRowSelection)
+                    return;
+
+                if (CurrentRowSelection+1 > MaxRowSelection)
+                {
+                    CurrentRowSelection++;
+                    SetSelection();
+                    return;
+                }
+
+                if (CurrentRowSelection < MaxRowSelection + 1 && ShopTablePanel.GetControlFromPosition(CurrentColumnSelection, CurrentRowSelection + 1) != null)
+                {
+                    CurrentRowSelection++;
+                    SetSelection();
+                }
+            }
 
 
-                if (e.KeyCode == Keys.Up)
-                    {
-                        if (CurrentRowSelection > 0 && ShopTablePanel.GetControlFromPosition(CurrentColumnSelection, CurrentRowSelection - 1) != null)
-                            CurrentRowSelection--;
-                    }
+            if (e.KeyCode == Keys.Up)
+            {
+                if (CurrentRowSelection <= -1)
+                    return;
+
+                if (CurrentRowSelection-1 < 0)
+                {
+                    CurrentRowSelection--;
+                    SetSelection();
+                    return;
+                }
+
+
+                if (CurrentRowSelection > 0 && ShopTablePanel.GetControlFromPosition(CurrentColumnSelection, CurrentRowSelection - 1) != null)
+                {
+                    CurrentRowSelection--;
+                    SetSelection();
+                }
+            }
 
             Console.WriteLine($"COL: {CurrentColumnSelection}");
             Console.WriteLine($"ROW: {CurrentRowSelection}");
-            SetSelection();
+            
         }
     }
 }
