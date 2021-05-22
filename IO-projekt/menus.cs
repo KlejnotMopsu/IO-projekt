@@ -181,15 +181,16 @@ namespace IO_projekt
             menuMedia.settings.volume = 7;
 
             this.ColumnCount = 3;
-            this.RowCount = 1;
+            this.RowCount = 2;
+            
 
             //this.BackgroundImage = Properties.Resources.menubg ;
             //this.BackColor = Color.DarkRed;
 
             this.ColumnStyles.Clear();
-            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
             this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40));
-            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
+            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+            this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40));
 
             foreach (string s in Selections)
             {
@@ -207,18 +208,22 @@ namespace IO_projekt
             this.Reposition();
 
             this.KeyDown += MainMenu_KeyDown;
+
+            //this.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
+            this.RowStyles.Clear();
+            this.RowStyles.Add(new RowStyle(SizeType.Absolute, 400));
         }
 
         private void SetSelection()
         {
-            for (int i = 0; i < this.RowCount - 1; i++)
+            for (int i = 0; i < this.RowCount - 2; i++)
             {
-                ((PictureBox)this.GetControlFromPosition(0, i)).Image = null;
-                ((PictureBox)this.GetControlFromPosition(2, i)).Image = null;
+                ((PictureBox)this.GetControlFromPosition(0, i+1)).Image = null;
+                ((PictureBox)this.GetControlFromPosition(2, i+1)).Image = null;
             }
 
-            ((PictureBox)this.GetControlFromPosition(0, CurrentSelection)).Image = Properties.Resources.LeftSelectionMarker;
-            ((PictureBox)this.GetControlFromPosition(2, CurrentSelection)).Image = Properties.Resources.RightSelectionMarker;
+            ((PictureBox)this.GetControlFromPosition(0, CurrentSelection+1)).Image = Properties.Resources.LeftSelectionMarker;
+            ((PictureBox)this.GetControlFromPosition(2, CurrentSelection+1)).Image = Properties.Resources.RightSelectionMarker;
         }
 
         public void Reposition()
@@ -232,7 +237,7 @@ namespace IO_projekt
 
         private void AddSelection(string text)
         {
-            this.Controls.Add(new Label() { Text=Selections[this.RowCount-1], Font=MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.None }, 1, this.RowCount-1);
+            this.Controls.Add(new Label() { Text=Selections[this.RowCount-2], Font=MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.None }, 1, this.RowCount-1);
             this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Right }, 0, this.RowCount - 1);
             this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Left }, 2, this.RowCount - 1);
 
