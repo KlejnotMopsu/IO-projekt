@@ -172,7 +172,7 @@ namespace IO_projekt
             menuMedia = new WindowsMediaPlayer();
             FormHandle.gameMedia.controls.stop();
 
-            BackgroundImage = Properties.Resources.menubg2;
+            
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 
             File.WriteAllBytes(@"sound\menu_music.wav", Form1.StreamToByteArr(Properties.Resources.menu_music));
@@ -191,6 +191,7 @@ namespace IO_projekt
             this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40));
             this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
             this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40));
+            
 
             foreach (string s in Selections)
             {
@@ -212,6 +213,8 @@ namespace IO_projekt
             //this.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
             this.RowStyles.Clear();
             this.RowStyles.Add(new RowStyle(SizeType.Absolute, 400));
+            
+            BackgroundImage = Properties.Resources.menubg2;
         }
 
         private void SetSelection()
