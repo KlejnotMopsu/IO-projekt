@@ -275,5 +275,8 @@
   <ItemGroup>
     <None Include="Resources\ShopSelectionMarkerPic.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\spaceshipspr.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

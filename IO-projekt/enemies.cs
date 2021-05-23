@@ -412,8 +412,7 @@ namespace IO_projekt
                 this.p = p;
 
                 BulletSpeed = 20;
-                DistanceTravelled = 0;
-                MaxDistanceTravelled = f.Height + 2000;
+                DistanceTravelled = 0;                
 
                 if(type == "straight")
                 {
@@ -426,6 +425,11 @@ namespace IO_projekt
                 else if(type == "right")
                 {
                     BulletSpeedHorizontal = 10;
+                }
+                else if(type == "aim")
+                {
+                    int m = Math.Abs(p.Sprite.Top + p.Sprite.Height / 2 - y) / BulletSpeed;
+                    BulletSpeedHorizontal = (p.Sprite.Left + p.Sprite.Width / 2 - x) / m;
                 }
                 else
                 {
@@ -445,6 +449,8 @@ namespace IO_projekt
                 Sprite.Width = Sprite.Height = 10;
                 Sprite.BackColor = Color.Red;
                 Sprite.Location = new Point(x - this.Sprite.Width / 2, y);
+
+                MaxDistanceTravelled = f.Height - this.Sprite.Top;
 
                 f.xGamePanel.Controls.Add(this.Sprite);
             }
@@ -627,6 +633,194 @@ namespace IO_projekt
                     phase = 2;
                     DistanceTravelled -= 250;
                     EnemySpeed = 5;
+                }
+            }
+        }
+
+        public class EnemySecondBoss : Enemy
+        {
+            int HitPoints;
+            int MaxHitPoints = 25;
+            int phase;
+            public System.Windows.Forms.Timer BossShootTimer;
+            PictureBox hpBar;
+            bool alive;
+            int MinDistanceTravel;
+            String side;
+            SecondArea sa;
+            int shootType;
+            int EnemyVerticalSpeed;
+
+            public EnemySecondBoss(Form1 f, Player p, String side)
+            {
+                HitPoints = MaxHitPoints;                
+                DistanceTravelled = 0;
+                MaxDistanceTravel = 300;
+                MinDistanceTravel = 300;
+                phase = 1;
+                alive = true;
+                this.side = side;                
+
+                this.p = p;
+                formHandle = f;
+                sa = formHandle.xGamePanel as SecondArea;
+
+                Sprite = new PictureBox();
+                Sprite.Image = Properties.Resources.boss2;
+                Sprite.Width = 108;
+                Sprite.Height = 172;
+                Sprite.BackColor = Color.Transparent;
+                Sprite.SizeMode = PictureBoxSizeMode.Zoom;               
+
+                if(side == "right")
+                {
+                    Sprite.Location = new Point(f.Width + 100, f.Height / 2 - 250);
+                    EnemySpeed = 5;
+                    EnemyVerticalSpeed = 1;
+                    shootType = 0;
+                }
+                else if(side == "left")
+                {
+                    Sprite.Location = new Point(-100 - this.Sprite.Width, f.Height / 2 - 250);
+                    EnemySpeed = -5;
+                    EnemyVerticalSpeed = -1;
+                    shootType = 1;
+                }                
+
+                hpBar = new PictureBox();
+                hpBar.Width = Sprite.Width;
+                hpBar.Height = 10;
+                hpBar.BackColor = Color.Red;
+                hpBar.BorderStyle = BorderStyle.Fixed3D;
+                hpBar.Location = new Point(Sprite.Left, Sprite.Top - (hpBar.Height + 5));
+
+                BossShootTimer = new System.Windows.Forms.Timer();
+                BossShootTimer.Tick += new System.EventHandler(BossShootTimer_Tick);
+                BossShootTimer.Interval = 1500;
+                BossShootTimer.Start();
+
+                f.xGamePanel.Controls.Add(this.Sprite);
+                f.xGamePanel.Controls.Add(this.hpBar);
+            }
+
+            private void BossShootTimer_Tick(object sender, EventArgs e)
+            {
+                if (!Pause && shootType == 0)
+                {
+                    EnemyBullet b = new EnemyBullet(formHandle, p, this, "aim", this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y + this.Sprite.Height);
+                    Conf.enemyBullets.Add(b);
+                    shootType = 1;
+                }
+                else if (!Pause && shootType == 1)
+                {
+                    EnemyBullet b1 = new EnemyBullet(formHandle, p, this, "left", this.Sprite.Location.X + this.Sprite.Width / 4, this.Sprite.Location.Y + this.Sprite.Height);
+                    Conf.enemyBullets.Add(b1);
+                    EnemyBullet b2 = new EnemyBullet(formHandle, p, this, "right", this.Sprite.Location.X + this.Sprite.Width / 2 + this.Sprite.Width / 4, this.Sprite.Location.Y + this.Sprite.Height);
+                    Conf.enemyBullets.Add(b2);
+                    shootType = 0;
+                }
+
+                if (!Pause)
+                {
+                    using (SoundPlayer sp = new SoundPlayer(Properties.Resources.laser))
+                    {
+                        sp.Play();
+                    }
+                }
+            }
+
+            public override void TICK()
+            {
+                if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
+                {
+                    Conf.EnemiesToRemove.Add(this);
+                    BossShootTimer.Stop();
+
+                    hp = 0;
+
+                    Console.WriteLine("hp = " + hp);
+                    this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
+                    p.HPCheck();
+                }
+
+                DistanceTravelled += Math.Abs(EnemySpeed);
+
+                this.Sprite.Left -= this.EnemySpeed;
+                this.hpBar.Left -= this.EnemySpeed;
+
+                Console.WriteLine(Conf.bullets.Count);
+                
+                if(phase == 1)
+                {
+                    if (side == "right" && DistanceTravelled > MinDistanceTravel && (this.Sprite.Left <= formHandle.Width / 2 || this.Sprite.Left + this.Sprite.Width >= formHandle.Width))
+                    {
+                        this.EnemySpeed = -(this.EnemySpeed);
+                        DistanceTravelled = 0;
+                    }
+                    else if (side == "left" && DistanceTravelled > MinDistanceTravel && (this.Sprite.Left <= 0 || this.Sprite.Left + this.Sprite.Width >= formHandle.Width / 2))
+                    {
+                        this.EnemySpeed = -(this.EnemySpeed);
+                        DistanceTravelled = 0;
+                    }
+                }
+                else if (phase == 2 && (this.Sprite.Left <= 0 || this.Sprite.Left + this.Sprite.Width >= formHandle.Width))
+                {
+                    sa.leftBoss.phase = 3;
+                    sa.rightBoss.phase = 3;
+                    sa.leftBoss.EnemySpeed = -5;
+                    sa.rightBoss.EnemySpeed = 5;
+                    sa.leftBoss.DistanceTravelled = 0;
+                    sa.rightBoss.DistanceTravelled = 0;
+                }
+                else if (phase == 3)
+                {
+                    this.Sprite.Top -= this.EnemyVerticalSpeed;
+                    this.hpBar.Top -= this.EnemyVerticalSpeed;
+
+                    if(DistanceTravelled > MinDistanceTravel && this.Sprite.Left <= 0 || this.Sprite.Left + this.Sprite.Width >= formHandle.Width)
+                    {
+                        this.EnemySpeed = -(this.EnemySpeed);
+                        DistanceTravelled = 0;
+                    }
+                    else if(DistanceTravelled > MinDistanceTravel && this.Sprite.Left + this.Sprite.Width / 2 >= formHandle.Width / 2 - 5 && this.Sprite.Left + this.Sprite.Width / 2 <= formHandle.Width / 2 + 5)
+                    {
+                        this.EnemyVerticalSpeed = -(this.EnemyVerticalSpeed);
+                        DistanceTravelled = 0;
+                    }
+                }
+            }
+
+            public override void GetHit()
+            {
+                HitPoints--;
+                hpBar.Width = Sprite.Width * HitPoints / MaxHitPoints;
+                hpBar.Left = Sprite.Left + (Sprite.Width - hpBar.Width) / 2;
+                formHandle.xGamePanel.Controls.Remove(this.hpBar);
+                formHandle.xGamePanel.Controls.Add(this.hpBar);
+
+                if (HitPoints <= 0)
+                {
+                    this.Sprite.Dispose();
+                    PlayDeathAnim();
+                    this.hpBar.Dispose();
+                    Conf.EnemiesToRemove.Add(this);                    
+                    Console.WriteLine("score = " + score);
+                    formHandle.Pointslbl.Text = Convert.ToString(score);
+                    BossShootTimer.Stop();
+                    alive = false;
+
+                    if(sa.leftBoss.alive == false && sa.rightBoss.alive == false)
+                    {
+                        score += 50 * scoreMultiplier;
+                        formHandle.NextLevel();
+                    }
+                }
+                else if(phase == 1 && HitPoints < MaxHitPoints / 2)
+                {                    
+                    sa.leftBoss.phase = 2;
+                    sa.rightBoss.phase = 2;
+                    sa.leftBoss.EnemySpeed = 5;
+                    sa.rightBoss.EnemySpeed = -5;
                 }
             }
         }

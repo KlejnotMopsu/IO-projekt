@@ -111,6 +111,7 @@ namespace IO_projekt
             return;
 
             xGamePanel.Visible = false;
+
             switch (CurrentLevel)
             {
                 case 1:

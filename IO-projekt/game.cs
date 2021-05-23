@@ -267,7 +267,7 @@ namespace IO_projekt
                     b.DistanceTravelled = b.MaxDistanceTravel;
                     formHandle.Controls.Remove(b.Sprite);
                 }
-                Conf.bonuses.Clear();
+                Conf.bonuses.Clear();                                
             }            
 
             public class Bullet
@@ -339,6 +339,16 @@ namespace IO_projekt
                 if(hp <= 0)
                 {
                     Sprite.Top = -1000;
+
+                    if (CurrentLevel == 2)
+                    {
+                        SecondArea sa = formHandle.xGamePanel as SecondArea;
+                        if (sa.phase == 3)
+                        {
+                            sa.leftBoss.BossShootTimer.Stop();
+                            sa.rightBoss.BossShootTimer.Stop();
+                        }
+                    }
 
                     formHandle.showGameOver("Game Over");                    
                 }
@@ -470,9 +480,6 @@ namespace IO_projekt
             }           
         }
 
-
-
-        //Zmiana - Artur
         public class Star : IDisposable
         {
             public PictureBox Sprite;
@@ -506,7 +513,6 @@ namespace IO_projekt
                 this.formHandle.Controls.Remove(this.Sprite);
             }
         }
-
 
         public void SrvField()
         {
