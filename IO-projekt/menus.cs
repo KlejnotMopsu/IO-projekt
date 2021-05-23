@@ -172,7 +172,7 @@ namespace IO_projekt
             menuMedia = new WindowsMediaPlayer();
             FormHandle.gameMedia.controls.stop();
 
-            BackgroundImage = Properties.Resources.menubg;
+            BackgroundImage = Properties.Resources.menubg2;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 
             File.WriteAllBytes(@"sound\menu_music.wav", Form1.StreamToByteArr(Properties.Resources.menu_music));
