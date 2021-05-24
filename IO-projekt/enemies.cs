@@ -625,7 +625,7 @@ namespace IO_projekt
                     Console.WriteLine("score = " + score);
                     formHandle.Pointslbl.Text = Convert.ToString(score);
 
-                    formHandle.NextLevel();
+                    formHandle.BringUpShop();
                     BossShootTimer.Stop();
                 }
                 else if(HitPoints <= MaxHitPoints/2 && phase == 1)
@@ -812,7 +812,7 @@ namespace IO_projekt
                     if(sa.leftBoss.alive == false && sa.rightBoss.alive == false)
                     {
                         score += 50 * scoreMultiplier;
-                        formHandle.NextLevel();
+                        formHandle.BringUpShop();
                     }
                 }
                 else if(phase == 1 && HitPoints < MaxHitPoints / 2)

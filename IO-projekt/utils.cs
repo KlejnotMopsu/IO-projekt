@@ -104,10 +104,7 @@ namespace IO_projekt
 
             await Task.Delay(500);
 
-            Conf.ClearAndDisposeAll();
-
-            new ShopPanel(this);
-            return;
+            Conf.ClearAndDisposeAll();        
 
             xGamePanel.Visible = false;
 
@@ -143,6 +140,11 @@ namespace IO_projekt
 
             BlackScreen.Dispose();
             MainTimer.Start();
+        }
+
+        public void BringUpShop()
+        {
+            new ShopPanel(this);
         }
     }
 }

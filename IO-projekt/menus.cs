@@ -531,6 +531,8 @@ namespace IO_projekt
                                    new ShopEntry("Bullet Speed", Properties.Resources.TempPic, 150)
             };
 
+        ShopEntry[] CurrentSelections;
+
         int CurrentRowSelection = 0;
         int CurrentColumnSelection = 0;
         int MaxRowSelection;
@@ -547,6 +549,19 @@ namespace IO_projekt
                 Img = i;
                 Cost = c;
             }
+        }
+
+        private async void BringUp()
+        {
+            FormHandle.MainTimer.Stop();
+
+            this.Left = -this.Width;
+            while (this.Left < 0)
+            {
+                await System.Threading.Tasks.Task.Delay(10);
+                this.Left += 20;
+            }
+            this.Left = 0;
         }
 
         public ShopPanel(Form1 fh)
@@ -620,6 +635,8 @@ namespace IO_projekt
             this.SetSelection();
             Console.WriteLine($"Max COL: {MaxColumnSelection}");
             Console.WriteLine($"Max ROW: {MaxRowSelection}");
+
+            this.BringUp();
         }
         public void Reposition()
         {
@@ -726,10 +743,51 @@ namespace IO_projekt
 
             if (CurrentRowSelection >= 0 && CurrentRowSelection <= MaxRowSelection)
             {
-                ItemDescriptionLabel.Text = $"{BonusesSelections[CurrentColumnSelection + this.ShopTablePanel.ColumnCount * CurrentRowSelection].Name}\n${BonusesSelections[CurrentColumnSelection + this.ShopTablePanel.ColumnCount * CurrentRowSelection].Cost}";
+                ItemDescriptionLabel.Text = $"{CurrentSelections[CurrentColumnSelection + this.ShopTablePanel.ColumnCount * CurrentRowSelection].Name}\n${CurrentSelections[CurrentColumnSelection + this.ShopTablePanel.ColumnCount * CurrentRowSelection].Cost}";
             }
             else
                 ItemDescriptionLabel.Text = "";
+        }
+
+        private void ConfirmSelection()
+        {
+            if (CurrentRowSelection < 0)
+                return;
+
+            if (CurrentRowSelection > MaxRowSelection)
+            {
+                FormHandle.NextLevel();
+                this.Dispose();
+                
+                return;
+            }
+
+            ShopEntry SelectedItem = CurrentSelections[CurrentColumnSelection + this.ShopTablePanel.ColumnCount * CurrentRowSelection];
+
+            if (FormHandle.p.Credits < SelectedItem.Cost)
+            {
+                return;
+            }
+
+            switch (SelectedItem.Name)
+            {
+                case "10 HP":
+                    Form1.hp += 10;
+                    break;
+
+                case "Shield":
+                    if (FormHandle.p.shielded)
+                        return;
+                    else
+                    {
+                        FormHandle.p.Credits -= SelectedItem.Cost;
+                        FormHandle.p.shielded = true;
+                    }
+                    break;
+            }
+
+            FormHandle.p.Credits -= SelectedItem.Cost;
+            CreditsLabel.Text = $"Credits:\n${FormHandle.p.Credits}";
         }
 
         private void ChangeTab()
@@ -748,6 +806,8 @@ namespace IO_projekt
 
         private void LoadBonusesTab()
         {
+            CurrentSelections = BonusesSelections;
+
             ((Label)ShopTabTable.GetControlFromPosition(1, 0)).Text = "Bonuses";
             ((PictureBox)ShopTabTable.GetControlFromPosition(0, 0)).Image = null;
             ((PictureBox)ShopTabTable.GetControlFromPosition(2, 0)).Image = Properties.Resources.LeftSelectionMarker;
@@ -763,6 +823,8 @@ namespace IO_projekt
         }
         private void LoadUpgradesTab()
         {
+            CurrentSelections = UpgradesSelections;
+
             ((Label)ShopTabTable.GetControlFromPosition(1, 0)).Text = "Upgrades";
             ((PictureBox)ShopTabTable.GetControlFromPosition(0, 0)).Image = Properties.Resources.RightSelectionMarker;
             ((PictureBox)ShopTabTable.GetControlFromPosition(2, 0)).Image = null;
@@ -779,7 +841,10 @@ namespace IO_projekt
 
         private void ShopPanel_KeyPress(object sender, KeyEventArgs e)
         {
-
+            if (e.KeyCode == Keys.Enter)
+            {
+                ConfirmSelection();
+            }
 
             if(e.KeyCode == Keys.Left && CurrentRowSelection <= MaxRowSelection)
             {
