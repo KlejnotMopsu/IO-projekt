@@ -153,7 +153,6 @@ namespace IO_projekt
                 this.SpawnPlayer();
 
                 phase = 1;
-                score = 100;
             }
 
             public override void TICK()
