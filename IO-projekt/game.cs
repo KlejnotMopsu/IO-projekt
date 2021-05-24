@@ -20,6 +20,7 @@ namespace IO_projekt
         public static List<Form1.Bonus> bonuses = new List<Form1.Bonus>();
         public static List<Bonus2> bonuses2 = new List<Bonus2>();
 
+
         public static List<object> DelayedAddList = new List<object>();
         public static void ClearAll()
         {
@@ -341,6 +342,8 @@ namespace IO_projekt
                 if(hp <= 0)
                 {
                     Sprite.Top = -1000;
+
+                    formHandle.LifePointslbl.Text = Convert.ToString(0);
 
                     if (CurrentLevel == 2)
                     {

@@ -77,7 +77,7 @@
     </Compile>
     <Compile Include="game.cs" />
     <Compile Include="gamepanels.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="menus.cs" />
     <Compile Include="Pointslbl\Text.cs" />
@@ -278,6 +278,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="graphic\spaceshipspr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\boss2Incoming.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\boss2Inc.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

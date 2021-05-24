@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Threading;
+using System.Media;
+using WMPLib;
+using System.IO;
 
 namespace IO_projekt
 {  
@@ -127,6 +130,8 @@ namespace IO_projekt
             public int phase;
             public EnemySecondBoss leftBoss;
             public EnemySecondBoss rightBoss;
+            int riflemanCount;
+            WindowsMediaPlayer bossMedia;
 
             public SecondArea(Form1 fh, Form1.Player ph)
             {
@@ -155,23 +160,35 @@ namespace IO_projekt
                 if (phase == 1)
                 {
                     int roll = Seed.Next(200);
+                    riflemanCount = 0;
 
-                    if (roll < 3)
-                    {
-                        Form1.EnemyRifleman er = new Form1.EnemyRifleman(FormHandle, FormHandle.p);
-                        Conf.enemies.Add(er);
-                    }
-
-                    if (roll > 197)
-                    {
-                        Conf.enemies.Add(new Form1.EnemyLocust(FormHandle, FormHandle.p));
-                    }
-                    if (roll > 198)
+                    if (roll <= 3)
                     {
                         Conf.enemies.Add(new Meteorite(this, FormHandle.p));
                     }
+                    else if (roll <= 5)
+                    {
+                        Conf.enemies.Add(new Form1.EnemyLocust(FormHandle, FormHandle.p));
+                    }
+                    else if (roll <= 7)
+                    {                                                
+                        Conf.enemies.Add(new Form1.EnemyRifleman(FormHandle, FormHandle.p));
+                    }
 
-                    roll = Seed.Next(750);
+                    foreach(Enemy e in Conf.enemies)
+                    {
+                        if(e is Form1.EnemyRifleman)
+                        {
+                            riflemanCount++;
+                            break;
+                        }
+                    }
+                    if(riflemanCount == 0)
+                    {
+                        Conf.enemies.Add(new Form1.EnemyRifleman(FormHandle, FormHandle.p));
+                    }
+
+                    roll = Seed.Next(600);
                     if (roll == 0)
                     {
                         Form1.Bonus b = new Form1.Bonus(FormHandle, FormHandle.p);
@@ -185,6 +202,12 @@ namespace IO_projekt
                     Conf.enemies.Add(leftBoss);
                     Conf.enemies.Add(rightBoss);
                     phase = 3;
+
+                    bossMedia = new WindowsMediaPlayer();
+                    File.WriteAllBytes(@"sound\boss2Inc.wav", StreamToByteArr(Properties.Resources.boss2Inc));
+                    bossMedia.URL = @"sound\boss2Inc.wav";
+                    bossMedia.settings.volume = 5;
+                    bossMedia.controls.play();
                 }
 
                 if (Form1.scoreMultiplierTime > 0)
