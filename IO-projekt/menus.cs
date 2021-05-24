@@ -517,17 +517,18 @@ namespace IO_projekt
         TableLayoutPanel BottomPanel;
         Label ExitLabel;
         Label ItemDescriptionLabel;
+        Label CreditsLabel;
         PictureBox ShopSelectionMarker;
 
         string[] ShopTabs = { "Bonuses", "Upgrades" };
-        ShopEntry[] BonusesSelections = { new ShopEntry("Shield", Properties.Resources.bonusShield),
-                                   new ShopEntry("Scatter Gun", Properties.Resources.TempPic),
-                                   new ShopEntry("Rocket", Properties.Resources.TempPic),
-                                   new ShopEntry("10 HP", Properties.Resources.bonusHP),
-                                   new ShopEntry("Bullet Speed", Properties.Resources.TempPic) };
+        ShopEntry[] BonusesSelections = { new ShopEntry("Shield", Properties.Resources.bonusShield, 200),
+                                   new ShopEntry("Scatter Gun", Properties.Resources.TempPic, 1000),
+                                   new ShopEntry("Rocket", Properties.Resources.TempPic, 250),
+                                   new ShopEntry("10 HP", Properties.Resources.bonusHP, 100),
+                                   new ShopEntry("Bullet Speed", Properties.Resources.TempPic, 150) };
 
-        ShopEntry[] UpgradesSelections = {new ShopEntry("Rate of Fire+", Properties.Resources.TempPic),
-                                   new ShopEntry("Bullet Speed", Properties.Resources.TempPic)
+        ShopEntry[] UpgradesSelections = {new ShopEntry("Rate of Fire+", Properties.Resources.TempPic, 175),
+                                   new ShopEntry("Bullet Speed", Properties.Resources.TempPic, 150)
             };
 
         int CurrentRowSelection = 0;
@@ -539,10 +540,12 @@ namespace IO_projekt
         {
             public string Name;
             public Image Img;
-            public ShopEntry(string n, Image i)
+            public int Cost;
+            public ShopEntry(string n, Image i, int c)
             {
                 Name = n;
                 Img = i;
+                Cost = c;
             }
         }
 
@@ -552,10 +555,11 @@ namespace IO_projekt
 
             FormHandle = fh;
             ShopTablePanel = new TableLayoutPanel();
-            //TablePanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
+
             BackColor = Color.DarkBlue;
             ExitLabel = new Label() { Text = "Exit Shop", Font = MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize = true, Anchor=AnchorStyles.None };
-            ItemDescriptionLabel = new Label() { Text = "abc", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None };
+            ItemDescriptionLabel = new Label() { Text = "abc", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter };
+            CreditsLabel = new Label() { Text = $"Credits:\n${FormHandle.p.Credits}", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None, TextAlign=ContentAlignment.MiddleCenter };
 
             ShopTabTable = new TableLayoutPanel();
             ShopTabTable.ColumnStyles.Clear();
@@ -570,13 +574,15 @@ namespace IO_projekt
 
             BottomPanel = new TableLayoutPanel();
             BottomPanel.RowCount = 1;
-            BottomPanel.ColumnCount = 2;
+            BottomPanel.ColumnCount = 3;
             BottomPanel.ColumnStyles.Clear();
-            BottomPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
-            BottomPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+            BottomPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
+            BottomPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 34));
+            BottomPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
             BottomPanel.Controls.Add(ExitLabel, 0, 0);
-            BottomPanel.Controls.Add(ItemDescriptionLabel, 1, 0);
-            BottomPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
+            BottomPanel.Controls.Add(CreditsLabel, 1, 0);
+            BottomPanel.Controls.Add(ItemDescriptionLabel, 2, 0);
+            //BottomPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
 
             //((PictureBox)ShopTabTable.GetControlFromPosition(0, 0)).Image = Properties.Resources.RightSelectionMarker;
             ((PictureBox)ShopTabTable.GetControlFromPosition(2, 0)).Image = Properties.Resources.LeftSelectionMarker;
@@ -591,11 +597,11 @@ namespace IO_projekt
             this.ShopTablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
             this.ShopTablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
             this.ShopTablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
-            ShopTablePanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
+            //ShopTablePanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
 
             this.ShopTablePanel.RowStyles.Clear();
             this.ShopTablePanel.RowStyles.Add(new RowStyle(SizeType.Absolute, this.ShopTablePanel.Width / this.ShopTablePanel.ColumnCount));
-            ShopTabTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
+            //ShopTabTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
 
             LoadBonusesTab();
             this.ShopTablePanel.RowCount++;
@@ -645,8 +651,8 @@ namespace IO_projekt
                     Image = s.Img,
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BackColor = Color.Transparent,
-                    Width = 70,
-                    Height = 70,
+                    Width = 150,
+                    Height = 150,
                     Anchor = AnchorStyles.None
                 },
                     ColumnIndex++, this.ShopTablePanel.RowCount - 1);
@@ -720,7 +726,7 @@ namespace IO_projekt
 
             if (CurrentRowSelection >= 0 && CurrentRowSelection <= MaxRowSelection)
             {
-                ItemDescriptionLabel.Text = BonusesSelections[CurrentColumnSelection + this.ShopTablePanel.ColumnCount * CurrentRowSelection].Name;
+                ItemDescriptionLabel.Text = $"{BonusesSelections[CurrentColumnSelection + this.ShopTablePanel.ColumnCount * CurrentRowSelection].Name}\n${BonusesSelections[CurrentColumnSelection + this.ShopTablePanel.ColumnCount * CurrentRowSelection].Cost}";
             }
             else
                 ItemDescriptionLabel.Text = "";
@@ -751,6 +757,9 @@ namespace IO_projekt
 
             AddBonusesSelections();
 
+            CurrentColumnSelection = 0;
+            CurrentRowSelection = 0;
+            SetSelection();
         }
         private void LoadUpgradesTab()
         {
@@ -762,6 +771,10 @@ namespace IO_projekt
                 ShopTablePanel.Controls[0].Dispose();
 
             AddUpgradesSelections();
+
+            CurrentColumnSelection = 0;
+            CurrentRowSelection = 0;
+            SetSelection();
         }
 
         private void ShopPanel_KeyPress(object sender, KeyEventArgs e)

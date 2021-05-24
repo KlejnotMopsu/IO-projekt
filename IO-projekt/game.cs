@@ -129,6 +129,7 @@ namespace IO_projekt
             public Point Position;
 
             int MovementSpeed;
+            public int Credits;
 
             bool IsGunLockOpen;
             public int NeededGunCooldown = 250;
@@ -156,6 +157,7 @@ namespace IO_projekt
             {
                 Console.WriteLine("Player() - f.Width: " + f.Width + "  f.Height: " + f.Height);
 
+                Credits = 0;
                 formHandle = f;
                 Sprite = new PictureBox();
                 Sprite.Height = Sprite.Width = 50;

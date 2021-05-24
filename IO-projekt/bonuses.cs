@@ -60,6 +60,7 @@ namespace IO_projekt
 
         public override void PlayerCollected()
         {
+            FormHandle.p.Credits += Amount;
             Sprite.Dispose();
         }
     }
