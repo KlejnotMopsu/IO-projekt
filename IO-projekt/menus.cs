@@ -240,9 +240,9 @@ namespace IO_projekt
 
         private void AddSelection(string text)
         {
-            this.Controls.Add(new Label() { Text=Selections[this.RowCount-2], Font=MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.None }, 1, this.RowCount-1);
-            this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Right }, 0, this.RowCount - 1);
-            this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Left }, 2, this.RowCount - 1);
+            this.Controls.Add(new Label() { Text=Selections[this.RowCount-2], Font=MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.None, BackColor=Color.Transparent }, 1, this.RowCount-1);
+            this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Right, BackColor = Color.Transparent }, 0, this.RowCount - 1);
+            this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Left, BackColor = Color.Transparent }, 2, this.RowCount - 1);
 
             this.RowCount++;
         }
@@ -384,10 +384,10 @@ namespace IO_projekt
 
             this.KeyPress += ScoreTable_KeyPress;
 
-            EscLabel = new Label() { Text="Press esc to quit", Font = MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.Left, BackColor = Color.Transparent };
-            FormHandle.Controls.Add(EscLabel);
+            EscLabel = new Label() { Text="Press esc to quit", Font = MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.Left };
+            this.FormHandle.Controls.Add(EscLabel);
             //this.Controls.Add(EscLabel);
-            //EscLabel.Parent = this;
+           //EscLabel.Parent = this;
             EscLabel.BringToFront();
 
             EscLabelTimer = new Timer() { Interval=600 };
@@ -523,8 +523,13 @@ namespace IO_projekt
         ShopEntry[] BonusesSelections = { new ShopEntry("Shield", Properties.Resources.bonusShield),
                                    new ShopEntry("Scatter Gun", Properties.Resources.TempPic),
                                    new ShopEntry("Rocket", Properties.Resources.TempPic),
-                                   new ShopEntry("Rate of Fire+", Properties.Resources.TempPic),
+                                   new ShopEntry("10 HP", Properties.Resources.bonusHP),
                                    new ShopEntry("Bullet Speed", Properties.Resources.TempPic) };
+
+        ShopEntry[] UpgradesSelections = {new ShopEntry("Rate of Fire+", Properties.Resources.TempPic),
+                                   new ShopEntry("Bullet Speed", Properties.Resources.TempPic)
+            };
+
         int CurrentRowSelection = 0;
         int CurrentColumnSelection = 0;
         int MaxRowSelection;
@@ -592,7 +597,7 @@ namespace IO_projekt
             this.ShopTablePanel.RowStyles.Add(new RowStyle(SizeType.Absolute, this.ShopTablePanel.Width / this.ShopTablePanel.ColumnCount));
             ShopTabTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
 
-            AddSelections();
+            LoadBonusesTab();
             this.ShopTablePanel.RowCount++;
 
 
@@ -625,8 +630,10 @@ namespace IO_projekt
             for (int i=0; i<this.ShopTablePanel.RowCount; i++)
                 this.ShopTablePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
         }
-        private void AddSelections()
+        private void AddBonusesSelections()
         {
+            this.ShopTablePanel.RowCount = 1;
+
             int ColumnIndex = 0;
             foreach (ShopEntry s in BonusesSelections)
             {
@@ -659,6 +666,42 @@ namespace IO_projekt
             MaxColumnSelection = this.ShopTablePanel.ColumnCount - 1;
             MaxRowSelection = this.ShopTablePanel.RowCount - 1;
         }
+        private void AddUpgradesSelections()
+        {
+            this.ShopTablePanel.RowCount = 1;
+
+            int ColumnIndex = 0;
+            foreach (ShopEntry s in UpgradesSelections)
+            {
+
+                Console.WriteLine($"Adding selection {s.Name}");
+
+                this.ShopTablePanel.Controls.Add(new PictureBox()
+                {
+                    Image = s.Img,
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    BackColor = Color.Transparent,
+                    Width = 70,
+                    Height = 70,
+                    Anchor = AnchorStyles.None
+                },
+                    ColumnIndex++, this.ShopTablePanel.RowCount - 1);
+
+                if (ColumnIndex >= 4)
+                {
+                    ColumnIndex = 0;
+                    this.ShopTablePanel.RowCount++;
+                    this.ShopTablePanel.RowStyles.Add(new RowStyle(SizeType.Absolute, this.ShopTablePanel.Width / this.ShopTablePanel.ColumnCount));
+                }
+
+                this.ShopTablePanel.RowStyles.Clear();
+                for (int i = 0; i < this.ShopTablePanel.RowCount; i++)
+                    this.ShopTablePanel.RowStyles.Add(new RowStyle(SizeType.Absolute, this.ShopTablePanel.Width / this.ShopTablePanel.ColumnCount));
+            }
+
+            MaxColumnSelection = this.ShopTablePanel.ColumnCount - 1;
+            MaxRowSelection = this.ShopTablePanel.RowCount - 1;
+        }
 
         private void SetSelection()
         {
@@ -685,17 +728,54 @@ namespace IO_projekt
 
         private void ChangeTab()
         {
-            
-            ((Label)ShopTabTable.GetControlFromPosition(1,0)).Text = ShopTabs[1];
-            ((PictureBox)ShopTabTable.GetControlFromPosition(0, 0)).Image.Dispose(); ;
+            switch (((Label)ShopTabTable.GetControlFromPosition(1, 0)).Text)
+            {
+                case "Bonuses":
+                    LoadUpgradesTab();
+                    break;
+
+                case "Upgrades":
+                    LoadBonusesTab();
+                    break;
+            }
+        }
+
+        private void LoadBonusesTab()
+        {
+            ((Label)ShopTabTable.GetControlFromPosition(1, 0)).Text = "Bonuses";
+            ((PictureBox)ShopTabTable.GetControlFromPosition(0, 0)).Image = null;
             ((PictureBox)ShopTabTable.GetControlFromPosition(2, 0)).Image = Properties.Resources.LeftSelectionMarker;
+
+            while (ShopTablePanel.Controls.Count > 0)
+                ShopTablePanel.Controls[0].Dispose();
+
+            AddBonusesSelections();
+
+        }
+        private void LoadUpgradesTab()
+        {
+            ((Label)ShopTabTable.GetControlFromPosition(1, 0)).Text = "Upgrades";
+            ((PictureBox)ShopTabTable.GetControlFromPosition(0, 0)).Image = Properties.Resources.RightSelectionMarker;
+            ((PictureBox)ShopTabTable.GetControlFromPosition(2, 0)).Image = null;
+
+            while (ShopTablePanel.Controls.Count > 0)
+                ShopTablePanel.Controls[0].Dispose();
+
+            AddUpgradesSelections();
         }
 
         private void ShopPanel_KeyPress(object sender, KeyEventArgs e)
         {
 
-            if(e.KeyCode == Keys.Left && CurrentRowSelection >= 0 && CurrentRowSelection <= MaxRowSelection)
+
+            if(e.KeyCode == Keys.Left && CurrentRowSelection <= MaxRowSelection)
             {
+                if (CurrentRowSelection < 0)
+                {
+                    ChangeTab();
+                    return;
+                }
+
                 if (CurrentColumnSelection > 0 && ShopTablePanel.GetControlFromPosition(CurrentColumnSelection - 1, CurrentRowSelection) != null)
                 {
                     CurrentColumnSelection--;
@@ -704,8 +784,14 @@ namespace IO_projekt
             }
                 
 
-            if (e.KeyCode == Keys.Right && CurrentRowSelection >= 0 && CurrentRowSelection <= MaxRowSelection)
+            if (e.KeyCode == Keys.Right && CurrentRowSelection <= MaxRowSelection)
             {
+                if (CurrentRowSelection < 0)
+                {
+                    ChangeTab();
+                    return;
+                }
+
                 if (CurrentColumnSelection < MaxColumnSelection && ShopTablePanel.GetControlFromPosition(CurrentColumnSelection + 1, CurrentRowSelection) != null)
                 {
                     CurrentColumnSelection++;

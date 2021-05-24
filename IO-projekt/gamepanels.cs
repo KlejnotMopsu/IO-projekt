@@ -215,7 +215,7 @@ namespace IO_projekt
                     }
                 }
 
-                if (score >= 125 && phase == 1)
+                if (score >= 25 && phase == 1)
                 {
                     phase = 2;
                 }

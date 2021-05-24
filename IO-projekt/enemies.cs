@@ -907,7 +907,7 @@ namespace IO_projekt
                         this.Sprite.Dispose();
                         PlayDeathAnim();
                         Conf.EnemiesToRemove.Add(this);
-                        score += scoreMultiplier;
+                        score += 3 * scoreMultiplier;
                         Console.WriteLine("score = " + score);
                         this.formHandle.Pointslbl.Text = Convert.ToString(score);
                         alreadyShot = true;
@@ -991,6 +991,8 @@ namespace IO_projekt
             {
                 Sprite.Dispose();
                 PlayDeathAnim();
+                score += 2 * scoreMultiplier;
+                this.formHandle.Pointslbl.Text = Convert.ToString(score);
                 Conf.EnemiesToRemove.Add(this);               
             }
         }
