@@ -106,9 +106,9 @@ namespace IO_projekt
 
             Conf.ClearAndDisposeAll();
 
-            new ShopPanel(this);
+            //new ShopPanel(this);
 
-            return;
+            //return;
 
             xGamePanel.Visible = false;
 

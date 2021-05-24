@@ -41,7 +41,7 @@ namespace IO_projekt
         public static int scoreMultiplier = 1;
         public static int scoreMultiplierTime;
         
-        public static int hp = 200;
+        public static int hp = 100;
         public static int level = 1;
         public static int CurrentLevel = 1;
 
@@ -85,6 +85,7 @@ namespace IO_projekt
 
             //gameMedia.controls.play();
             gameMedia.controls.stop();
+
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
             Cursor.Hide();
@@ -240,18 +241,11 @@ namespace IO_projekt
             }
         }
 
-        //Zmiana - Artur
         public void MainTimer_Tick(object sender, EventArgs e)
         {
             FramesInCurrentSecond++;
             p.TICK();
-            /*
-            if (hp <= 0)
-            {
-                MainTimer.Stop();
-                xScoreEntry = new ScoreEntry(this);
-            }
-            */
+
             for (int i = 0; i < StarCount; i++)
             {
                 if (StarArray[i] == null)

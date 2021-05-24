@@ -640,23 +640,25 @@ namespace IO_projekt
         public class EnemySecondBoss : Enemy
         {
             int HitPoints;
-            int MaxHitPoints = 25;
+            int MaxHitPoints = 20;
             int phase;
             public System.Windows.Forms.Timer BossShootTimer;
             PictureBox hpBar;
             bool alive;
-            int MinDistanceTravel;
             String side;
             SecondArea sa;
             int shootType;
             int EnemyVerticalSpeed;
+            int MaxDistaceTravelVertical;
+            int DistanceTravelledVertical;
 
             public EnemySecondBoss(Form1 f, Player p, String side)
             {
                 HitPoints = MaxHitPoints;                
-                DistanceTravelled = 0;
-                MaxDistanceTravel = 300;
-                MinDistanceTravel = 300;
+                DistanceTravelled = 0;                
+                MaxDistanceTravel = f.Width / 4 - 100;
+                MaxDistaceTravelVertical = 2 * MaxDistanceTravel;
+                DistanceTravelledVertical = MaxDistaceTravelVertical / 2;
                 phase = 1;
                 alive = true;
                 this.side = side;                
@@ -674,16 +676,16 @@ namespace IO_projekt
 
                 if(side == "right")
                 {
-                    Sprite.Location = new Point(f.Width + 100, f.Height / 2 - 250);
+                    Sprite.Location = new Point(f.Width + 400, f.Height / 2 - 250);
                     EnemySpeed = 5;
-                    EnemyVerticalSpeed = 1;
+                    EnemyVerticalSpeed = -2;
                     shootType = 0;
                 }
                 else if(side == "left")
                 {
-                    Sprite.Location = new Point(-100 - this.Sprite.Width, f.Height / 2 - 250);
+                    Sprite.Location = new Point(-400 - this.Sprite.Width, f.Height / 2 - 250);
                     EnemySpeed = -5;
-                    EnemyVerticalSpeed = -1;
+                    EnemyVerticalSpeed = 2;
                     shootType = 1;
                 }                
 
@@ -705,28 +707,39 @@ namespace IO_projekt
 
             private void BossShootTimer_Tick(object sender, EventArgs e)
             {
-                if (!Pause && shootType == 0)
+                if(!Pause)
                 {
-                    EnemyBullet b = new EnemyBullet(formHandle, p, this, "aim", this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y + this.Sprite.Height);
-                    Conf.enemyBullets.Add(b);
-                    shootType = 1;
-                }
-                else if (!Pause && shootType == 1)
-                {
-                    EnemyBullet b1 = new EnemyBullet(formHandle, p, this, "left", this.Sprite.Location.X + this.Sprite.Width / 4, this.Sprite.Location.Y + this.Sprite.Height);
-                    Conf.enemyBullets.Add(b1);
-                    EnemyBullet b2 = new EnemyBullet(formHandle, p, this, "right", this.Sprite.Location.X + this.Sprite.Width / 2 + this.Sprite.Width / 4, this.Sprite.Location.Y + this.Sprite.Height);
-                    Conf.enemyBullets.Add(b2);
-                    shootType = 0;
-                }
+                    if (phase == 1)
+                    {
+                        EnemyBullet b1 = new EnemyBullet(formHandle, p, this, "left", this.Sprite.Location.X + this.Sprite.Width / 4, this.Sprite.Location.Y + this.Sprite.Height);
+                        Conf.enemyBullets.Add(b1);
+                        EnemyBullet b2 = new EnemyBullet(formHandle, p, this, "right", this.Sprite.Location.X + this.Sprite.Width / 2 + this.Sprite.Width / 4, this.Sprite.Location.Y + this.Sprite.Height);
+                        Conf.enemyBullets.Add(b2);
+                    }
+                    else
+                    {
+                        if (shootType == 0)
+                        {
+                            EnemyBullet b = new EnemyBullet(formHandle, p, this, "aim", this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y + this.Sprite.Height);
+                            Conf.enemyBullets.Add(b);
+                            shootType = 1;
+                        }
+                        else if (shootType == 1)
+                        {
+                            EnemyBullet b1 = new EnemyBullet(formHandle, p, this, "left", this.Sprite.Location.X + this.Sprite.Width / 4, this.Sprite.Location.Y + this.Sprite.Height);
+                            Conf.enemyBullets.Add(b1);
+                            EnemyBullet b2 = new EnemyBullet(formHandle, p, this, "right", this.Sprite.Location.X + this.Sprite.Width / 2 + this.Sprite.Width / 4, this.Sprite.Location.Y + this.Sprite.Height);
+                            Conf.enemyBullets.Add(b2);
+                            shootType = 0;
+                        }
+                    }
 
-                if (!Pause)
-                {
                     using (SoundPlayer sp = new SoundPlayer(Properties.Resources.laser))
                     {
                         sp.Play();
                     }
-                }
+                }                
+
             }
 
             public override void TICK()
@@ -748,46 +761,52 @@ namespace IO_projekt
                 this.Sprite.Left -= this.EnemySpeed;
                 this.hpBar.Left -= this.EnemySpeed;
 
-                Console.WriteLine(Conf.bullets.Count);
-                
                 if(phase == 1)
                 {
-                    if (side == "right" && DistanceTravelled > MinDistanceTravel && (this.Sprite.Left <= formHandle.Width / 2 || this.Sprite.Left + this.Sprite.Width >= formHandle.Width))
+                    if((side == "right" && this.Sprite.Left <= formHandle.Width / 2) || (side == "left" && this.Sprite.Left + this.Sprite.Width >= formHandle.Width / 2))
                     {
-                        this.EnemySpeed = -(this.EnemySpeed);
-                        DistanceTravelled = 0;
-                    }
-                    else if (side == "left" && DistanceTravelled > MinDistanceTravel && (this.Sprite.Left <= 0 || this.Sprite.Left + this.Sprite.Width >= formHandle.Width / 2))
-                    {
-                        this.EnemySpeed = -(this.EnemySpeed);
+                        phase = 2;
+                        EnemySpeed = -(EnemySpeed);
                         DistanceTravelled = 0;
                     }
                 }
-                else if (phase == 2 && (this.Sprite.Left <= 0 || this.Sprite.Left + this.Sprite.Width >= formHandle.Width))
+                else if(phase == 2)
                 {
-                    sa.leftBoss.phase = 3;
-                    sa.rightBoss.phase = 3;
-                    sa.leftBoss.EnemySpeed = -5;
-                    sa.rightBoss.EnemySpeed = 5;
-                    sa.leftBoss.DistanceTravelled = 0;
-                    sa.rightBoss.DistanceTravelled = 0;
+                    if(DistanceTravelled >= MaxDistanceTravel)
+                    {
+                        EnemySpeed = -(EnemySpeed);
+                        DistanceTravelled = 0;
+                    }
                 }
-                else if (phase == 3)
+                else if(phase == 3)
+                {
+                    if(this.Sprite.Left <= formHandle.Width * 0.25 || this.Sprite.Left >= formHandle.Width * 0.75)
+                    {
+                        sa.leftBoss.phase = sa.rightBoss.phase = 4;
+                        sa.leftBoss.EnemySpeed = -5;
+                        sa.rightBoss.EnemySpeed = 5;
+                        sa.leftBoss.MaxDistanceTravel = sa.rightBoss.MaxDistanceTravel = 2 * MaxDistanceTravel;
+                        sa.leftBoss.DistanceTravelled = sa.rightBoss.DistanceTravelled = 0;
+                    }                    
+                }
+                else if(phase == 4)
                 {
                     this.Sprite.Top -= this.EnemyVerticalSpeed;
                     this.hpBar.Top -= this.EnemyVerticalSpeed;
+                    DistanceTravelledVertical += Math.Abs(EnemySpeed);
 
-                    if(DistanceTravelled > MinDistanceTravel && this.Sprite.Left <= 0 || this.Sprite.Left + this.Sprite.Width >= formHandle.Width)
+                    if (DistanceTravelled >= MaxDistanceTravel)
                     {
-                        this.EnemySpeed = -(this.EnemySpeed);
+                        EnemySpeed = -(EnemySpeed);
                         DistanceTravelled = 0;
                     }
-                    else if(DistanceTravelled > MinDistanceTravel && this.Sprite.Left + this.Sprite.Width / 2 >= formHandle.Width / 2 - 5 && this.Sprite.Left + this.Sprite.Width / 2 <= formHandle.Width / 2 + 5)
+
+                    if(DistanceTravelledVertical >= MaxDistaceTravelVertical)
                     {
-                        this.EnemyVerticalSpeed = -(this.EnemyVerticalSpeed);
-                        DistanceTravelled = 0;
+                        EnemyVerticalSpeed = -(EnemyVerticalSpeed);
+                        DistanceTravelledVertical = 0;
                     }
-                }
+                }                
             }
 
             public override void GetHit()
@@ -815,12 +834,12 @@ namespace IO_projekt
                         formHandle.NextLevel();
                     }
                 }
-                else if(phase == 1 && HitPoints < MaxHitPoints / 2)
+                else if(phase == 2 && HitPoints < MaxHitPoints / 2)
                 {                    
-                    sa.leftBoss.phase = 2;
-                    sa.rightBoss.phase = 2;
+                    sa.leftBoss.phase = sa.rightBoss.phase = 3;                     
                     sa.leftBoss.EnemySpeed = 5;
                     sa.rightBoss.EnemySpeed = -5;
+                    
                 }
             }
         }
@@ -984,6 +1003,7 @@ namespace IO_projekt
                     Conf.EnemiesToRemove.Add(this);
                     hp -= 3;
                     this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
+                    p.HPCheck();
                 }
             }
 
