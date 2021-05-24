@@ -41,7 +41,7 @@ namespace IO_projekt
         public static int scoreMultiplier = 1;
         public static int scoreMultiplierTime;
         
-        public static int hp = 100;
+        public static int hp = 200;
         public static int level = 1;
         public static int CurrentLevel = 1;
 
@@ -308,7 +308,6 @@ namespace IO_projekt
                 level = 2;
             }
 
-            //Console.WriteLine("zara wywyolam tika");
             xGamePanel.TICK();
 
             Conf.DelayedAdd();
@@ -338,6 +337,7 @@ namespace IO_projekt
             p.MoveLeftStop();
             p.MoveUpStop();
             p.MoveDownStop();
+            Cursor.Hide();
         }
 
         public static byte[] StreamToByteArr(Stream input)
