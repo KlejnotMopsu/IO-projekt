@@ -272,7 +272,7 @@ namespace IO_projekt
                     break;
 
                 case "options":
-                    
+                    new OptionsPanel(FormHandle);
                     break;
 
                 case "view score":
@@ -584,7 +584,7 @@ namespace IO_projekt
             ShopTabTable.RowCount = 1;
             ShopTabTable.ColumnCount = 3;
             ShopTabTable.Controls.Add(new PictureBox() { Width = Height = 40, BackColor = Color.Transparent, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 0, 0);
-            ShopTabTable.Controls.Add(new Label() { Text = "Bonuses", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, 0);
+            ShopTabTable.Controls.Add(new Label() { Text = "abc", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, 0);
             ShopTabTable.Controls.Add(new PictureBox() { Width = Height = 40, BackColor = Color.Transparent, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 2, 0);
 
             BottomPanel = new TableLayoutPanel();
@@ -921,6 +921,165 @@ namespace IO_projekt
             Console.WriteLine($"COL: {CurrentColumnSelection}");
             Console.WriteLine($"ROW: {CurrentRowSelection}");
             
+        }
+    }
+
+
+    public class OptionsPanel : FlowLayoutPanel
+    {
+        Form1 FormHandle;
+        TableLayoutPanel TopPanel;
+        TableLayoutPanel MainPanel;
+
+        string[] SoundSelections = { "master", "music", "sounds" };
+        string[] DisplaySelections = { "show fps", "ui scale" };
+        int CurrentSelectionInd = -1;
+
+        Dictionary<string, string[]> OptionsTabs;
+        int CurrentTabInd;
+        int MaxTabInd;
+
+
+        public OptionsPanel(Form1 fh)
+        {
+            FlowDirection = FlowDirection.TopDown;
+
+            FormHandle = fh;
+            OptionsTabs = new Dictionary<string, string[]>();
+            OptionsTabs.Add("sound", SoundSelections);
+            OptionsTabs.Add("display", DisplaySelections);
+            MaxTabInd = 1;
+
+            CurrentTabInd = 0;
+            SetupTables();
+
+            ReloadTab();
+            this.BackColor = Color.Pink;
+            FormHandle.Controls.Add(this);
+            Reposition();
+            KeyDown += OptionsPanel_KeyDown;
+            this.BringToFront();
+            this.Focus();
+        }
+
+        private void SetSelection()
+        {
+                      
+        }
+        private void ReloadTab()
+        {
+            ((Label)TopPanel.GetControlFromPosition(1, 0)).Text = OptionsTabs.Keys.ToArray()[CurrentTabInd];
+
+            if (CurrentTabInd == 0)
+            {
+                ((Label)TopPanel.GetControlFromPosition(0, 0)).Text = "";
+                ((Label)TopPanel.GetControlFromPosition(2, 0)).Text = OptionsTabs.Keys.ToArray()[CurrentTabInd + 1];
+            }
+            else if (CurrentTabInd == MaxTabInd)
+            {
+                ((Label)TopPanel.GetControlFromPosition(0, 0)).Text = OptionsTabs.Keys.ToArray()[CurrentTabInd - 1];
+                ((Label)TopPanel.GetControlFromPosition(2, 0)).Text = "";
+            }
+
+            while (MainPanel.Controls.Count > 0)
+                MainPanel.Controls[0].Dispose();
+            MainPanel.RowCount = 0;
+
+            foreach (string s in OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]])
+            {
+                Console.WriteLine($"Supposedly addin' {s}");
+                AddMainPanelEntry(s);
+            }
+        }
+
+        private void OptionsPanel_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            if (e.KeyCode == Keys.Left)
+            {
+                if (CurrentSelectionInd < 0)
+                {
+                    if (CurrentTabInd > 0)
+                    {
+                        CurrentTabInd--;
+                        ReloadTab();
+                        Reposition();
+                    }
+                }
+            }
+            if (e.KeyCode == Keys.Right)
+            {
+                if (CurrentSelectionInd < 0)
+                {
+                    if (CurrentTabInd < MaxTabInd)
+                    {
+                        CurrentTabInd++;
+                        ReloadTab();
+                        Reposition();
+                    }
+                }
+            }
+            if (e.KeyCode == Keys.Up)
+            {
+
+            }
+            if (e.KeyCode == Keys.Down)
+            {
+
+            }
+        }
+
+        private void Reposition()
+        {
+            this.Width = FormHandle.Width;
+            this.Height = FormHandle.Height;
+
+            TopPanel.Width = MainPanel.Width = this.Width;
+            MainPanel.Height = FormHandle.Height - MainPanel.Height;
+        }
+
+        private void AddMainPanelEntry(string s)
+        {
+
+            /*
+            MainPanel.Controls.Add(new Label() { Text = "ha-ha", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 0, 0);
+            MainPanel.Controls.Add(new Label() { Text = "ha-ha", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, 0);
+            MainPanel.Controls.Add(new Label() { Text = "ha-ha", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 2, 0);
+            */
+            MainPanel.RowCount++;
+            MainPanel.Controls.Add(new PictureBox() { Width = Height = 60, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Right, BackColor=Color.Green }, 0, MainPanel.RowCount - 1);
+            MainPanel.Controls.Add(new Label() { Text = s, Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, MainPanel.RowCount - 1);
+            MainPanel.Controls.Add(new PictureBox() { Width = Height = 60, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Right }, 2, MainPanel.RowCount - 1);
+            
+        }
+
+        private void SetupTables()
+        {
+            TopPanel = new TableLayoutPanel();
+            TopPanel.RowCount = 1;
+            TopPanel.ColumnCount = 3;
+            TopPanel.ColumnStyles.Clear();
+            TopPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
+            TopPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40));
+            TopPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
+            TopPanel.Controls.Add(new Label() { Text = "", Font = new Font("Stencil", 18, FontStyle.Bold), ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 0, 0);
+            TopPanel.Controls.Add(new Label() { Text = "", Font = new Font("Stencil", 36, FontStyle.Bold), ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, 0);
+            TopPanel.Controls.Add(new Label() { Text = "sad", Font = new Font("Stencil", 18, FontStyle.Bold), ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 2, 0);
+            this.Controls.Add(TopPanel);
+            TopPanel.BackColor = Color.Blue;
+
+            MainPanel = new TableLayoutPanel();
+            MainPanel.RowCount = 0;
+            MainPanel.ColumnCount = 3;
+            MainPanel.ColumnStyles.Clear();
+            MainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
+            MainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+            MainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
+            this.Controls.Add(MainPanel);
+            MainPanel.BackColor = Color.Red;
+            MainPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
+
+            SetSelection();
         }
     }
 }
