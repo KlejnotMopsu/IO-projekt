@@ -70,6 +70,9 @@ namespace IO_projekt
             pauseLabel.Visible = false;
             hp = 100;
             UpdateHpLabel();
+
+            if (Properties.Settings.Default.ShowFPS)
+                StartFpsThread();
         }
 
         public async void NextLevel()

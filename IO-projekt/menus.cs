@@ -992,7 +992,8 @@ namespace IO_projekt
 
             ((PictureBox)MainPanel.GetControlFromPosition(0, CurrentSelectionInd)).Image = Properties.Resources.LeftSelectionMarker;
             ((PictureBox)MainPanel.GetControlFromPosition(2, CurrentSelectionInd)).Image = Properties.Resources.RightSelectionMarker;
-            CurrentSelection = ((Label) MainPanel.GetControlFromPosition(1, CurrentSelectionInd)).Text;
+            CurrentSelection = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd];
+            Console.WriteLine($"Selection set to {CurrentSelection}");
         }
 
         private void ReloadTab()
@@ -1030,6 +1031,19 @@ namespace IO_projekt
             
         }
 
+        private void UpdateCurrentSelectionText()
+        {
+            switch (OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd])
+            {
+                case "show fps":
+                    if (Properties.Settings.Default.ShowFPS)
+                        ((Label)MainPanel.GetControlFromPosition(1, CurrentSelectionInd)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd] + ": on";
+                    else
+                        ((Label)MainPanel.GetControlFromPosition(1, CurrentSelectionInd)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd] + ": off";
+                    return;
+            }
+        }
+
         private void OptionsPanel_KeyDown(object sender, KeyEventArgs e)
         {
 
@@ -1044,6 +1058,17 @@ namespace IO_projekt
                         //Reposition();
                     }
                 }
+                else
+                {
+                    switch (CurrentSelection)
+                    {
+                        case "show fps":
+                            Properties.Settings.Default.ShowFPS = !Properties.Settings.Default.ShowFPS;
+                            Properties.Settings.Default.Save();
+                            UpdateCurrentSelectionText();
+                            break;
+                    }
+                }
             }
 
             if (e.KeyCode == Keys.Right)
@@ -1055,6 +1080,17 @@ namespace IO_projekt
                         CurrentTabInd++;
                         ReloadTab();
                         //Reposition();
+                    }
+                }
+                else
+                {
+                    switch (CurrentSelection)
+                    {
+                        case "show fps":
+                            Properties.Settings.Default.ShowFPS = !Properties.Settings.Default.ShowFPS;
+                            Properties.Settings.Default.Save();
+                            UpdateCurrentSelectionText();
+                            break;
                     }
                 }
             }
@@ -1103,8 +1139,16 @@ namespace IO_projekt
             MainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 65));
             MainPanel.Height += 70;
             MainPanel.Controls.Add(new PictureBox() { Width = 60, Height = 60, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Right }, 0, MainPanel.RowCount - 1);
-            MainPanel.Controls.Add(new Label() { Text = s, Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, MainPanel.RowCount - 1);
+            MainPanel.Controls.Add(new Label() { Text = s + ": ", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, MainPanel.RowCount - 1);
             MainPanel.Controls.Add(new PictureBox() { Width = 60, Height = 60, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Left }, 2, MainPanel.RowCount - 1);
+
+            if (s == "show fps")
+            {
+                if (Properties.Settings.Default.ShowFPS)
+                    ((Label)MainPanel.GetControlFromPosition(1, MainPanel.RowCount - 1)).Text += "on";
+                else
+                    ((Label)MainPanel.GetControlFromPosition(1, MainPanel.RowCount - 1)).Text += "off";
+            }
         }
 
         private void SetupTables()

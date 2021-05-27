@@ -129,8 +129,7 @@ namespace IO_projekt
             this.PauseMenu.Reposition();
 
             this.MainMenu = new MainMenuPanel(this);
-
-            StartFpsThread();
+           
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
