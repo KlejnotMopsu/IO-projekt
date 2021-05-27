@@ -932,7 +932,7 @@ namespace IO_projekt
         TableLayoutPanel MainPanel;
         PictureBox TempMarker;
 
-        string[] SoundSelections = { "master", "music", "sounds" };
+        string[] SoundSelections = { "master", "music", "sound" };
         string[] DisplaySelections = { "show fps", "ui scale" };
         int CurrentSelectionInd = -1;
         int MaxSelectionInd;
@@ -1027,6 +1027,8 @@ namespace IO_projekt
             MaxSelectionInd = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]].Length-1;
             CurrentSelectionInd = -1;
 
+            UpdateAllSelectionText();
+
             SetSelection();
             
         }
@@ -1041,6 +1043,34 @@ namespace IO_projekt
                     else
                         ((Label)MainPanel.GetControlFromPosition(1, CurrentSelectionInd)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd] + ": off";
                     return;
+            }
+        }
+
+        private void UpdateAllSelectionText()
+        {
+            for (int i=0; i<MainPanel.RowCount; i++)
+            {
+                switch (OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][i])
+                {
+                    case "show fps":
+                        if (Properties.Settings.Default.ShowFPS)
+                            ((Label)MainPanel.GetControlFromPosition(1, i)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][i] + ": on";
+                        else
+                            ((Label)MainPanel.GetControlFromPosition(1, i)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][i] + ": off";
+                        break;
+
+                    case "master":
+                        ((Label)MainPanel.GetControlFromPosition(1, i)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][i] + ": " + Convert.ToString(Properties.Settings.Default.VolMaster);
+                        break;
+
+                    case "music":
+                        ((Label)MainPanel.GetControlFromPosition(1, i)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][i] + ": " + Convert.ToString(Properties.Settings.Default.VolMusic);
+                        break;
+
+                    case "sound":
+                        ((Label)MainPanel.GetControlFromPosition(1, i)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][i] + ": " + Convert.ToString(Properties.Settings.Default.VolSound);
+                        break;
+                }
             }
         }
 

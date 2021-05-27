@@ -34,5 +34,41 @@ namespace IO_projekt.Properties {
                 this["ShowFPS"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int VolMaster {
+            get {
+                return ((int)(this["VolMaster"]));
+            }
+            set {
+                this["VolMaster"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int VolMusic {
+            get {
+                return ((int)(this["VolMusic"]));
+            }
+            set {
+                this["VolMusic"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int VolSound {
+            get {
+                return ((int)(this["VolSound"]));
+            }
+            set {
+                this["VolSound"] = value;
+            }
+        }
     }
 }
