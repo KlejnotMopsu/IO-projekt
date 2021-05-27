@@ -34,8 +34,8 @@ namespace IO_projekt
         ScoreEntry xScoreEntry;
 
         public WindowsMediaPlayer gameMedia;
-        WindowsMediaPlayer shootMedia;
-        WindowsMediaPlayer bonusMedia;
+        public WindowsMediaPlayer shootMedia;
+        public WindowsMediaPlayer bonusMedia;
 
         public static int score = 0;
         public static int scoreMultiplier = 1;

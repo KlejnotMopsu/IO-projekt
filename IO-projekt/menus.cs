@@ -1043,6 +1043,18 @@ namespace IO_projekt
                     else
                         ((Label)MainPanel.GetControlFromPosition(1, CurrentSelectionInd)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd] + ": off";
                     return;
+
+                case "master":
+                    ((Label)MainPanel.GetControlFromPosition(1, CurrentSelectionInd)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd] + ": " + Convert.ToString(Properties.Settings.Default.VolMaster);
+                    break;
+
+                case "music":
+                    ((Label)MainPanel.GetControlFromPosition(1, CurrentSelectionInd)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd] + ": " + Convert.ToString(Properties.Settings.Default.VolMusic);
+                    break;
+
+                case "sound":
+                    ((Label)MainPanel.GetControlFromPosition(1, CurrentSelectionInd)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd] + ": " + Convert.ToString(Properties.Settings.Default.VolSound);
+                    break;
             }
         }
 
@@ -1097,6 +1109,36 @@ namespace IO_projekt
                             Properties.Settings.Default.Save();
                             UpdateCurrentSelectionText();
                             break;
+
+                        case "master":
+                            if (Properties.Settings.Default.VolMaster > 0)
+                            {
+                                Properties.Settings.Default.VolMaster--;
+                                Properties.Settings.Default.Save();
+                                UpdateCurrentSelectionText();
+                                UpdateAudioLevels();
+                            }
+                            break;
+
+                        case "music":
+                            if (Properties.Settings.Default.VolMusic > 0)
+                            {
+                                Properties.Settings.Default.VolMusic--;
+                                Properties.Settings.Default.Save();
+                                UpdateCurrentSelectionText();
+                                UpdateAudioLevels();
+                            }
+                            break;
+
+                        case "sound":
+                            if (Properties.Settings.Default.VolSound > 0)
+                            {
+                                Properties.Settings.Default.VolSound--;
+                                Properties.Settings.Default.Save();
+                                UpdateCurrentSelectionText();
+                                UpdateAudioLevels();
+                            }
+                            break;
                     }
                 }
             }
@@ -1121,6 +1163,36 @@ namespace IO_projekt
                             Properties.Settings.Default.Save();
                             UpdateCurrentSelectionText();
                             break;
+
+                        case "master":
+                            if (Properties.Settings.Default.VolMaster < 10)
+                            {
+                                Properties.Settings.Default.VolMaster++;
+                                Properties.Settings.Default.Save();
+                                UpdateCurrentSelectionText();
+                                UpdateAudioLevels();
+                            }
+                            break;
+
+                        case "music":
+                            if (Properties.Settings.Default.VolMusic < 10)
+                            {
+                                Properties.Settings.Default.VolMusic++;
+                                Properties.Settings.Default.Save();
+                                UpdateCurrentSelectionText();
+                                UpdateAudioLevels();
+                            }
+                            break;
+
+                        case "sound":
+                            if (Properties.Settings.Default.VolSound < 10)
+                            {
+                                Properties.Settings.Default.VolSound++;
+                                Properties.Settings.Default.Save();
+                                UpdateCurrentSelectionText();
+                                UpdateAudioLevels();
+                            }
+                            break;
                     }
                 }
             }
@@ -1141,6 +1213,12 @@ namespace IO_projekt
                     CurrentSelectionInd++;
                     SetSelection(CurrentSelectionInd-1);
                 }
+            }
+
+            if (e.KeyCode == Keys.Escape)
+            {
+                this.FormHandle.MainMenu.Focus();
+                this.Dispose();
             }
         }
 
@@ -1179,6 +1257,14 @@ namespace IO_projekt
                 else
                     ((Label)MainPanel.GetControlFromPosition(1, MainPanel.RowCount - 1)).Text += "off";
             }
+        }
+
+        private void UpdateAudioLevels()
+        {
+            FormHandle.gameMedia.settings.volume = Properties.Settings.Default.VolMaster * Properties.Settings.Default.VolMusic;
+            FormHandle.MainMenu.menuMedia.settings.volume = Properties.Settings.Default.VolMaster * Properties.Settings.Default.VolMusic;
+            FormHandle.bonusMedia.settings.volume = Properties.Settings.Default.VolMaster * Properties.Settings.Default.VolSound;
+            FormHandle.shootMedia.settings.volume = Properties.Settings.Default.VolMaster * Properties.Settings.Default.VolSound;
         }
 
         private void SetupTables()
