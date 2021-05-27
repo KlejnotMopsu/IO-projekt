@@ -942,7 +942,7 @@ namespace IO_projekt
 
         public OptionsPanel(Form1 fh)
         {
-            FlowDirection = FlowDirection.TopDown;
+            this.FlowDirection = FlowDirection.TopDown;
 
             FormHandle = fh;
             OptionsTabs = new Dictionary<string, string[]>();
@@ -984,14 +984,14 @@ namespace IO_projekt
             
             while (MainPanel.Controls.Count > 0)
                 MainPanel.Controls[0].Dispose();
-            
+
             MainPanel.RowCount = 0;
-            
+            MainPanel.RowStyles.Clear();
+            MainPanel.Height = 0;
             foreach (string s in OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]])
             {
                 AddMainPanelEntry(s);
             }
-            MainPanel.Height = this.Height;
             Console.WriteLine($"Current MainPanel.Height = {MainPanel.Height}");
             
         }
@@ -1040,8 +1040,9 @@ namespace IO_projekt
 
             TopPanel.Width = this.Width;
             MainPanel.Width = this.Width;
-            MainPanel.Height = this.Height;
-            //Console.WriteLine($"Current MainPanel.Height = {MainPanel.Height}");
+            //MainPanel.Height = this.Height;
+
+            Console.WriteLine($"Current MainPanel.Height = {MainPanel.Height}");
         }
 
         private void AddMainPanelEntry(string s)
@@ -1054,6 +1055,8 @@ namespace IO_projekt
             MainPanel.Controls.Add(new Label() { Text = "ha-ha", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.Left }, 2, MainPanel.RowCount-1);
             
             return;*/
+            MainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
+            MainPanel.Height += 51;
             MainPanel.Controls.Add(new PictureBox() { Width = 60, Height = 60, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Right, BackColor=Color.Green }, 0, MainPanel.RowCount - 1);
             MainPanel.Controls.Add(new Label() { Text = s, Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, MainPanel.RowCount - 1);
             MainPanel.Controls.Add(new PictureBox() { Width = 60, Height = 60, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Right }, 2, MainPanel.RowCount - 1);
@@ -1074,6 +1077,14 @@ namespace IO_projekt
             this.Controls.Add(TopPanel);
             TopPanel.BackColor = Color.Blue;
 
+            SetupMainTable();
+
+            SetSelection();
+        }
+
+        private void SetupMainTable()
+        {
+            MainPanel?.Dispose();
             MainPanel = new TableLayoutPanel();
             MainPanel.RowCount = 1;
             MainPanel.ColumnCount = 3;
@@ -1084,8 +1095,6 @@ namespace IO_projekt
             this.Controls.Add(MainPanel);
             MainPanel.BackColor = Color.Red;
             MainPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
-
-            SetSelection();
         }
     }
 }
