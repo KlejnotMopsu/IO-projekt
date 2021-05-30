@@ -522,10 +522,10 @@ namespace IO_projekt
 
         string[] ShopTabs = { "Bonuses", "Upgrades" };
         ShopEntry[] BonusesSelections = { new ShopEntry("Shield", Properties.Resources.bonusShield, 200),
-                                   new ShopEntry("Scatter Gun", Properties.Resources.TempPic, 1000),
-                                   new ShopEntry("Rocket", Properties.Resources.TempPic, 250),
+                                   new ShopEntry("Scatter Gun", Properties.Resources.scatterGun, 1000),
+                                   new ShopEntry("Rocket", Properties.Resources.rocket, 250),
                                    new ShopEntry("10 HP", Properties.Resources.bonusHP, 100),
-                                   new ShopEntry("Bullet Speed", Properties.Resources.TempPic, 150) };
+                                   new ShopEntry("Bullet Speed", Properties.Resources.bulletSpeed, 150) };
 
         ShopEntry[] UpgradesSelections = {new ShopEntry("Rate of Fire+", Properties.Resources.TempPic, 175),
                                    new ShopEntry("Bullet Speed", Properties.Resources.TempPic, 150)
@@ -788,6 +788,16 @@ namespace IO_projekt
                     {
                         FormHandle.p.Credits -= SelectedItem.Cost;
                         FormHandle.p.shielded = true;
+                    }
+                    break;
+
+                case "Scatter Gun":
+                    if (FormHandle.p.ScatterGun)
+                        return;
+                    else
+                    {
+                        FormHandle.p.Credits -= SelectedItem.Cost;
+                        FormHandle.p.ScatterGun = true;
                     }
                     break;
             }

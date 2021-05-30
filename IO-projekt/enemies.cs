@@ -449,6 +449,9 @@ namespace IO_projekt
                 Sprite.Width = Sprite.Height = 10;
                 Sprite.BackColor = Color.Red;
                 Sprite.Location = new Point(x - this.Sprite.Width / 2, y);
+                Sprite.Image = Properties.Resources.enemyBullet;
+                Sprite.BackColor = Color.Transparent;
+                Sprite.SizeMode = PictureBoxSizeMode.Zoom;
 
                 MaxDistanceTravelled = f.Height - this.Sprite.Top;
 

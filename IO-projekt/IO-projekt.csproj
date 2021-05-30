@@ -312,5 +312,26 @@
   <ItemGroup>
     <None Include="graphic\fragmentSE.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\bulletSpeed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\scatterGun.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\enemyBullet.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\BulleLefttIMG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\BulleRighttIMG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\BulletLeftIMG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\BulletRightIMG.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -141,9 +141,39 @@ namespace IO_projekt.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap BulletLeftIMG {
+            get {
+                object obj = ResourceManager.GetObject("BulletLeftIMG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap BulletPic {
             get {
                 object obj = ResourceManager.GetObject("BulletPic", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap BulletRightIMG {
+            get {
+                object obj = ResourceManager.GetObject("BulletRightIMG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bulletSpeed {
+            get {
+                object obj = ResourceManager.GetObject("bulletSpeed", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -214,6 +244,16 @@ namespace IO_projekt.Properties {
         internal static System.Drawing.Bitmap enemy3 {
             get {
                 object obj = ResourceManager.GetObject("enemy3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap enemyBullet {
+            get {
+                object obj = ResourceManager.GetObject("enemyBullet", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -441,6 +481,26 @@ namespace IO_projekt.Properties {
         internal static System.Drawing.Bitmap RightSelectionMarker {
             get {
                 object obj = ResourceManager.GetObject("RightSelectionMarker", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap rocket {
+            get {
+                object obj = ResourceManager.GetObject("rocket", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap scatterGun {
+            get {
+                object obj = ResourceManager.GetObject("scatterGun", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

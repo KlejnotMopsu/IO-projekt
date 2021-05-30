@@ -149,6 +149,13 @@ namespace IO_projekt
                 get { return shielded; }
             }
 
+            bool scatterGun;
+            public bool ScatterGun
+            {
+                get { return scatterGun; }
+                set { scatterGun = value; }
+            }
+
             System.Windows.Forms.Timer MoveRightTimer;
             System.Windows.Forms.Timer MoveLeftTimer;
             System.Windows.Forms.Timer MoveUpTimer;
@@ -191,6 +198,8 @@ namespace IO_projekt
                 MoveDownTimer = new System.Windows.Forms.Timer();
                 MoveDownTimer.Tick += new System.EventHandler(MoveDownTimer_Tick);
                 MoveDownTimer.Interval = 10;
+
+                scatterGun = false;
             }
 
             public void TICK()
@@ -239,6 +248,7 @@ namespace IO_projekt
                 Sprite.Image = Properties.Resources.player1;
                 shielded = false;
                 doubleShootTime = 0;
+                scatterGun = false;
 
                 foreach (Enemy en in Conf.enemies)
                 {
@@ -278,6 +288,7 @@ namespace IO_projekt
                 public int DistanceTravelled;
                 public int MaxDistanceTravelled;
                 int BulletSpeed;
+                int BulletSpeedHorizontal;
                 public PictureBox Sprite;
                 
                 Form1 formHandle;
@@ -286,6 +297,7 @@ namespace IO_projekt
                 {
                     formHandle = f;
                     BulletSpeed = 15;
+                    BulletSpeedHorizontal = 0;
                     DistanceTravelled = 0;
                     MaxDistanceTravelled = f.Height + 200;
                     Sprite = new PictureBox();
@@ -293,6 +305,32 @@ namespace IO_projekt
                     Sprite.BackColor = Color.Transparent;
                     Sprite.Image = Properties.Resources.BulletPic;
                     Sprite.Location = new Point(x - this.Sprite.Width / 2, y);
+
+                    f.xGamePanel.Controls.Add(this.Sprite);
+                }
+
+                public Bullet(Form1 f, Player p, int x, int y, String type)
+                {
+                    formHandle = f;
+                    BulletSpeed = 15;
+                                        
+                    DistanceTravelled = 0;
+                    MaxDistanceTravelled = f.Height + 200;
+                    Sprite = new PictureBox();
+                    Sprite.Width = Sprite.Height = 10;
+                    Sprite.BackColor = Color.Transparent;                    
+                    Sprite.Location = new Point(x - this.Sprite.Width / 2, y);
+
+                    if (type == "left")
+                    {
+                        BulletSpeedHorizontal = -5;
+                        Sprite.Image = Properties.Resources.BulletLeftIMG;
+                    }
+                    else
+                    {
+                        BulletSpeedHorizontal = 5;
+                        Sprite.Image = Properties.Resources.BulletRightIMG;
+                    }
 
                     f.xGamePanel.Controls.Add(this.Sprite);
                 }
@@ -328,6 +366,7 @@ namespace IO_projekt
                     {
                         DistanceTravelled += BulletSpeed;
                         this.Sprite.Top -= this.BulletSpeed;
+                        this.Sprite.Left += this.BulletSpeedHorizontal;
                     }
                     else if (this.DistanceTravelled >= this.MaxDistanceTravelled)
                     {
@@ -445,6 +484,12 @@ namespace IO_projekt
                         else
                         {
                             Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y));
+                        }
+
+                        if(scatterGun)
+                        {
+                            Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y, "left"));
+                            Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y, "right"));
                         }
                     }
                 }
