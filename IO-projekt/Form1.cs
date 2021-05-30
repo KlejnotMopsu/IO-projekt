@@ -26,7 +26,6 @@ namespace IO_projekt
         static int lowest = 0;
         static int[] scoreList = new int[11];
         
-
         public GamePanel xGamePanel;
 
         PauseMenuPanel PauseMenu;
@@ -45,7 +44,7 @@ namespace IO_projekt
         public static int level = 1;
         public static int CurrentLevel = 1;
 
-        static bool Pause;
+        public static bool Pause;
         static bool GameOver;
         public static bool BossLevel;
 
@@ -222,17 +221,19 @@ namespace IO_projekt
                     if (Pause)
                     {
                         MainTimer.Start();
-                        Cursor.Hide();
                         pauseLabel.Visible = false;
-
-                        Pause = false;
+                        Pause = false;                        
                     }
                     else
                     {
+                        p.MoveRightStop();
+                        p.MoveLeftStop();
+                        p.MoveUpStop();
+                        p.MoveDownStop();
+                        p.CloseGunLock();
+                        p.CloseGunLock();
+
                         this.PauseMenu.BringUp();
-
-                        Cursor.Show();
-
                         MainTimer.Stop();
                         Pause = true;
                     }

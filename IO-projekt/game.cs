@@ -426,7 +426,7 @@ namespace IO_projekt
             public void Shoot()
             {
 
-                if (IsGunLockOpen)
+                if (!Pause && IsGunLockOpen)
                 {
                     if (GunCooldown <= 0)
                     {
@@ -453,7 +453,7 @@ namespace IO_projekt
             private void MoveRightTimer_Tick(object sender, EventArgs e)
             {
 
-                if (Sprite.Left < formHandle.Width - 80)
+                if (!Pause && Sprite.Left < formHandle.Width - 80)
                 {
                     Console.WriteLine(OPERATIONS++ + "> " + "Ticking MoveRightTimer");
                     Sprite.Left += MovementSpeed;
@@ -461,7 +461,7 @@ namespace IO_projekt
             }
             private void MoveLeftTimer_Tick(object sender, EventArgs e)
             {
-                if (Sprite.Left > 15)
+                if (!Pause && Sprite.Left > 15)
                 {
                     Console.WriteLine(OPERATIONS++ + "> " + "Ticking MoveLeftTimer");
                     Sprite.Left -= MovementSpeed;
@@ -469,7 +469,7 @@ namespace IO_projekt
             }
             private void MoveUpTimer_Tick(object sender, EventArgs e)
             {
-                if (Sprite.Top > 15)
+                if (!Pause && Sprite.Top > 15)
                 {
                     Console.WriteLine(OPERATIONS++ + "> " + "Ticking MoveUpTimer");
                     Sprite.Top -= MovementSpeed;
@@ -477,7 +477,7 @@ namespace IO_projekt
             }
             private void MoveDownTimer_Tick(object sender, EventArgs e)
             {
-                if (Sprite.Top < formHandle.Height - 100)
+                if (!Pause && Sprite.Top < formHandle.Height - 100)
                 {
                     Console.WriteLine(OPERATIONS++ + "> " + "Ticking MoveDownTimer");
                     Sprite.Top += MovementSpeed;

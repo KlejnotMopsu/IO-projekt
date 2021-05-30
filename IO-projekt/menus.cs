@@ -17,7 +17,7 @@ namespace IO_projekt
 
     public class PauseMenuPanel : TableLayoutPanel
     {
-        Form1 FormHandle;
+        Form1 FormHandle;        
         Label ExitLabel;
         Label ContinueLabel;
 
@@ -27,7 +27,7 @@ namespace IO_projekt
         
         public PauseMenuPanel(Form1 fh)
         {
-            FormHandle = fh;
+            FormHandle = fh;            
 
             MaxSelection = Selections.Length - 1;
 
@@ -59,30 +59,30 @@ namespace IO_projekt
             ExitLabel.AutoSize = true;
             ExitLabel.Anchor = AnchorStyles.None;
 
-            //this.Grid.Controls.Add(ExitButton, 1, 0);
-            //this.Grid.Controls.Add(new PictureBox() {BackColor = Color.Green }, 0, 0);
-
             this.FormHandle.Controls.Add(this);
             
-
             this.BackColor = Color.Transparent;
             this.Visible = false;
 
             this.SetSelection();
+
             this.KeyDown += PauseMenu_KeyDown;
+            this.KeyUp += PauseMenu_KeyUp;
         }
 
         public void BringUp()
         {        
             this.Visible = true;
             this.Focus();
-            this.BringToFront();
+            this.BringToFront();            
         }
         public void HideMenu()
         {
             this.Visible = false;
-            this.FormHandle.Focus();
+            this.FormHandle.Focus();            
             this.FormHandle.BringToFront();
+            this.FormHandle.MainTimer.Start();
+            Form1.Pause = false;
         }
 
         private void SetSelection()
@@ -112,8 +112,6 @@ namespace IO_projekt
             {
                 case "continue":
                     this.HideMenu();
-                    this.FormHandle.MainTimer.Start();
-                    this.FormHandle.Focus();
                     break;
 
                 case "exit":
@@ -125,11 +123,6 @@ namespace IO_projekt
         private void PauseMenu_KeyDown(object sender, KeyEventArgs e)
         {
             Console.WriteLine("Getting KeyDown in PauseMenuPanel.");
-            if (e.KeyCode == Keys.Escape)
-            {
-                this.HideMenu();
-            }
-
             if (e.KeyCode == Keys.Down)
             {
                 CurrentSelection++;
@@ -144,10 +137,17 @@ namespace IO_projekt
                     CurrentSelection = MaxSelection;
                 SetSelection();
             }
-
             if (e.KeyCode == Keys.Enter)
             {
                 ConfirmSelection();
+            }
+        }
+
+        private void PauseMenu_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                this.HideMenu();
             }
         }
     }
@@ -554,6 +554,12 @@ namespace IO_projekt
         private async void BringUp()
         {
             FormHandle.MainTimer.Stop();
+            FormHandle.p.MoveRightStop();
+            FormHandle.p.MoveLeftStop();
+            FormHandle.p.MoveUpStop();
+            FormHandle.p.MoveDownStop();
+            FormHandle.p.CloseGunLock();
+            FormHandle.p.CloseGunLock();
 
             this.Left = -this.Width;
             while (this.Left < 0)

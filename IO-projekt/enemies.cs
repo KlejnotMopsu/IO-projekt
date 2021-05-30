@@ -640,7 +640,7 @@ namespace IO_projekt
         public class EnemySecondBoss : Enemy
         {
             int HitPoints;
-            int MaxHitPoints = 20;
+            int MaxHitPoints = 25;
             int phase;
             public System.Windows.Forms.Timer BossShootTimer;
             PictureBox hpBar;
@@ -1123,23 +1123,19 @@ namespace IO_projekt
                     switch (Direction)
                     {
                         case "nw":
-                            Sprite.Left -= EnemySpeed;
-                            Sprite.Top -= EnemySpeed;
+                            Sprite.Location = new Point(Sprite.Left - EnemySpeed, Sprite.Top - EnemySpeed);
                             break;
 
                         case "ne":
-                            Sprite.Left += EnemySpeed;
-                            Sprite.Top -= EnemySpeed;
+                            Sprite.Location = new Point(Sprite.Left + EnemySpeed, Sprite.Top - EnemySpeed);
                             break;
 
                         case "sw":
-                            Sprite.Left -= EnemySpeed;
-                            Sprite.Top += EnemySpeed;
+                            Sprite.Location = new Point(Sprite.Left - EnemySpeed, Sprite.Top + EnemySpeed);
                             break;
 
                         case "se":
-                            Sprite.Left += EnemySpeed;
-                            Sprite.Top += EnemySpeed;
+                            Sprite.Location = new Point(Sprite.Left + EnemySpeed, Sprite.Top + EnemySpeed);
                             break;                        
                     }
 

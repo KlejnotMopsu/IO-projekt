@@ -81,6 +81,13 @@ namespace IO_projekt
             CurrentLevel++;
             BossLevel = false;
 
+            UpdateHpLabel();
+            p.MoveRightStop();
+            p.MoveLeftStop();
+            p.MoveUpStop();
+            p.MoveDownStop();
+            p.CloseGunLock();
+
             Panel BlackScreen = new Panel();
             BlackScreen.BackColor = Color.Black;
             BlackScreen.Width = this.Width+50;
