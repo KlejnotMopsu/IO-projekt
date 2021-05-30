@@ -87,6 +87,12 @@ namespace IO_projekt
                     Conf.enemies.Add(eb);
                 }
 
+                if(Conf.enemies.Count == 0)
+                {
+                    Form1.EnemyStandard en = new Form1.EnemyStandard(FormHandle, FormHandle.p);
+                    Conf.enemies.Add(en);
+                }
+
                 roll = Seed.Next(750);
                 if (roll == 0 && !Form1.BossLevel)
                 {
@@ -206,7 +212,7 @@ namespace IO_projekt
                     bossMedia = new WindowsMediaPlayer();
                     File.WriteAllBytes(@"sound\boss2Inc.wav", StreamToByteArr(Properties.Resources.boss2Inc));
                     bossMedia.URL = @"sound\boss2Inc.wav";
-                    bossMedia.settings.volume = 5;
+                    bossMedia.settings.volume = 10;
                     bossMedia.controls.play();
                 }
 
@@ -238,7 +244,7 @@ namespace IO_projekt
                     }
                 }
 
-                if (score >= 25 && phase == 1)
+                if (score >= 150 && phase == 1)
                 {
                     phase = 2;
                 }

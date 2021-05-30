@@ -26,7 +26,6 @@ namespace IO_projekt
         static int lowest = 0;
         static int[] scoreList = new int[11];
         
-
         public GamePanel xGamePanel;
 
         PauseMenuPanel PauseMenu;
@@ -34,8 +33,8 @@ namespace IO_projekt
         ScoreEntry xScoreEntry;
 
         public WindowsMediaPlayer gameMedia;
-        WindowsMediaPlayer shootMedia;
-        WindowsMediaPlayer bonusMedia;
+        public WindowsMediaPlayer shootMedia;
+        public WindowsMediaPlayer bonusMedia;
 
         public static int score = 0;
         public static int scoreMultiplier = 1;
@@ -45,7 +44,7 @@ namespace IO_projekt
         public static int level = 1;
         public static int CurrentLevel = 1;
 
-        static bool Pause;
+        public static bool Pause;
         static bool GameOver;
         public static bool BossLevel;
 
@@ -129,8 +128,7 @@ namespace IO_projekt
             this.PauseMenu.Reposition();
 
             this.MainMenu = new MainMenuPanel(this);
-
-            StartFpsThread();
+           
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -223,17 +221,19 @@ namespace IO_projekt
                     if (Pause)
                     {
                         MainTimer.Start();
-                        Cursor.Hide();
                         pauseLabel.Visible = false;
-
-                        Pause = false;
+                        Pause = false;                        
                     }
                     else
                     {
+                        p.MoveRightStop();
+                        p.MoveLeftStop();
+                        p.MoveUpStop();
+                        p.MoveDownStop();
+                        p.CloseGunLock();
+                        p.CloseGunLock();
+
                         this.PauseMenu.BringUp();
-
-                        Cursor.Show();
-
                         MainTimer.Stop();
                         Pause = true;
                     }

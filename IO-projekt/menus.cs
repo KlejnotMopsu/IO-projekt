@@ -18,7 +18,7 @@ namespace IO_projekt
 
     public class PauseMenuPanel : TableLayoutPanel
     {
-        Form1 FormHandle;
+        Form1 FormHandle;        
         Label ExitLabel;
         Label ContinueLabel;
 
@@ -28,7 +28,7 @@ namespace IO_projekt
         
         public PauseMenuPanel(Form1 fh)
         {
-            FormHandle = fh;
+            FormHandle = fh;            
 
             MaxSelection = Selections.Length - 1;
 
@@ -60,30 +60,30 @@ namespace IO_projekt
             ExitLabel.AutoSize = true;
             ExitLabel.Anchor = AnchorStyles.None;
 
-            //this.Grid.Controls.Add(ExitButton, 1, 0);
-            //this.Grid.Controls.Add(new PictureBox() {BackColor = Color.Green }, 0, 0);
-
             this.FormHandle.Controls.Add(this);
             
-
             this.BackColor = Color.Transparent;
             this.Visible = false;
 
             this.SetSelection();
+
             this.KeyDown += PauseMenu_KeyDown;
+            this.KeyUp += PauseMenu_KeyUp;
         }
 
         public void BringUp()
         {        
             this.Visible = true;
             this.Focus();
-            this.BringToFront();
+            this.BringToFront();            
         }
         public void HideMenu()
         {
             this.Visible = false;
-            this.FormHandle.Focus();
+            this.FormHandle.Focus();            
             this.FormHandle.BringToFront();
+            this.FormHandle.MainTimer.Start();
+            Form1.Pause = false;
         }
 
         private void SetSelection()
@@ -113,8 +113,6 @@ namespace IO_projekt
             {
                 case "continue":
                     this.HideMenu();
-                    this.FormHandle.MainTimer.Start();
-                    this.FormHandle.Focus();
                     break;
 
                 case "exit":
@@ -126,11 +124,6 @@ namespace IO_projekt
         private void PauseMenu_KeyDown(object sender, KeyEventArgs e)
         {
             Console.WriteLine("Getting KeyDown in PauseMenuPanel.");
-            if (e.KeyCode == Keys.Escape)
-            {
-                this.HideMenu();
-            }
-
             if (e.KeyCode == Keys.Down)
             {
                 CurrentSelection++;
@@ -145,10 +138,17 @@ namespace IO_projekt
                     CurrentSelection = MaxSelection;
                 SetSelection();
             }
-
             if (e.KeyCode == Keys.Enter)
             {
                 ConfirmSelection();
+            }
+        }
+
+        private void PauseMenu_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                this.HideMenu();
             }
         }
     }
@@ -273,7 +273,7 @@ namespace IO_projekt
                     break;
 
                 case "options":
-                    
+                    new OptionsPanel(FormHandle);
                     break;
 
                 case "view score":
@@ -523,10 +523,10 @@ namespace IO_projekt
 
         string[] ShopTabs = { "Bonuses", "Upgrades" };
         ShopEntry[] BonusesSelections = { new ShopEntry("Shield", Properties.Resources.bonusShield, 200),
-                                   new ShopEntry("Scatter Gun", Properties.Resources.TempPic, 1000),
-                                   new ShopEntry("Rocket", Properties.Resources.TempPic, 250),
+                                   new ShopEntry("Scatter Gun", Properties.Resources.scatterGun, 1000),
+                                   new ShopEntry("Rocket", Properties.Resources.rocket, 250),
                                    new ShopEntry("10 HP", Properties.Resources.bonusHP, 100),
-                                   new ShopEntry("Bullet Speed", Properties.Resources.TempPic, 150) };
+                                   new ShopEntry("Bullet Speed", Properties.Resources.bulletSpeed, 150) };
 
         ShopEntry[] UpgradesSelections = {new ShopEntry("Rate of Fire+", Properties.Resources.TempPic, 175),
                                    new ShopEntry("Bullet Speed", Properties.Resources.TempPic, 150)
@@ -555,6 +555,12 @@ namespace IO_projekt
         private async void BringUp()
         {
             FormHandle.MainTimer.Stop();
+            FormHandle.p.MoveRightStop();
+            FormHandle.p.MoveLeftStop();
+            FormHandle.p.MoveUpStop();
+            FormHandle.p.MoveDownStop();
+            FormHandle.p.CloseGunLock();
+            FormHandle.p.CloseGunLock();
 
             this.Left = -this.Width;
             while (this.Left < 0)
@@ -586,7 +592,7 @@ namespace IO_projekt
             ShopTabTable.RowCount = 1;
             ShopTabTable.ColumnCount = 3;
             ShopTabTable.Controls.Add(new PictureBox() { Width = Height = 40, BackColor = Color.Transparent, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 0, 0);
-            ShopTabTable.Controls.Add(new Label() { Text = "Bonuses", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, 0);
+            ShopTabTable.Controls.Add(new Label() { Text = "abc", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, 0);
             ShopTabTable.Controls.Add(new PictureBox() { Width = Height = 40, BackColor = Color.Transparent, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 2, 0);
 
             BottomPanel = new TableLayoutPanel();
@@ -787,6 +793,16 @@ namespace IO_projekt
                         FormHandle.p.shielded = true;
                     }
                     break;
+
+                case "Scatter Gun":
+                    if (FormHandle.p.ScatterGun)
+                        return;
+                    else
+                    {
+                        FormHandle.p.Credits -= SelectedItem.Cost;
+                        FormHandle.p.ScatterGun = true;
+                    }
+                    break;
             }
 
             FormHandle.p.Credits -= SelectedItem.Cost;
@@ -924,6 +940,385 @@ namespace IO_projekt
             Console.WriteLine($"COL: {CurrentColumnSelection}");
             Console.WriteLine($"ROW: {CurrentRowSelection}");
             
+        }
+    }
+
+
+    public class OptionsPanel : FlowLayoutPanel
+    {
+        Form1 FormHandle;
+        TableLayoutPanel TopPanel;
+        TableLayoutPanel MainPanel;
+        PictureBox TempMarker;
+
+        string[] SoundSelections = { "master", "music", "sound" };
+        string[] DisplaySelections = { "show fps", "ui scale" };
+        int CurrentSelectionInd = -1;
+        int MaxSelectionInd;
+        string CurrentSelection;
+
+        Dictionary<string, string[]> OptionsTabs;
+        int CurrentTabInd;
+        int MaxTabInd;
+
+
+        public OptionsPanel(Form1 fh)
+        {
+            this.FlowDirection = FlowDirection.TopDown;
+
+            FormHandle = fh;
+            OptionsTabs = new Dictionary<string, string[]>();
+            OptionsTabs.Add("sound", SoundSelections);
+            OptionsTabs.Add("display", DisplaySelections);
+            MaxTabInd = 1;
+
+            CurrentTabInd = 0;
+            SetupTables();
+            FormHandle.Controls.Add(this);
+            Reposition();
+            ReloadTab();
+            //this.BackColor = Color.Pink;
+            
+            KeyDown += OptionsPanel_KeyDown;
+            this.BringToFront();
+            this.Focus();
+        }
+
+        private void SetSelection(int PrevInd = -2)
+        {
+            if (PrevInd >= 0)
+            {
+                ((PictureBox)MainPanel.GetControlFromPosition(0, PrevInd)).Image = null;
+                ((PictureBox)MainPanel.GetControlFromPosition(2, PrevInd)).Image = null;
+            }
+
+            if (CurrentSelectionInd == -1)
+            {
+                TempMarker = new PictureBox() {
+                    Parent = TopPanel.GetControlFromPosition(1, 0),
+                    SizeMode = PictureBoxSizeMode.StretchImage,
+                    Image = Properties.Resources.ShopSelectionMarkerPic,
+                    BackColor = Color.Transparent
+                };
+                TempMarker.Width = TempMarker.Parent.Width;
+                TempMarker.Height = TempMarker.Parent.Height;
+
+                CurrentSelection = "";
+                return;
+            }
+
+            TempMarker?.Dispose();
+
+            ((PictureBox)MainPanel.GetControlFromPosition(0, CurrentSelectionInd)).Image = Properties.Resources.LeftSelectionMarker;
+            ((PictureBox)MainPanel.GetControlFromPosition(2, CurrentSelectionInd)).Image = Properties.Resources.RightSelectionMarker;
+            CurrentSelection = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd];
+            Console.WriteLine($"Selection set to {CurrentSelection}");
+        }
+
+        private void ReloadTab()
+        {
+            TempMarker?.Dispose();
+
+            ((Label)TopPanel.GetControlFromPosition(1, 0)).Text = OptionsTabs.Keys.ToArray()[CurrentTabInd];
+
+            if (CurrentTabInd == 0)
+            {
+                ((Label)TopPanel.GetControlFromPosition(0, 0)).Text = "";
+                ((Label)TopPanel.GetControlFromPosition(2, 0)).Text = OptionsTabs.Keys.ToArray()[CurrentTabInd + 1];
+            }
+            else if (CurrentTabInd == MaxTabInd)
+            {
+                ((Label)TopPanel.GetControlFromPosition(0, 0)).Text = OptionsTabs.Keys.ToArray()[CurrentTabInd - 1];
+                ((Label)TopPanel.GetControlFromPosition(2, 0)).Text = "";
+            }
+
+            
+            while (MainPanel.Controls.Count > 0)
+                MainPanel.Controls[0].Dispose();
+
+            MainPanel.RowCount = 0;
+            MainPanel.RowStyles.Clear();
+            MainPanel.Height = 0;
+            foreach (string s in OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]])
+            {
+                AddMainPanelEntry(s);
+            }
+            MaxSelectionInd = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]].Length-1;
+            CurrentSelectionInd = -1;
+
+            UpdateAllSelectionText();
+
+            SetSelection();
+            
+        }
+
+        private void UpdateCurrentSelectionText()
+        {
+            switch (OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd])
+            {
+                case "show fps":
+                    if (Properties.Settings.Default.ShowFPS)
+                        ((Label)MainPanel.GetControlFromPosition(1, CurrentSelectionInd)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd] + ": on";
+                    else
+                        ((Label)MainPanel.GetControlFromPosition(1, CurrentSelectionInd)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd] + ": off";
+                    return;
+
+                case "master":
+                    ((Label)MainPanel.GetControlFromPosition(1, CurrentSelectionInd)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd] + ": " + Convert.ToString(Properties.Settings.Default.VolMaster);
+                    break;
+
+                case "music":
+                    ((Label)MainPanel.GetControlFromPosition(1, CurrentSelectionInd)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd] + ": " + Convert.ToString(Properties.Settings.Default.VolMusic);
+                    break;
+
+                case "sound":
+                    ((Label)MainPanel.GetControlFromPosition(1, CurrentSelectionInd)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][CurrentSelectionInd] + ": " + Convert.ToString(Properties.Settings.Default.VolSound);
+                    break;
+            }
+        }
+
+        private void UpdateAllSelectionText()
+        {
+            for (int i=0; i<MainPanel.RowCount; i++)
+            {
+                switch (OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][i])
+                {
+                    case "show fps":
+                        if (Properties.Settings.Default.ShowFPS)
+                            ((Label)MainPanel.GetControlFromPosition(1, i)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][i] + ": on";
+                        else
+                            ((Label)MainPanel.GetControlFromPosition(1, i)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][i] + ": off";
+                        break;
+
+                    case "master":
+                        ((Label)MainPanel.GetControlFromPosition(1, i)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][i] + ": " + Convert.ToString(Properties.Settings.Default.VolMaster);
+                        break;
+
+                    case "music":
+                        ((Label)MainPanel.GetControlFromPosition(1, i)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][i] + ": " + Convert.ToString(Properties.Settings.Default.VolMusic);
+                        break;
+
+                    case "sound":
+                        ((Label)MainPanel.GetControlFromPosition(1, i)).Text = OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]][i] + ": " + Convert.ToString(Properties.Settings.Default.VolSound);
+                        break;
+                }
+            }
+        }
+
+        private void OptionsPanel_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            if (e.KeyCode == Keys.Left)
+            {
+                if (CurrentSelectionInd < 0)
+                {
+                    if (CurrentTabInd > 0)
+                    {
+                        CurrentTabInd--;
+                        ReloadTab();
+                        //Reposition();
+                    }
+                }
+                else
+                {
+                    switch (CurrentSelection)
+                    {
+                        case "show fps":
+                            Properties.Settings.Default.ShowFPS = !Properties.Settings.Default.ShowFPS;
+                            Properties.Settings.Default.Save();
+                            UpdateCurrentSelectionText();
+                            break;
+
+                        case "master":
+                            if (Properties.Settings.Default.VolMaster > 0)
+                            {
+                                Properties.Settings.Default.VolMaster--;
+                                Properties.Settings.Default.Save();
+                                UpdateCurrentSelectionText();
+                                UpdateAudioLevels();
+                            }
+                            break;
+
+                        case "music":
+                            if (Properties.Settings.Default.VolMusic > 0)
+                            {
+                                Properties.Settings.Default.VolMusic--;
+                                Properties.Settings.Default.Save();
+                                UpdateCurrentSelectionText();
+                                UpdateAudioLevels();
+                            }
+                            break;
+
+                        case "sound":
+                            if (Properties.Settings.Default.VolSound > 0)
+                            {
+                                Properties.Settings.Default.VolSound--;
+                                Properties.Settings.Default.Save();
+                                UpdateCurrentSelectionText();
+                                UpdateAudioLevels();
+                            }
+                            break;
+                    }
+                }
+            }
+
+            if (e.KeyCode == Keys.Right)
+            {
+                if (CurrentSelectionInd < 0)
+                {
+                    if (CurrentTabInd < MaxTabInd)
+                    {
+                        CurrentTabInd++;
+                        ReloadTab();
+                        //Reposition();
+                    }
+                }
+                else
+                {
+                    switch (CurrentSelection)
+                    {
+                        case "show fps":
+                            Properties.Settings.Default.ShowFPS = !Properties.Settings.Default.ShowFPS;
+                            Properties.Settings.Default.Save();
+                            UpdateCurrentSelectionText();
+                            break;
+
+                        case "master":
+                            if (Properties.Settings.Default.VolMaster < 10)
+                            {
+                                Properties.Settings.Default.VolMaster++;
+                                Properties.Settings.Default.Save();
+                                UpdateCurrentSelectionText();
+                                UpdateAudioLevels();
+                            }
+                            break;
+
+                        case "music":
+                            if (Properties.Settings.Default.VolMusic < 10)
+                            {
+                                Properties.Settings.Default.VolMusic++;
+                                Properties.Settings.Default.Save();
+                                UpdateCurrentSelectionText();
+                                UpdateAudioLevels();
+                            }
+                            break;
+
+                        case "sound":
+                            if (Properties.Settings.Default.VolSound < 10)
+                            {
+                                Properties.Settings.Default.VolSound++;
+                                Properties.Settings.Default.Save();
+                                UpdateCurrentSelectionText();
+                                UpdateAudioLevels();
+                            }
+                            break;
+                    }
+                }
+            }
+
+            if (e.KeyCode == Keys.Up)
+            {
+                if (CurrentSelectionInd > -1)
+                {
+                    CurrentSelectionInd--;
+                    SetSelection(CurrentSelectionInd+1);
+                }
+            }
+
+            if (e.KeyCode == Keys.Down)
+            {
+                if (CurrentSelectionInd < MaxSelectionInd)
+                {
+                    CurrentSelectionInd++;
+                    SetSelection(CurrentSelectionInd-1);
+                }
+            }
+
+            if (e.KeyCode == Keys.Escape)
+            {
+                this.FormHandle.MainMenu.Focus();
+                this.Dispose();
+            }
+        }
+
+        private void Reposition()
+        {
+            this.Width = FormHandle.Width;
+            this.Height = FormHandle.Height;
+
+            TopPanel.Width = this.Width;
+            MainPanel.Width = this.Width;
+            //MainPanel.Height = this.Height;
+
+            Console.WriteLine($"Current MainPanel.Height = {MainPanel.Height}");
+        }
+
+        private void AddMainPanelEntry(string s)
+        {
+            MainPanel.RowCount++;
+            Console.WriteLine($"Current MainPanel.RowCount = {MainPanel.RowCount}");
+            /*
+            MainPanel.Controls.Add(new Label() { Text = "ha-ha", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.Right }, 0, MainPanel.RowCount - 1);
+            MainPanel.Controls.Add(new Label() { Text = "ha-ha", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, MainPanel.RowCount - 1);
+            MainPanel.Controls.Add(new Label() { Text = "ha-ha", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.Left }, 2, MainPanel.RowCount-1);
+            
+            return;*/
+            MainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 65));
+            MainPanel.Height += 70;
+            MainPanel.Controls.Add(new PictureBox() { Width = 60, Height = 60, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Right }, 0, MainPanel.RowCount - 1);
+            MainPanel.Controls.Add(new Label() { Text = s + ": ", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, MainPanel.RowCount - 1);
+            MainPanel.Controls.Add(new PictureBox() { Width = 60, Height = 60, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Left }, 2, MainPanel.RowCount - 1);
+
+            if (s == "show fps")
+            {
+                if (Properties.Settings.Default.ShowFPS)
+                    ((Label)MainPanel.GetControlFromPosition(1, MainPanel.RowCount - 1)).Text += "on";
+                else
+                    ((Label)MainPanel.GetControlFromPosition(1, MainPanel.RowCount - 1)).Text += "off";
+            }
+        }
+
+        private void UpdateAudioLevels()
+        {
+            FormHandle.gameMedia.settings.volume = Properties.Settings.Default.VolMaster * Properties.Settings.Default.VolMusic;
+            FormHandle.MainMenu.menuMedia.settings.volume = Properties.Settings.Default.VolMaster * Properties.Settings.Default.VolMusic;
+            FormHandle.bonusMedia.settings.volume = Properties.Settings.Default.VolMaster * Properties.Settings.Default.VolSound;
+            FormHandle.shootMedia.settings.volume = Properties.Settings.Default.VolMaster * Properties.Settings.Default.VolSound;
+        }
+
+        private void SetupTables()
+        {
+            TopPanel = new TableLayoutPanel();
+            TopPanel.RowCount = 1;
+            TopPanel.ColumnCount = 3;
+            TopPanel.ColumnStyles.Clear();
+            TopPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
+            TopPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40));
+            TopPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
+            TopPanel.Controls.Add(new Label() { Text = "", Font = new Font("Stencil", 18, FontStyle.Bold), ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 0, 0);
+            TopPanel.Controls.Add(new Label() { Text = "", Font = new Font("Stencil", 36, FontStyle.Bold), ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, 0);
+            TopPanel.Controls.Add(new Label() { Text = "sad", Font = new Font("Stencil", 18, FontStyle.Bold), ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 2, 0);
+            this.Controls.Add(TopPanel);
+            TopPanel.BackColor = Color.Blue;
+
+            SetupMainTable();
+
+            SetSelection();
+        }
+
+        private void SetupMainTable()
+        {
+            MainPanel?.Dispose();
+            MainPanel = new TableLayoutPanel();
+            MainPanel.RowCount = 1;
+            MainPanel.ColumnCount = 3;
+            MainPanel.ColumnStyles.Clear();
+            MainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
+            MainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40));
+            MainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
+            this.Controls.Add(MainPanel);
+            //MainPanel.BackColor = Color.Red;
+            MainPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
         }
     }
 }

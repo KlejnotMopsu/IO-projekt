@@ -70,6 +70,9 @@ namespace IO_projekt
             pauseLabel.Visible = false;
             hp = 100;
             UpdateHpLabel();
+
+            if (Properties.Settings.Default.ShowFPS)
+                StartFpsThread();
         }
 
         public async void NextLevel()
@@ -77,6 +80,13 @@ namespace IO_projekt
             MainTimer.Stop();
             CurrentLevel++;
             BossLevel = false;
+
+            UpdateHpLabel();
+            p.MoveRightStop();
+            p.MoveLeftStop();
+            p.MoveUpStop();
+            p.MoveDownStop();
+            p.CloseGunLock();
 
             Panel BlackScreen = new Panel();
             BlackScreen.BackColor = Color.Black;
