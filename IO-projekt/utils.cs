@@ -104,8 +104,9 @@ namespace IO_projekt
 
             await Task.Delay(500);
 
-            Conf.ClearAndDisposeAll();        
-
+            Conf.ClearAndDisposeAll();
+            //new ShopPanel(this);
+            //return;
             xGamePanel.Visible = false;
 
             switch (CurrentLevel)

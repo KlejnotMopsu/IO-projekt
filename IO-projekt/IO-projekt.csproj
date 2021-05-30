@@ -285,5 +285,8 @@
   <ItemGroup>
     <None Include="Resources\boss2Inc.wav" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\shopbg.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

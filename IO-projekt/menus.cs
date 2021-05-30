@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IO_projekt.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -337,7 +338,6 @@ namespace IO_projekt
             string path = @"Scores.txt";
             FormHandle = fh;
             parent = p;
-            this.BackgroundImage = Properties.Resources.scorebg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             Scores = new List<ScorePosition>();
 
@@ -400,6 +400,7 @@ namespace IO_projekt
                 }
             );
             EscLabelTimer.Start();
+            this.BackgroundImage = Properties.Resources.scorebg;
         }
 
         private void AddEntry(int score, string name)
@@ -572,6 +573,7 @@ namespace IO_projekt
             ShopTablePanel = new TableLayoutPanel();
 
             BackColor = Color.DarkBlue;
+            
             ExitLabel = new Label() { Text = "Exit Shop", Font = MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize = true, Anchor=AnchorStyles.None };
             ItemDescriptionLabel = new Label() { Text = "abc", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter };
             CreditsLabel = new Label() { Text = $"Credits:\n${FormHandle.p.Credits}", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None, TextAlign=ContentAlignment.MiddleCenter };
@@ -635,6 +637,7 @@ namespace IO_projekt
             this.SetSelection();
             Console.WriteLine($"Max COL: {MaxColumnSelection}");
             Console.WriteLine($"Max ROW: {MaxRowSelection}");
+            //BackgroundImage = Resources.shopbg;
 
             this.BringUp();
         }
