@@ -241,6 +241,16 @@ namespace IO_projekt.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap exploder {
+            get {
+                object obj = ResourceManager.GetObject("exploder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ExploderFragmentPic {
             get {
                 object obj = ResourceManager.GetObject("ExploderFragmentPic", resourceCulture);
@@ -254,6 +264,46 @@ namespace IO_projekt.Properties {
         internal static System.Drawing.Bitmap ExplosionPic1 {
             get {
                 object obj = ResourceManager.GetObject("ExplosionPic1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap fragmentNE {
+            get {
+                object obj = ResourceManager.GetObject("fragmentNE", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap fragmentNW {
+            get {
+                object obj = ResourceManager.GetObject("fragmentNW", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap fragmentSE {
+            get {
+                object obj = ResourceManager.GetObject("fragmentSE", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap fragmentSW {
+            get {
+                object obj = ResourceManager.GetObject("fragmentSW", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

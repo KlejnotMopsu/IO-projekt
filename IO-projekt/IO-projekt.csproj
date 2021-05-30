@@ -285,5 +285,32 @@
   <ItemGroup>
     <None Include="Resources\boss2Inc.wav" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\exploder.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\exploder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\exploderNE.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\exploderNW.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\exploderSE.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\fragmentSW.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\fragmentNE.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\fragmentNW.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\fragmentSE.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

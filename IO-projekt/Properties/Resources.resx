@@ -232,4 +232,19 @@
   <data name="boss2Inc" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\boss2Inc.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="exploder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\graphic\exploder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fragmentNE" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\graphic\fragmentNE.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fragmentNW" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\graphic\fragmentNW.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fragmentSE" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\graphic\fragmentSE.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fragmentSW" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\graphic\fragmentSW.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

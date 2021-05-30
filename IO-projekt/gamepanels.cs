@@ -206,7 +206,7 @@ namespace IO_projekt
                     bossMedia = new WindowsMediaPlayer();
                     File.WriteAllBytes(@"sound\boss2Inc.wav", StreamToByteArr(Properties.Resources.boss2Inc));
                     bossMedia.URL = @"sound\boss2Inc.wav";
-                    bossMedia.settings.volume = 5;
+                    bossMedia.settings.volume = 10;
                     bossMedia.controls.play();
                 }
 
@@ -238,7 +238,7 @@ namespace IO_projekt
                     }
                 }
 
-                if (score >= 25 && phase == 1)
+                if (score >= 150 && phase == 1)
                 {
                     phase = 2;
                 }

@@ -1023,14 +1023,15 @@ namespace IO_projekt
             {
                 formHandle = fh;
                 this.p = ph;
-                EnemySpeed = 1;
+                EnemySpeed = 2;
                 alreadyShot = false;
 
                 Sprite = new PictureBox();
-                Sprite.Width = Sprite.Height = 60;
-                Sprite.Image = Properties.Resources.EnemyExploderPic;
+                Sprite.Width = 30;
+                Sprite.Height = 80;
+                Sprite.Image = Properties.Resources.exploder;
                 Sprite.BackColor = Color.Transparent;
-                Sprite.SizeMode = PictureBoxSizeMode.Zoom;
+                Sprite.SizeMode = PictureBoxSizeMode.Zoom;                
 
                 Random r = new Random();
                 Sprite.Top = -Sprite.Height;
@@ -1048,12 +1049,23 @@ namespace IO_projekt
                     SpawnFragments();
                     Conf.EnemiesToRemove.Add(this);
                 }
+                else if (Sprite.Bounds.IntersectsWith(p.Sprite.Bounds) || Sprite.Top >= formHandle.Height)
+                {
+                    hp -= 10;
+                    p.HPCheck();
+                    formHandle.UpdateHpLabel();
+                    Conf.EnemiesToRemove.Add(this);
+                    this.Sprite.Dispose();
+                }
+
                 Sprite.Top += EnemySpeed;
             }
 
             public override void GetHit()
             {
                 alreadyShot = true;
+                score++;
+                this.formHandle.Pointslbl.Text = Convert.ToString(score);
             }
 
             public void SpawnFragments()
@@ -1073,15 +1085,31 @@ namespace IO_projekt
                 {
                     formHandle = fh;
                     this.p = ph;
-                    EnemySpeed = 10;
+                    EnemySpeed = 15;
                     hExploder = eh;
                     Direction = d;
 
                     Sprite = new PictureBox();
-                    Sprite.Width = Sprite.Height = 20;
-                    Sprite.Image = Properties.Resources.ExploderFragmentPic;
+                    Sprite.Width = Sprite.Height = 40;
                     Sprite.BackColor = Color.Transparent;
                     Sprite.SizeMode = PictureBoxSizeMode.Zoom;
+
+                    if(d == "ne")
+                    {
+                        Sprite.Image = Properties.Resources.fragmentNE;
+                    }
+                    else if (d == "se")
+                    {
+                        Sprite.Image = Properties.Resources.fragmentSE;
+                    }
+                    else if (d == "sw")
+                    {
+                        Sprite.Image = Properties.Resources.fragmentSW;
+                    }
+                    else if (d == "nw")
+                    {
+                        Sprite.Image = Properties.Resources.fragmentNW;
+                    }
 
                     Random r = new Random();
                     Sprite.Top = hExploder.Sprite.Top + hExploder.Sprite.Height/2 - Sprite.Height/2;
@@ -1117,7 +1145,7 @@ namespace IO_projekt
 
                     if (Sprite.Bounds.IntersectsWith(hExploder.p.Sprite.Bounds))
                     {
-                        hp -= 15;
+                        hp -= 10;
                         p.HPCheck();
                         formHandle.UpdateHpLabel();
                         Conf.EnemiesToRemove.Add(this);
