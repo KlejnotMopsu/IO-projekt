@@ -333,5 +333,8 @@
   <ItemGroup>
     <None Include="graphic\BulletRightIMG.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="graphic\scorebg2.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

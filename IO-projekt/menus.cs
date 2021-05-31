@@ -577,8 +577,7 @@ namespace IO_projekt
 
             FormHandle = fh;
             ShopTablePanel = new TableLayoutPanel();
-
-            BackColor = Color.DarkBlue;
+            
             
             ExitLabel = new Label() { Text = "Exit Shop", Font = MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize = true, Anchor=AnchorStyles.None };
             ItemDescriptionLabel = new Label() { Text = "abc", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter };
@@ -643,7 +642,9 @@ namespace IO_projekt
             this.SetSelection();
             Console.WriteLine($"Max COL: {MaxColumnSelection}");
             Console.WriteLine($"Max ROW: {MaxRowSelection}");
-            //BackgroundImage = Resources.shopbg;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            BackColor = Color.Transparent;
+            BackgroundImage = Resources.scorebg;
 
             this.BringUp();
         }
@@ -962,6 +963,7 @@ namespace IO_projekt
         int MaxTabInd;
 
 
+
         public OptionsPanel(Form1 fh)
         {
             this.FlowDirection = FlowDirection.TopDown;
@@ -982,6 +984,10 @@ namespace IO_projekt
             KeyDown += OptionsPanel_KeyDown;
             this.BringToFront();
             this.Focus();
+
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.BackColor = Color.Transparent;
+            this.BackgroundImage = Resources.scorebg2;
         }
 
         private void SetSelection(int PrevInd = -2)
@@ -1250,6 +1256,7 @@ namespace IO_projekt
             MainPanel.Width = this.Width;
             //MainPanel.Height = this.Height;
 
+
             Console.WriteLine($"Current MainPanel.Height = {MainPanel.Height}");
         }
 
@@ -1299,7 +1306,10 @@ namespace IO_projekt
             TopPanel.Controls.Add(new Label() { Text = "", Font = new Font("Stencil", 36, FontStyle.Bold), ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, 0);
             TopPanel.Controls.Add(new Label() { Text = "sad", Font = new Font("Stencil", 18, FontStyle.Bold), ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 2, 0);
             this.Controls.Add(TopPanel);
-            TopPanel.BackColor = Color.Blue;
+            //TopPanel.BackColor = Color.Blue;
+            TopPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            TopPanel.BackColor = Color.Transparent;
+            TopPanel.BackgroundImage = Properties.Resources.scorebg;
 
             SetupMainTable();
 
