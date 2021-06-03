@@ -72,6 +72,10 @@ namespace IO_projekt
             public void PlayDeathAnim()
             {
                 new Thread(DeathAnim).Start();
+                if (new Random().Next(0, 10) > 8)
+                {
+                    Conf.bonuses2.Add(new Credit(formHandle, this, new Random().Next(0, 50)));
+                }
             }
         }
 
@@ -275,12 +279,7 @@ namespace IO_projekt
             public override void GetHit()
             {
                 if (!alreadyShot)
-                {
-                    if (new Random().Next(0, 10) > 5 || true)
-                    {
-                        Conf.bonuses2.Add(new Credit(formHandle, this, new Random().Next(0, 50)));
-                    }
-
+                {                  
                     this.Sprite.Dispose();
                     Conf.EnemiesToRemove.Add(this);
                     score += scoreMultiplier;

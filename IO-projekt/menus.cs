@@ -18,11 +18,9 @@ namespace IO_projekt
 
     public class PauseMenuPanel : TableLayoutPanel
     {
-        Form1 FormHandle;        
-        Label ExitLabel;
-        Label ContinueLabel;
+        Form1 FormHandle;
 
-        string[] Selections = { "continue", "exit" };
+        string[] Selections = { "continue", "exit to menu", "exit to desktop" };
         int MaxSelection = 1;
         int CurrentSelection = 0;
         
@@ -40,25 +38,11 @@ namespace IO_projekt
             this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
             this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
 
-            ContinueLabel = new Label();
-            this.Controls.Add(ContinueLabel, 1, 0);
-            this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 0, 0);
-            this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 2, 0);
-            ContinueLabel.Font = MenusConfig.DefaultFont;
-            ContinueLabel.Text = "CONTINUE";
-            ContinueLabel.ForeColor = Color.White;
-            ContinueLabel.AutoSize = true;
-            ContinueLabel.Anchor = AnchorStyles.None;
-
-            ExitLabel = new Label();
-            this.Controls.Add(ExitLabel, 1, 1);
-            this.Controls.Add(new PictureBox() { Image = Properties.Resources.LeftSelectionMarker, Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 0, 1);
-            this.Controls.Add(new PictureBox() { Image = Properties.Resources.RightSelectionMarker, Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 2, 1);
-            ExitLabel.Font = MenusConfig.DefaultFont;
-            ExitLabel.Text = "EXIT";
-            ExitLabel.ForeColor = Color.White;
-            ExitLabel.AutoSize = true;
-            ExitLabel.Anchor = AnchorStyles.None;
+            this.RowCount = 1;
+            foreach (string s in Selections)
+            {
+                AddSelection(s);
+            }
 
             this.FormHandle.Controls.Add(this);
             
@@ -98,6 +82,21 @@ namespace IO_projekt
             ((PictureBox)this.GetControlFromPosition(2, CurrentSelection)).Image = Properties.Resources.RightSelectionMarker;
         }
 
+        private void AddSelection(string s)
+        {
+            this.RowCount++;
+            this.Controls.Add(new Label() {
+                        Font = MenusConfig.DefaultFont,
+                        Text = s,
+                        ForeColor = Color.White,
+                        AutoSize = true,
+                        Anchor = AnchorStyles.None,
+                }, 1, this.RowCount-2);
+            this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 0, this.RowCount - 2);
+            this.Controls.Add(new PictureBox() { Width = 25, Height = 25, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.None }, 2, this.RowCount - 2);
+
+        }
+
         public void Reposition()
         {
             this.Width = this.FormHandle.Width / 2 - 200;
@@ -115,7 +114,13 @@ namespace IO_projekt
                     this.HideMenu();
                     break;
 
-                case "exit":
+                case "exit to menu":
+                    this.HideMenu();
+                    FormHandle.MainMenu?.Dispose();
+                    FormHandle.MainMenu = new MainMenuPanel(FormHandle);
+                    break;
+
+                case "exit to desktop":
                     this.FormHandle.Close();
                     break;
             }
