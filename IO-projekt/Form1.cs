@@ -58,9 +58,7 @@ namespace IO_projekt
             LifePointslbl.Text = hp.ToString();
 
             xGamePanel = null;
-            //p = new Player(this);
-            //this.xGamePanel = new FirstArea(this, p);
-            //this.Controls.Add(this.xGamePanel);
+
             PauseMenu = new PauseMenuPanel(this);
 
             gameMedia = new WindowsMediaPlayer();
@@ -74,7 +72,6 @@ namespace IO_projekt
             File.WriteAllBytes(@"sound\bonus.wav", StreamToByteArr(Properties.Resources.bonus));
 
             gameMedia.URL = @"sound\game_music.wav";
-            //shootMedia.URL = @"sound\laser.wav";
             bonusMedia.URL = @"sound\bonus.wav";
 
             gameMedia.settings.setMode("loop", true);
@@ -82,7 +79,6 @@ namespace IO_projekt
             shootMedia.settings.volume = 4;
             bonusMedia.settings.volume = 4;
 
-            //gameMedia.controls.play();
             gameMedia.controls.stop();
 
             FormBorderStyle = FormBorderStyle.None;
@@ -92,7 +88,6 @@ namespace IO_projekt
 
             labelTopOffset = scoreMultiplierTimeLabel.Top;
 
-            SrvField();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -115,15 +110,13 @@ namespace IO_projekt
             StarArray = new Star[StarCount];
             for (int i = 0; i < StarCount; i++)
             {
-                //StarArray[i] = new Star(this);
                 StarArray[i] = null;
             }
         }      
         
         private void Form1_shown(object sender, EventArgs e)
         {
-            //this.xGamePanel.Width = this.Width;
-            //this.xGamePanel.Height = this.Height;
+
 
             this.PauseMenu.Reposition();
 
@@ -307,32 +300,7 @@ namespace IO_projekt
             Conf.DelayedAdd();
         }
 
-        private void Exitbtn_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
 
-        private void Replaybtn_Click(object sender, EventArgs e)
-        {
-            score = 0;
-            level = 1;
-            scoreMultiplierTime = 0;
-            Pointslbl.Text = Convert.ToString(score);
-            hp = 100;
-            LifePointslbl.Text = Convert.ToString(hp);
-            Pause = false;
-            GameOver = false;
-            p.ResetGame();
-            MainTimer.Start();
-            Cursor.Hide();
-            pauseLabel.Visible = false;
-            this.ActiveControl = null;
-            p.MoveRightStop();
-            p.MoveLeftStop();
-            p.MoveUpStop();
-            p.MoveDownStop();
-            Cursor.Hide();
-        }
 
         public static byte[] StreamToByteArr(Stream input)
         {
@@ -348,29 +316,7 @@ namespace IO_projekt
             }
         }
 
-        private void Scorebtn_Click(object sender, EventArgs e)
-        {/*
-            ScoreView.Size = new Size(327, 334);
-            ScoreView.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 163, 250);
-            //Playbtn.Visible = false;
-            ScoreView.Visible = true;*/
-        }
 
-        private void ClScorebtn_Click(object sender, EventArgs e)
-        {/*
-            ScoreView.Visible = false;*/
-        }
-
-        private void Playbtn_Click(object sender, EventArgs e)
-        {/*
-            MainTimer.Start();
-            Cursor.Hide();
-            pauseLabel.Visible = false;
-            Exitbtn.Visible = false;
-            Scorebtn.Visible = false;
-            Pause = false;
-            Playbtn.Visible = false;*/
-        }
 
         public void showGameOver(string message)
         {
@@ -384,7 +330,6 @@ namespace IO_projekt
             if (Int32.Parse(Pointslbl.Text) > lowest)
             {
                 ScoreView.Clear();
-                SrvField();
             }
 
             pauseLabel.Text = message;
@@ -406,7 +351,6 @@ namespace IO_projekt
             p.MoveUpStop();
             p.MoveDownStop();
 
-            //MainTimer.Stop();
             Cursor.Show();
         }
 
