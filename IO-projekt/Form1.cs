@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WMPLib;
 
@@ -87,7 +81,6 @@ namespace IO_projekt
             this.Shown += Form1_shown;
 
             labelTopOffset = scoreMultiplierTimeLabel.Top;
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -116,51 +109,48 @@ namespace IO_projekt
         
         private void Form1_shown(object sender, EventArgs e)
         {
-
-
             this.PauseMenu.Reposition();
 
-            this.MainMenu = new MainMenuPanel(this);
-           
+            this.MainMenu = new MainMenuPanel(this);          
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-                if (e.KeyCode == Keys.Right)
+            if (e.KeyCode == Keys.Right)
+            {
+                if (!Pause)
                 {
-                    if (!Pause)
-                    {
-                        p.MoveRight();
-                    }
+                    p.MoveRight();
                 }
-                if (e.KeyCode == Keys.Left)
+            }
+            if (e.KeyCode == Keys.Left)
+            {
+                if (!Pause)
                 {
-                    if (!Pause)
-                    {
-                        p.MoveLeft();                    
-                    }
+                    p.MoveLeft();                    
                 }
-                if (e.KeyCode == Keys.Up)
+            }
+            if (e.KeyCode == Keys.Up)
+            {
+                if (!Pause)
                 {
-                    if (!Pause)
-                    {
-                        p.MoveUp();
-                    }
+                    p.MoveUp();
                 }
-                if (e.KeyCode == Keys.Down)
+            }
+            if (e.KeyCode == Keys.Down)
+            {
+                if (!Pause)
                 {
-                    if (!Pause)
-                    {
-                        p.MoveDown();
-                    }
+                    p.MoveDown();
                 }
-                if (e.KeyCode == Keys.Space)
+            }
+            if (e.KeyCode == Keys.Space)
+            {
+                if (!Pause)
                 {
-                    if (!Pause)
-                    {
-                        p.OpenGunLock();
-                    }
-                }           
+                    p.OpenGunLock();
+                }
+            }           
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
@@ -300,8 +290,6 @@ namespace IO_projekt
             Conf.DelayedAdd();
         }
 
-
-
         public static byte[] StreamToByteArr(Stream input)
         {
             byte[] buffer = new byte[16 * 1024];
@@ -315,9 +303,7 @@ namespace IO_projekt
                 return ms.ToArray();
             }
         }
-
-
-
+       
         public void showGameOver(string message)
         {
             GameOver = true;
@@ -342,8 +328,7 @@ namespace IO_projekt
             {
                 pauseLabel.Location = new Point((System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2) - 285, 100);
             }            
-                               
-            
+                                         
             pauseLabel.Visible = true;
 
             p.MoveRightStop();
@@ -353,7 +338,7 @@ namespace IO_projekt
 
             Cursor.Show();
         }
-
+        
         public void UpdateHpLabel()
         {
             if (hp < 0)
@@ -363,6 +348,5 @@ namespace IO_projekt
             }
             this.LifePointslbl.Text = Convert.ToString(hp);
         }
-
     }
 }

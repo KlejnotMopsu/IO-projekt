@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
-using System.Threading;
-using System.Media;
 using WMPLib;
 using System.IO;
 
@@ -18,14 +13,23 @@ namespace IO_projekt
         {
             public Form1 FormHandle;
             public Form1.Player PlayerHandle;
+            public Random Seed;
 
             public abstract void TICK();
+
+            public GamePanel(Form1 fh, Player ph)
+            {
+                Conf.ClearAndDisposeAll();
+
+                Seed = new Random();
+                FormHandle = fh;
+                PlayerHandle = ph;
+            }
 
             public async void SpawnPlayer()
             {
                 PlayerHandle.Sprite.Left = this.FormHandle.Width / 2 - PlayerHandle.Sprite.Width / 2;
                 PlayerHandle.Sprite.Top = this.FormHandle.Height + PlayerHandle.Sprite.Height;
-
 
                 while (PlayerHandle.Sprite.Top > this.Height - PlayerHandle.Sprite.Height - 50)
                 {
@@ -37,17 +41,9 @@ namespace IO_projekt
         }
 
         public class FirstArea : GamePanel
-        {
-            Random Seed;
-            public FirstArea(Form1 fh, Form1.Player ph)
-            {
-                FormHandle = fh;
-                PlayerHandle = ph;
-
-                Seed = new Random();
-
-                Conf.ClearAndDisposeAll();
-
+        {          
+            public FirstArea(Form1 fh, Form1.Player ph) : base(fh, ph)
+            {          
                 this.BackColor = Color.Black;
                 this.FormHandle.BackColor = Color.Black;
 
@@ -61,7 +57,7 @@ namespace IO_projekt
 
             public override void TICK()
             {
-                int roll = Seed.Next(150);
+                int roll = this.Seed.Next(150);
                 if ((roll == 0 || roll == 1) && Form1.level >= 1 && !Form1.BossLevel)
                 {
                     Form1.EnemyStandard en = new Form1.EnemyStandard(FormHandle, FormHandle.p);
@@ -130,22 +126,14 @@ namespace IO_projekt
 
         public class SecondArea : GamePanel
         {
-            Random Seed;
             public int phase;
             public EnemySecondBoss leftBoss;
             public EnemySecondBoss rightBoss;
             int riflemanCount;
             WindowsMediaPlayer bossMedia;
 
-            public SecondArea(Form1 fh, Form1.Player ph)
+            public SecondArea(Form1 fh, Form1.Player ph) : base(fh, ph)
             {
-                FormHandle = fh;
-                PlayerHandle = ph;
-
-                Seed = new Random();
-
-                Conf.ClearAndDisposeAll();
-
                 this.BackColor = ColorTranslator.FromHtml("#033806");
                 FormHandle.BackColor = ColorTranslator.FromHtml("#033806");
 
@@ -246,7 +234,7 @@ namespace IO_projekt
                 {
                     phase = 2;
                 }
-        }
+            }
 
             private class Meteorite : Form1.Enemy
             {
@@ -273,7 +261,6 @@ namespace IO_projekt
 
                 public override void TICK()
                 {
-
                     Sprite.Top += 3;
                     if (Sprite.Top > GPHandle.Height)
                     {
@@ -300,17 +287,8 @@ namespace IO_projekt
 
         public class ThirdArea : GamePanel
         {
-            Random Seed;
-
-            public ThirdArea(Form1 fh, Form1.Player ph)
+            public ThirdArea(Form1 fh, Form1.Player ph) : base(fh, ph)
             {
-                FormHandle = fh;
-                PlayerHandle = ph;
-
-                Seed = new Random();
-
-                Conf.ClearAndDisposeAll();
-
                 this.BackColor = ColorTranslator.FromHtml("#2e040c");
                 FormHandle.BackColor = ColorTranslator.FromHtml("#2e040c");
 

@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
-using WMPLib;
 using System.Drawing;
-using System.Threading;
 using System.Media;
 
 namespace IO_projekt
@@ -19,7 +13,6 @@ namespace IO_projekt
         public static List<Form1.EnemyBullet> enemyBullets = new List<Form1.EnemyBullet>();
         public static List<Form1.Bonus> bonuses = new List<Form1.Bonus>();
         public static List<Bonus2> bonuses2 = new List<Bonus2>();
-
 
         public static List<object> DelayedAddList = new List<object>();
         public static void ClearAll()
@@ -36,12 +29,10 @@ namespace IO_projekt
                 e.Sprite.Dispose();
                 Form1.EnemyRifleman er = e as Form1.EnemyRifleman;
                 if (er != null)
-                {
-                    
+                {                
                     er.EnemyShootTimer.Stop();
                     er.EnemyShootTimer.Dispose();
-                }
-                    
+                }                   
             }
             enemies.Clear();
 
@@ -216,28 +207,7 @@ namespace IO_projekt
             public void CloseGunLock()
             {
                 IsGunLockOpen = false;
-            }
-
-            public void xMoveLeft()
-            {
-                if (this.Sprite.Left > this.Sprite.Width)
-                    this.Sprite.Left -= MovementSpeed;
-            }
-            public void xMoveRight()
-            {
-                if (this.Sprite.Left < this.formHandle.Width - this.Sprite.Width)
-                    this.Sprite.Left += MovementSpeed;
-            }
-            public void xMoveUp()
-            {
-                if (this.Sprite.Top < this.Sprite.Height)
-                    this.Sprite.Top -= MovementSpeed;
-            }
-            public void xMoveDown()
-            {
-                if (this.Sprite.Top > this.formHandle.Height - this.Sprite.Height)
-                    this.Sprite.Top += MovementSpeed;
-            }
+            }         
 
             public void ResetGame()
             {                
@@ -247,9 +217,12 @@ namespace IO_projekt
                 doubleShootTime = 0;
                 scatterGun = false;
 
+                Conf.ClearAndDisposeAll();
+                /*
                 foreach (Enemy en in Conf.enemies)
                 {
                     en.Sprite.Top = -1000;
+                    en.Sprite.Dispose();
                     en.DistanceTravelled = en.MaxDistanceTravel;
                     formHandle.Controls.Remove(en.Sprite);                    
                 }
@@ -258,6 +231,7 @@ namespace IO_projekt
                 foreach (Bullet b in Conf.bullets)
                 {
                     b.Sprite.Top = -1000;
+                    b.Sprite.Dispose();
                     b.DistanceTravelled = b.MaxDistanceTravelled;
                     formHandle.Controls.Remove(b.Sprite);
                 }
@@ -266,6 +240,7 @@ namespace IO_projekt
                 foreach (EnemyBullet b in Conf.enemyBullets)
                 {
                     b.Sprite.Top = -1000;
+                    b.Sprite.Dispose();
                     b.DistanceTravelled = b.MaxDistanceTravelled;
                     formHandle.Controls.Remove(b.Sprite);
                 }
@@ -274,10 +249,11 @@ namespace IO_projekt
                 foreach (Bonus b in Conf.bonuses)
                 {
                     b.Sprite.Top = -1000;
+                    b.Sprite.Dispose();
                     b.DistanceTravelled = b.MaxDistanceTravel;
                     formHandle.Controls.Remove(b.Sprite);
                 }
-                Conf.bonuses.Clear();                                
+                Conf.bonuses.Clear();    */                            
             }            
 
             public class Bullet
@@ -559,7 +535,6 @@ namespace IO_projekt
             {
                 this.formHandle.Controls.Remove(this.Sprite);
             }
-        }
-       
+        }     
     }
 }

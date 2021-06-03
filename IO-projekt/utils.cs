@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 
-
 namespace IO_projekt
 {
     public partial class Form1 : Form
@@ -21,7 +20,6 @@ namespace IO_projekt
             FpsLabel.ForeColor = Color.White;
             FpsLabel.AutoSize = true;
             FpsLabel.Top = this.Height - FpsLabel.Height-10;
-
 
             this.Controls.Add(FpsLabel);
             FpsLabel.BringToFront();
