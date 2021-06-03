@@ -886,7 +886,6 @@ namespace IO_projekt
                     DistanceTravelled = MaxDistanceTravel;
                     formHandle.Controls.Remove(this.Sprite);
                     Conf.EnemiesToRemove.Add(this);
-                    //Conf.enemies.Remove(this);
 
                     if (p.shielded)
                     {
@@ -901,7 +900,6 @@ namespace IO_projekt
                     Console.WriteLine("hp = " + hp);
                     this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
                     p.HPCheck();
-                    //this.EnemyTimer.Stop();
                 }
                 if (DistanceTravelled < MaxDistanceTravel)
                 {
@@ -914,7 +912,6 @@ namespace IO_projekt
 
                     Console.WriteLine("hp = " + hp);
                     this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
-                    //this.EnemyTimer.Stop();
                     p.HPCheck();
                 }
             }

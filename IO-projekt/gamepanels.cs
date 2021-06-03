@@ -26,8 +26,6 @@ namespace IO_projekt
                 PlayerHandle.Sprite.Left = this.FormHandle.Width / 2 - PlayerHandle.Sprite.Width / 2;
                 PlayerHandle.Sprite.Top = this.FormHandle.Height + PlayerHandle.Sprite.Height;
 
-                //PlayerHandle.Sprite.Left = 1000;
-                //PlayerHandle.Sprite.Top = 1000;
 
                 while (PlayerHandle.Sprite.Top > this.Height - PlayerHandle.Sprite.Height - 50)
                 {

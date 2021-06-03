@@ -30,7 +30,6 @@ namespace IO_projekt
             FpsThread = new System.Threading.Thread(() =>
             {
                 Console.WriteLine("Declaring FpsThread...");
-                //public volatile int FramesInCurrentSecond = 0;
 
                 System.Timers.Timer FpsTimer = new System.Timers.Timer(1000);
                 FpsTimer.Enabled = true;
@@ -41,10 +40,6 @@ namespace IO_projekt
 
                 void FpsTimer_tick(object sender, System.Timers.ElapsedEventArgs e)
                 {
-                    //Console.WriteLine("Second has passed");
-                    //Console.WriteLine($"FPS: {FramesInCurrentSecond}");
-
-                    //FpsLabel.Text = $"FPS: {FramesInCurrentSecond}";
                     FpsLabel.Invoke(new MethodInvoker(delegate { FpsLabel.Text = $"FPS: {FramesInCurrentSecond}"; }));
                     FramesInCurrentSecond = 0;
                 }

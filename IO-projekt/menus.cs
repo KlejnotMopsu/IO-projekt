@@ -183,10 +183,6 @@ namespace IO_projekt
 
             this.ColumnCount = 3;
             this.RowCount = 2;
-            
-
-            //this.BackgroundImage = Properties.Resources.menubg ;
-            //this.BackColor = Color.DarkRed;
 
             this.ColumnStyles.Clear();
             this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40));
@@ -211,7 +207,6 @@ namespace IO_projekt
 
             this.KeyDown += MainMenu_KeyDown;
 
-            //this.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
             this.RowStyles.Clear();
             this.RowStyles.Add(new RowStyle(SizeType.Absolute, 400));
             
@@ -269,7 +264,6 @@ namespace IO_projekt
                     }
 
                     FormHandle.gameMedia.controls.play();
-                    //FormHandle.StartNewGame();
                     break;
 
                 case "options":
@@ -343,7 +337,6 @@ namespace IO_projekt
 
             this.ColumnCount = 2;
             this.RowCount = 2;
-            //this.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
 
             this.RowStyles.Clear();
             this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
@@ -386,8 +379,6 @@ namespace IO_projekt
 
             EscLabel = new Label() { Text="Press esc to quit", Font = MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize=true, Anchor=AnchorStyles.Left };
             this.FormHandle.Controls.Add(EscLabel);
-            //this.Controls.Add(EscLabel);
-           //EscLabel.Parent = this;
             EscLabel.BringToFront();
 
             EscLabelTimer = new Timer() { Interval=600 };
@@ -604,9 +595,6 @@ namespace IO_projekt
             BottomPanel.Controls.Add(ExitLabel, 0, 0);
             BottomPanel.Controls.Add(CreditsLabel, 1, 0);
             BottomPanel.Controls.Add(ItemDescriptionLabel, 2, 0);
-            //BottomPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
-
-            //((PictureBox)ShopTabTable.GetControlFromPosition(0, 0)).Image = Properties.Resources.RightSelectionMarker;
             ((PictureBox)ShopTabTable.GetControlFromPosition(2, 0)).Image = Properties.Resources.LeftSelectionMarker;
 
             this.Reposition();
@@ -619,11 +607,9 @@ namespace IO_projekt
             this.ShopTablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
             this.ShopTablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
             this.ShopTablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
-            //ShopTablePanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
 
             this.ShopTablePanel.RowStyles.Clear();
             this.ShopTablePanel.RowStyles.Add(new RowStyle(SizeType.Absolute, this.ShopTablePanel.Width / this.ShopTablePanel.ColumnCount));
-            //ShopTabTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
 
             LoadBonusesTab();
             this.ShopTablePanel.RowCount++;
@@ -633,7 +619,6 @@ namespace IO_projekt
             this.Controls.Add(ShopTabTable);
             this.Controls.Add(ShopTablePanel);
             this.Controls.Add(BottomPanel);
-            //this.Controls.Add(ExitLabel);
             this.BringToFront();
 
             this.KeyDown += ShopPanel_KeyPress;
@@ -979,7 +964,6 @@ namespace IO_projekt
             FormHandle.Controls.Add(this);
             Reposition();
             ReloadTab();
-            //this.BackColor = Color.Pink;
             
             KeyDown += OptionsPanel_KeyDown;
             this.BringToFront();
@@ -1038,10 +1022,6 @@ namespace IO_projekt
                 ((Label)TopPanel.GetControlFromPosition(2, 0)).Text = "";
             }
 
-            /*
-            while (MainPanel.Controls.Count > 0)
-                MainPanel.Controls[0].Dispose();
-                */
             for (int i=0; i<MainPanel.RowCount; i++)
             {
                 ((Label)MainPanel.GetControlFromPosition(1, i)).Text = "";
@@ -1049,7 +1029,6 @@ namespace IO_projekt
 
             MaxRow = 0;
             MainPanel.RowStyles.Clear();
-            //MainPanel.Height = 0;
             foreach (string s in OptionsTabs[OptionsTabs.Keys.ToArray()[CurrentTabInd]])
             {
                 AddMainPanelEntry(s);
@@ -1127,7 +1106,6 @@ namespace IO_projekt
                     {
                         CurrentTabInd--;
                         ReloadTab();
-                        //Reposition();
                     }
                 }
                 else
@@ -1181,7 +1159,6 @@ namespace IO_projekt
                     {
                         CurrentTabInd++;
                         ReloadTab();
-                        //Reposition();
                     }
                 }
                 else
@@ -1259,7 +1236,6 @@ namespace IO_projekt
 
             TopPanel.Width = this.Width;
             MainPanel.Width = this.Width;
-            //MainPanel.Height = this.Height;
 
 
             Console.WriteLine($"Current MainPanel.Height = {MainPanel.Height}");
@@ -1269,18 +1245,7 @@ namespace IO_projekt
         {
             MaxRow++;
             Console.WriteLine($"Current MainPanel.RowCount = {MainPanel.RowCount}");
-            /*
-            MainPanel.Controls.Add(new Label() { Text = "ha-ha", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.Right }, 0, MainPanel.RowCount - 1);
-            MainPanel.Controls.Add(new Label() { Text = "ha-ha", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, MainPanel.RowCount - 1);
-            MainPanel.Controls.Add(new Label() { Text = "ha-ha", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.Left }, 2, MainPanel.RowCount-1);
-            
-            return;*//*
-            MainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 65));
-            MainPanel.Height += 70;
-            MainPanel.Controls.Add(new PictureBox() { Width = 60, Height = 60, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Right }, 0, MainPanel.RowCount - 1);
-            MainPanel.Controls.Add(new Label() { Text = s + ": ", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, MainPanel.RowCount - 1);
-            MainPanel.Controls.Add(new PictureBox() { Width = 60, Height = 60, SizeMode = PictureBoxSizeMode.Zoom, Anchor = AnchorStyles.Left }, 2, MainPanel.RowCount - 1);
-            */
+
 
             ((Label)MainPanel.GetControlFromPosition(1, MaxRow - 1)).Text = s + ": ";
 
@@ -1315,7 +1280,6 @@ namespace IO_projekt
             TopPanel.Controls.Add(new Label() { Text = "", Font = new Font("Stencil", 36, FontStyle.Bold), ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 1, 0);
             TopPanel.Controls.Add(new Label() { Text = "sad", Font = new Font("Stencil", 18, FontStyle.Bold), ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None }, 2, 0);
             this.Controls.Add(TopPanel);
-            //TopPanel.BackColor = Color.Blue;
             TopPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             TopPanel.BackColor = Color.Transparent;
             TopPanel.BackgroundImage = Properties.Resources.scorebg;
@@ -1336,8 +1300,7 @@ namespace IO_projekt
             MainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40));
             MainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
             this.Controls.Add(MainPanel);
-            //MainPanel.BackColor = Color.Red;
-           // MainPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset;
+
 
             MainPanel.RowCount = 4;
             for (int i = 0; i < MainPanel.RowCount; i++)
