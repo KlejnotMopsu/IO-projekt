@@ -63,6 +63,8 @@ namespace IO_projekt
             pauseLabel.Visible = false;
             hp = 100;
             UpdateHpLabel();
+            score = 0;
+            UpdateScoreLabel();
 
             if (Properties.Settings.Default.ShowFPS)
                 StartFpsThread();
@@ -149,6 +151,21 @@ namespace IO_projekt
         public void BringUpShop()
         {
             new ShopPanel(this);
+        }
+
+        public void UpdateHpLabel()
+        {
+            if (hp < 0)
+            {
+                this.LifePointslbl.Text = Convert.ToString(0);
+                return;
+            }
+            this.LifePointslbl.Text = Convert.ToString(hp);
+        }
+
+        public void UpdateScoreLabel()
+        {
+            this.Pointslbl.Text = Convert.ToString(score);
         }
     }
 }

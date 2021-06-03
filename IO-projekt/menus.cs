@@ -14,7 +14,7 @@ namespace IO_projekt
     public static class MenusConfig
     {
         public static Font DefaultFont = new Font("Stencil", 24, FontStyle.Bold);
-    }
+    }       
 
     public class PauseMenuPanel : TableLayoutPanel
     {
@@ -25,7 +25,7 @@ namespace IO_projekt
         int CurrentSelection = 0;
         
         public PauseMenuPanel(Form1 fh)
-        {
+        {        
             FormHandle = fh;            
 
             MaxSelection = Selections.Length - 1;
@@ -47,27 +47,14 @@ namespace IO_projekt
             this.FormHandle.Controls.Add(this);
             
             this.BackColor = Color.Transparent;
-            this.Visible = false;
 
             this.SetSelection();
 
             this.KeyDown += PauseMenu_KeyDown;
-            this.KeyUp += PauseMenu_KeyUp;
-        }
 
-        public void BringUp()
-        {        
-            this.Visible = true;
+            this.Reposition();
+            this.BringToFront();
             this.Focus();
-            this.BringToFront();            
-        }
-        public void HideMenu()
-        {
-            this.Visible = false;
-            this.FormHandle.Focus();            
-            this.FormHandle.BringToFront();
-            this.FormHandle.MainTimer.Start();
-            Form1.Pause = false;
         }
 
         private void SetSelection()
@@ -111,11 +98,12 @@ namespace IO_projekt
             switch (Selections[CurrentSelection])
             {
                 case "continue":
-                    this.HideMenu();
+                    this.Dispose();
+                    this.FormHandle.MainTimer.Start();
                     break;
 
                 case "exit to menu":
-                    this.HideMenu();
+                    this.Dispose();
                     FormHandle.MainMenu?.Dispose();
                     FormHandle.MainMenu = new MainMenuPanel(FormHandle);
                     break;
@@ -147,15 +135,11 @@ namespace IO_projekt
             {
                 ConfirmSelection();
             }
-        }
-
-        private void PauseMenu_KeyUp(object sender, KeyEventArgs e)
-        {
             if (e.KeyCode == Keys.Escape)
             {
-                this.HideMenu();
+                this.Dispose();
             }
-        }
+        }     
     }
 
     public class MainMenuPanel : TableLayoutPanel
@@ -466,7 +450,6 @@ namespace IO_projekt
             NameLabel.Anchor = AnchorStyles.None;
             this.Controls.Add(NameLabel);
             
-
             this.KeyPress += ScoreEntry_KeyDown;
             this.Focus();
             this.Reposition();
@@ -548,8 +531,8 @@ namespace IO_projekt
             }
         }
 
-        private async void BringUp()
-        {
+        private void BringUp()
+        {/*
             FormHandle.MainTimer.Stop();
             FormHandle.p.MoveRightStop();
             FormHandle.p.MoveLeftStop();
@@ -563,7 +546,7 @@ namespace IO_projekt
             {
                 await System.Threading.Tasks.Task.Delay(10);
                 this.Left += 20;
-            }
+            }*/
             this.Left = 0;
         }
 
@@ -573,8 +556,7 @@ namespace IO_projekt
 
             FormHandle = fh;
             ShopTablePanel = new TableLayoutPanel();
-            
-            
+                      
             ExitLabel = new Label() { Text = "Exit Shop", Font = MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize = true, Anchor=AnchorStyles.None };
             ItemDescriptionLabel = new Label() { Text = "abc", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter };
             CreditsLabel = new Label() { Text = $"Credits:\n${FormHandle.p.Credits}", Font = MenusConfig.DefaultFont, ForeColor = Color.White, AutoSize = true, Anchor = AnchorStyles.None, TextAlign=ContentAlignment.MiddleCenter };
@@ -619,7 +601,6 @@ namespace IO_projekt
             LoadBonusesTab();
             this.ShopTablePanel.RowCount++;
 
-
             FormHandle.Controls.Add(this);
             this.Controls.Add(ShopTabTable);
             this.Controls.Add(ShopTablePanel);
@@ -660,7 +641,6 @@ namespace IO_projekt
             int ColumnIndex = 0;
             foreach (ShopEntry s in BonusesSelections)
             {
-
                 Console.WriteLine($"Adding selection {s.Name}");
 
                 this.ShopTablePanel.Controls.Add(new PictureBox()
@@ -696,7 +676,6 @@ namespace IO_projekt
             int ColumnIndex = 0;
             foreach (ShopEntry s in UpgradesSelections)
             {
-
                 Console.WriteLine($"Adding selection {s.Name}");
 
                 this.ShopTablePanel.Controls.Add(new PictureBox()
@@ -933,7 +912,6 @@ namespace IO_projekt
             
         }
     }
-
 
     public class OptionsPanel : FlowLayoutPanel
     {

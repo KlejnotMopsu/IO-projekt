@@ -53,7 +53,7 @@ namespace IO_projekt
 
             xGamePanel = null;
 
-            PauseMenu = new PauseMenuPanel(this);
+            //PauseMenu = new PauseMenuPanel(this);
 
             gameMedia = new WindowsMediaPlayer();
             shootMedia = new WindowsMediaPlayer();
@@ -109,7 +109,7 @@ namespace IO_projekt
         
         private void Form1_shown(object sender, EventArgs e)
         {
-            this.PauseMenu.Reposition();
+            //this.PauseMenu.Reposition();
 
             this.MainMenu = new MainMenuPanel(this);          
         }
@@ -216,7 +216,8 @@ namespace IO_projekt
                         p.CloseGunLock();
                         p.CloseGunLock();
 
-                        this.PauseMenu.BringUp();
+                        new PauseMenuPanel(this);
+                        //this.PauseMenu.BringUp();
                         MainTimer.Stop();
                         Pause = true;
                     }
@@ -337,16 +338,6 @@ namespace IO_projekt
             p.MoveDownStop();
 
             Cursor.Show();
-        }
-        
-        public void UpdateHpLabel()
-        {
-            if (hp < 0)
-            {
-                this.LifePointslbl.Text = Convert.ToString(0);
-                return;
-            }
-            this.LifePointslbl.Text = Convert.ToString(hp);
-        }
+        }               
     }
 }
