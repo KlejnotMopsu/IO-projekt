@@ -147,6 +147,9 @@ namespace IO_projekt
                 set { scatterGun = value; }
             }
 
+            public int bulletSpeed;
+            public bool bulletSpeedIncreased;
+
             System.Windows.Forms.Timer MoveRightTimer;
             System.Windows.Forms.Timer MoveLeftTimer;
             System.Windows.Forms.Timer MoveUpTimer;
@@ -165,6 +168,8 @@ namespace IO_projekt
                 Console.WriteLine("Sprite.Location = " + "(" + Sprite.Location.X + "," + Sprite.Location.Y + ")");
 
                 MovementSpeed = 20;
+                bulletSpeed = 15;
+                bulletSpeedIncreased = false;
 
                 IsGunLockOpen = false;
                 GunCooldown = 0;
@@ -266,10 +271,10 @@ namespace IO_projekt
                 
                 Form1 formHandle;
 
-                public Bullet(Form1 f, Player p, int x, int y)
+                public Bullet(Form1 f, Player p, int x, int y, int bs)
                 {
                     formHandle = f;
-                    BulletSpeed = 15;
+                    BulletSpeed = bs;
                     BulletSpeedHorizontal = 0;
                     DistanceTravelled = 0;
                     MaxDistanceTravelled = f.Height + 200;
@@ -282,10 +287,10 @@ namespace IO_projekt
                     f.xGamePanel.Controls.Add(this.Sprite);
                 }
 
-                public Bullet(Form1 f, Player p, int x, int y, String type)
+                public Bullet(Form1 f, Player p, int x, int y, String type, int bs)
                 {
                     formHandle = f;
-                    BulletSpeed = 15;
+                    BulletSpeed = bs;
                                         
                     DistanceTravelled = 0;
                     MaxDistanceTravelled = f.Height + 200;
@@ -338,8 +343,7 @@ namespace IO_projekt
                     if (DistanceTravelled < MaxDistanceTravelled)
                     {
                         DistanceTravelled += BulletSpeed;
-                        this.Sprite.Top -= this.BulletSpeed;
-                        this.Sprite.Left += this.BulletSpeedHorizontal;
+                        this.Sprite.Location = new Point(this.Sprite.Left + BulletSpeedHorizontal, this.Sprite.Top - BulletSpeed);
                     }
                     else if (this.DistanceTravelled >= this.MaxDistanceTravelled)
                     {
@@ -451,18 +455,18 @@ namespace IO_projekt
 
                         if(doubleShootTime > 0)
                         {
-                            Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 4, this.Sprite.Location.Y));
-                            Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 2 + this.Sprite.Width / 4, this.Sprite.Location.Y));
+                            Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 4, this.Sprite.Location.Y, bulletSpeed));
+                            Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 2 + this.Sprite.Width / 4, this.Sprite.Location.Y, bulletSpeed));
                         }
                         else
                         {
-                            Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y));
+                            Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y, bulletSpeed));
                         }
 
                         if(scatterGun)
                         {
-                            Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y, "left"));
-                            Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y, "right"));
+                            Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y, "left", bulletSpeed));
+                            Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y, "right", bulletSpeed));
                         }
                     }
                 }
