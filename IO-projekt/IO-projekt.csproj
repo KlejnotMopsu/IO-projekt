@@ -315,5 +315,8 @@
   <ItemGroup>
     <None Include="graphic\scorebg2.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\boss1Inc.wav" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

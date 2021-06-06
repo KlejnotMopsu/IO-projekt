@@ -212,54 +212,7 @@ namespace IO_projekt
             public void CloseGunLock()
             {
                 IsGunLockOpen = false;
-            }         
-
-            public void ResetGame()
-            {                
-                Sprite.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width/2, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height - 100);
-                Sprite.Image = Properties.Resources.player1;
-                shielded = false;
-                doubleShootTime = 0;
-                scatterGun = false;
-
-                Conf.ClearAndDisposeAll();
-                /*
-                foreach (Enemy en in Conf.enemies)
-                {
-                    en.Sprite.Top = -1000;
-                    en.Sprite.Dispose();
-                    en.DistanceTravelled = en.MaxDistanceTravel;
-                    formHandle.Controls.Remove(en.Sprite);                    
-                }
-                Conf.enemies.Clear();
-
-                foreach (Bullet b in Conf.bullets)
-                {
-                    b.Sprite.Top = -1000;
-                    b.Sprite.Dispose();
-                    b.DistanceTravelled = b.MaxDistanceTravelled;
-                    formHandle.Controls.Remove(b.Sprite);
-                }
-                Conf.bullets.Clear();
-
-                foreach (EnemyBullet b in Conf.enemyBullets)
-                {
-                    b.Sprite.Top = -1000;
-                    b.Sprite.Dispose();
-                    b.DistanceTravelled = b.MaxDistanceTravelled;
-                    formHandle.Controls.Remove(b.Sprite);
-                }
-                Conf.enemyBullets.Clear();
-
-                foreach (Bonus b in Conf.bonuses)
-                {
-                    b.Sprite.Top = -1000;
-                    b.Sprite.Dispose();
-                    b.DistanceTravelled = b.MaxDistanceTravel;
-                    formHandle.Controls.Remove(b.Sprite);
-                }
-                Conf.bonuses.Clear();    */                            
-            }            
+            }                                 
 
             public class Bullet
             {

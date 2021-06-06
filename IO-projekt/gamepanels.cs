@@ -77,8 +77,8 @@ namespace IO_projekt
                 else if (Form1.level >= 4 && !Form1.BossLevel)
                 {
                     bossMedia = new WindowsMediaPlayer();
-                    File.WriteAllBytes(@"sound\boss2Inc.wav", StreamToByteArr(Properties.Resources.boss2Inc));
-                    bossMedia.URL = @"sound\boss2Inc.wav";
+                    File.WriteAllBytes(@"sound\boss1Inc.wav", StreamToByteArr(Properties.Resources.boss1Inc));
+                    bossMedia.URL = @"sound\boss1Inc.wav";
                     bossMedia.settings.volume = 10;
                     bossMedia.controls.play();
 
@@ -277,7 +277,16 @@ namespace IO_projekt
 
                     if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
                     {
-                        Form1.hp -= 45;
+                        if (p.shielded)
+                        {
+                            p.shielded = false;
+                            p.Sprite.Image = Properties.Resources.player1;
+                        }
+                        else
+                        {
+                            hp -= 25;
+                        }
+
                         GPHandle.FormHandle.UpdateHpLabel();
                         this.Sprite.Dispose();
                         Conf.EnemiesToRemove.Add(this);

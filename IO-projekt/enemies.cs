@@ -63,7 +63,7 @@ namespace IO_projekt
                     }
                     catch (System.InvalidOperationException e)
                     {
-                    Console.WriteLine("Catched Exception!");
+                        Console.WriteLine("Catched Exception!" + e.Message);
                     }
                
                 
@@ -82,28 +82,9 @@ namespace IO_projekt
         public class Bonus : Enemy
         {
             public bool bonusHP = false;
-            public bool BonusHP
-            {
-                get { return bonusHP; }
-            }
-
             public bool bonusShield = false;
-            public bool BonusShield
-            {
-                get { return bonusShield; }
-            }
-
             public bool bonusDoubleShoot = false;
-            public bool BonusDoubleShoot
-            {
-                get { return bonusDoubleShoot; }
-            }
-
             public bool bonusMultiplier = false;
-            public bool BonusMultiplier
-            {
-                get { return bonusMultiplier; }
-            }
 
             public Bonus(Form1 f, Player p)
             {
@@ -707,7 +688,7 @@ namespace IO_projekt
 
                 BossShootTimer = new System.Windows.Forms.Timer();
                 BossShootTimer.Tick += new System.EventHandler(BossShootTimer_Tick);
-                BossShootTimer.Interval = 1500;
+                BossShootTimer.Interval = 2000;
                 BossShootTimer.Start();
 
                 f.xGamePanel.Controls.Add(this.Sprite);
@@ -839,7 +820,7 @@ namespace IO_projekt
 
                     if(sa.leftBoss.alive == false && sa.rightBoss.alive == false)
                     {
-                        score += 50 * scoreMultiplier;
+                        score += 25 * scoreMultiplier;
                         formHandle.BringUpShop();
                     }
                 }
@@ -996,7 +977,15 @@ namespace IO_projekt
                     Sprite.Dispose();
                     Conf.EnemiesToRemove.Add(this);
 
-                    hp -= 3;
+                    if(p.shielded)
+                    {
+                        p.shielded = false;
+                        p.Sprite.Image = Properties.Resources.player1;
+                    }
+                    else
+                    {
+                        hp -= 3;
+                    }                    
 
                     this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
                     p.HPCheck();
