@@ -468,7 +468,7 @@ namespace IO_projekt
         {         
             if (e.KeyChar == (char)Keys.Enter && PlayerName != "")
             {
-                File.AppendAllText(@"scores.txt", Convert.ToString(Form1.score) + '-' + PlayerName + '\n');
+                File.AppendAllText(@"scores.txt", Convert.ToString(Form1.score) + '-' + PlayerName.Replace("\n", "").Replace("\r", "") + '\n');
 
                 this.Dispose();
                 FormHandle.MainMenu = new MainMenuPanel(FormHandle);
