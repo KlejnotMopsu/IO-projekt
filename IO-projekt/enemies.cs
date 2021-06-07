@@ -638,6 +638,7 @@ namespace IO_projekt
             public System.Windows.Forms.Timer BossShootTimer;
             PictureBox hpBar;
             bool alive;
+            bool broughtShop;
             String side;
             SecondArea sa;
             int shootType;
@@ -654,6 +655,7 @@ namespace IO_projekt
                 DistanceTravelledVertical = MaxDistaceTravelVertical / 2;
                 phase = 1;
                 alive = true;
+                broughtShop = false;
                 this.side = side;                
 
                 this.p = p;
@@ -812,14 +814,18 @@ namespace IO_projekt
 
                 if (HitPoints <= 0)
                 {
-                    this.Sprite.Dispose();                    
-                    this.hpBar.Dispose();
-                    Conf.EnemiesToRemove.Add(this);                                                            
-                    BossShootTimer.Stop();
-                    alive = false;
-
-                    if(sa.leftBoss.alive == false && sa.rightBoss.alive == false)
+                    if(alive)
                     {
+                        this.Sprite.Dispose();                    
+                        this.hpBar.Dispose();
+                        Conf.EnemiesToRemove.Add(this);                                                            
+                        BossShootTimer.Stop();
+                        alive = false;
+                    }
+
+                    if(sa.leftBoss.alive == false && sa.rightBoss.alive == false && !broughtShop)
+                    {
+                        broughtShop = true;
                         score += 25 * scoreMultiplier;
                         Console.WriteLine("score = " + score);
                         formHandle.Pointslbl.Text = Convert.ToString(score);
