@@ -492,6 +492,8 @@ namespace IO_projekt
 
     public class ShopPanel : FlowLayoutPanel
     {
+        Panel BlackScreen;
+
         Form1 FormHandle;
         TableLayoutPanel ShopTablePanel;
         TableLayoutPanel ShopTabTable;
@@ -538,11 +540,53 @@ namespace IO_projekt
             this.Left = 0;
         }
 
+        private async void BlackScreenUp()
+        {
+            BlackScreen = new Panel();
+            BlackScreen.BackColor = Color.Black;
+            BlackScreen.Width = this.Width + 50;
+            BlackScreen.Height = this.Height;
+            BlackScreen.Top = 0;
+            BlackScreen.Left = -BlackScreen.Width;
+
+            this.FormHandle.Controls.Add(BlackScreen);
+            BlackScreen.BringToFront();
+
+            Label ShopLabel = new Label()
+            {
+                Text = "Shop",
+                Font = new Font("Stencil", 50, FontStyle.Bold),
+                ForeColor = Color.White,
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+            BlackScreen.Controls.Add(ShopLabel);
+
+            while (BlackScreen.Left < 0)
+            {
+                await System.Threading.Tasks.Task.Delay(10);
+                BlackScreen.Left += 50;
+            }
+           
+            ShopLabel.Dispose();
+        }
+        private async void BlackScreenDown()
+        {
+            while (BlackScreen.Left < BlackScreen.Width)
+            {
+                await System.Threading.Tasks.Task.Delay(10);
+                BlackScreen.Left += 50;
+            }
+        }
+
         public ShopPanel(Form1 fh)
         {
-            this.FlowDirection = FlowDirection.TopDown;
-
             FormHandle = fh;
+
+            //BlackScreenUp();
+
+            this.FlowDirection = FlowDirection.TopDown;
+            
             ShopTablePanel = new TableLayoutPanel();
                       
             ExitLabel = new Label() { Text = "Exit Shop", Font = MenusConfig.DefaultFont, ForeColor=Color.White, AutoSize = true, Anchor=AnchorStyles.None };
@@ -606,6 +650,8 @@ namespace IO_projekt
             BackgroundImage = Resources.scorebg;
 
             this.BringUp();
+            //BlackScreenDown();
+
         }
         public void Reposition()
         {
@@ -724,6 +770,8 @@ namespace IO_projekt
             if (CurrentRowSelection > MaxRowSelection)
             {
                 FormHandle.NextLevel();
+                this.Visible = false;
+                this.DisposeTabs();
                 this.Dispose();
                 
                 return;
@@ -831,6 +879,13 @@ namespace IO_projekt
             CurrentColumnSelection = 0;
             CurrentRowSelection = 0;
             SetSelection();
+        }
+
+        private void DisposeTabs()
+        {
+            ShopTabTable.Dispose();
+            ShopTablePanel.Dispose();
+            BottomPanel.Dispose();
         }
 
         private void ShopPanel_KeyPress(object sender, KeyEventArgs e)

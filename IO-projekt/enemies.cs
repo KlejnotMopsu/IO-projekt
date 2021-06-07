@@ -160,6 +160,7 @@ namespace IO_projekt
                                 formHandle.doubleShootTimeLabel.Top += formHandle.scoreMultiplierTimeLabel.Height;
                             }
                             formHandle.doubleShootTimeLabel.Visible = true;
+                            formHandle.p.CurrentGun = new DoubleGun(formHandle.p);
                         }
                         p.DoubleShootTime = 10000;                        
                     }
