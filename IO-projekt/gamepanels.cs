@@ -41,7 +41,8 @@ namespace IO_projekt
         }
 
         public class FirstArea : GamePanel
-        {          
+        {
+            WindowsMediaPlayer bossMedia;
             public FirstArea(Form1 fh, Form1.Player ph) : base(fh, ph)
             {          
                 this.BackColor = Color.Black;
@@ -75,13 +76,19 @@ namespace IO_projekt
                 }
                 else if (Form1.level >= 4 && !Form1.BossLevel)
                 {
+                    bossMedia = new WindowsMediaPlayer();
+                    File.WriteAllBytes(@"sound\boss1Inc.wav", StreamToByteArr(Properties.Resources.boss1Inc));
+                    bossMedia.URL = @"sound\boss1Inc.wav";
+                    bossMedia.settings.volume = 10;
+                    bossMedia.controls.play();
+
                     Form1.BossLevel = true;
                     Form1.level = 0;
                     Form1.EnemyBoss eb = new Form1.EnemyBoss(FormHandle, FormHandle.p);
                     Conf.enemies.Add(eb);
                 }
 
-                if(Conf.enemies.Count == 0)
+                if(Conf.enemies.Count == 0 && !Form1.BossLevel)
                 {
                     Form1.EnemyStandard en = new Form1.EnemyStandard(FormHandle, FormHandle.p);
                     Conf.enemies.Add(en);
@@ -270,7 +277,16 @@ namespace IO_projekt
 
                     if (this.Sprite.Bounds.IntersectsWith(p.Sprite.Bounds))
                     {
-                        Form1.hp -= 45;
+                        if (p.shielded)
+                        {
+                            p.shielded = false;
+                            p.Sprite.Image = Properties.Resources.player1;
+                        }
+                        else
+                        {
+                            hp -= 25;
+                        }
+
                         GPHandle.FormHandle.UpdateHpLabel();
                         this.Sprite.Dispose();
                         Conf.EnemiesToRemove.Add(this);

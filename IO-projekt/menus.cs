@@ -100,6 +100,7 @@ namespace IO_projekt
                 case "continue":
                     this.Dispose();
                     this.FormHandle.MainTimer.Start();
+                    Form1.Pause = false;
                     break;
 
                 case "exit to menu":
@@ -532,21 +533,8 @@ namespace IO_projekt
         }
 
         private void BringUp()
-        {/*
-            FormHandle.MainTimer.Stop();
-            FormHandle.p.MoveRightStop();
-            FormHandle.p.MoveLeftStop();
-            FormHandle.p.MoveUpStop();
-            FormHandle.p.MoveDownStop();
+        {
             FormHandle.p.CloseGunLock();
-            FormHandle.p.CloseGunLock();
-
-            this.Left = -this.Width;
-            while (this.Left < 0)
-            {
-                await System.Threading.Tasks.Task.Delay(10);
-                this.Left += 20;
-            }*/
             this.Left = 0;
         }
 
@@ -751,7 +739,16 @@ namespace IO_projekt
             switch (SelectedItem.Name)
             {
                 case "10 HP":
-                    Form1.hp += 10;
+                    if (Form1.hp < 100)
+                    {
+                        Form1.hp += 10;
+                        if (Form1.hp > 100)
+                        {
+                            Form1.hp = 100;
+                        }
+                    }
+                    else
+                        return;
                     break;
 
                 case "Shield":
@@ -759,7 +756,6 @@ namespace IO_projekt
                         return;
                     else
                     {
-                        FormHandle.p.Credits -= SelectedItem.Cost;
                         FormHandle.p.shielded = true;
                     }
                     break;
@@ -769,9 +765,18 @@ namespace IO_projekt
                         return;
                     else
                     {
-                        FormHandle.p.Credits -= SelectedItem.Cost;
                         FormHandle.p.ScatterGun = true;
                     }
+                    break;
+
+                case "Bullet Speed":
+                    if (!FormHandle.p.bulletSpeedIncreased)
+                    {
+                        FormHandle.p.bulletSpeed = 20;
+                        FormHandle.p.bulletSpeedIncreased = true;
+                    }
+                    else
+                        return;
                     break;
             }
 

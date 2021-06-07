@@ -63,7 +63,7 @@ namespace IO_projekt
                     }
                     catch (System.InvalidOperationException e)
                     {
-                    Console.WriteLine("Catched Exception!");
+                        Console.WriteLine("Catched Exception!" + e.Message);
                     }
                
                 
@@ -82,28 +82,9 @@ namespace IO_projekt
         public class Bonus : Enemy
         {
             public bool bonusHP = false;
-            public bool BonusHP
-            {
-                get { return bonusHP; }
-            }
-
             public bool bonusShield = false;
-            public bool BonusShield
-            {
-                get { return bonusShield; }
-            }
-
             public bool bonusDoubleShoot = false;
-            public bool BonusDoubleShoot
-            {
-                get { return bonusDoubleShoot; }
-            }
-
             public bool bonusMultiplier = false;
-            public bool BonusMultiplier
-            {
-                get { return bonusMultiplier; }
-            }
 
             public Bonus(Form1 f, Player p)
             {
@@ -427,8 +408,17 @@ namespace IO_projekt
                 }
                 else if(type == "aim")
                 {
-                    int m = Math.Abs(p.Sprite.Top + p.Sprite.Height / 2 - y) / BulletSpeed;
-                    BulletSpeedHorizontal = (p.Sprite.Left + p.Sprite.Width / 2 - x) / m;
+                    int h = p.Sprite.Top + p.Sprite.Height / 2 - y;
+                    int w = p.Sprite.Left + p.Sprite.Width / 2 - x;
+
+                    if(h * 1.73 >= Math.Abs(w))
+                    {                        
+                        BulletSpeedHorizontal = w * BulletSpeed / h;
+                    }
+                    else
+                    {
+                        BulletSpeedHorizontal = 0;
+                    }                                        
                 }
                 else
                 {
@@ -485,8 +475,7 @@ namespace IO_projekt
                 if (DistanceTravelled < MaxDistanceTravelled)
                 {
                     DistanceTravelled += BulletSpeed;
-                    this.Sprite.Top += this.BulletSpeed;
-                    this.Sprite.Left += this.BulletSpeedHorizontal;
+                    Sprite.Location = new Point(Sprite.Left + BulletSpeedHorizontal, Sprite.Top + BulletSpeed);
                     if (this.Sprite.Left >= System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width || this.Sprite.Left <= 0)
                     {
                         BulletSpeedHorizontal = -BulletSpeedHorizontal;
@@ -503,7 +492,7 @@ namespace IO_projekt
         public class EnemyBoss : Enemy
         {
             int HitPoints;
-            int MaxHitPoints = 50;
+            int MaxHitPoints = 40;
             int phase;
             System.Windows.Forms.Timer BossShootTimer;
             PictureBox hpBar;
@@ -511,9 +500,9 @@ namespace IO_projekt
             public EnemyBoss(Form1 f, Player p)
             {
                 HitPoints = MaxHitPoints;
-                EnemySpeed = 5;
+                EnemySpeed = 4;
                 DistanceTravelled = 0;
-                MaxDistanceTravel = 300;
+                MaxDistanceTravel = 350;
                 phase = 1;
 
                 this.p = p;
@@ -536,7 +525,7 @@ namespace IO_projekt
 
                 BossShootTimer = new System.Windows.Forms.Timer();
                 BossShootTimer.Tick += new System.EventHandler(BossShootTimer_Tick);
-                BossShootTimer.Interval = 1000;
+                BossShootTimer.Interval = 1500;
                 BossShootTimer.Start();
 
                 f.xGamePanel.Controls.Add(this.Sprite);
@@ -549,7 +538,7 @@ namespace IO_projekt
                 {
                     if (!Pause && phase >= 1)
                     {
-                        EnemyBullet b = new EnemyBullet(formHandle, p, this, "straight", this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y + this.Sprite.Height);
+                        EnemyBullet b = new EnemyBullet(formHandle, p, this, "aim", this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y + this.Sprite.Height);
                         Conf.enemyBullets.Add(b);
                     }
                     if (!Pause && phase == 2)
@@ -620,21 +609,20 @@ namespace IO_projekt
                 if (HitPoints <= 0)
                 {
                     this.Sprite.Dispose();
-                    PlayDeathAnim();
                     this.hpBar.Dispose();
                     Conf.EnemiesToRemove.Add(this);
-                    score += 50 * scoreMultiplier;
+                    score += 25 * scoreMultiplier;
                     Console.WriteLine("score = " + score);
                     formHandle.Pointslbl.Text = Convert.ToString(score);
-
-                    formHandle.BringUpShop();
                     BossShootTimer.Stop();
+
+                    formHandle.BringUpShop();                    
                 }
-                else if(HitPoints <= MaxHitPoints/2 && phase == 1)
+                else if((HitPoints <= MaxHitPoints * 0.8) && phase == 1)
                 {
                     phase = 2;
                     DistanceTravelled -= 250;
-                    EnemySpeed = 5;
+                    EnemySpeed = 4;
                 }
             }
         }
@@ -700,7 +688,7 @@ namespace IO_projekt
 
                 BossShootTimer = new System.Windows.Forms.Timer();
                 BossShootTimer.Tick += new System.EventHandler(BossShootTimer_Tick);
-                BossShootTimer.Interval = 1500;
+                BossShootTimer.Interval = 2000;
                 BossShootTimer.Start();
 
                 f.xGamePanel.Controls.Add(this.Sprite);
@@ -832,7 +820,7 @@ namespace IO_projekt
 
                     if(sa.leftBoss.alive == false && sa.rightBoss.alive == false)
                     {
-                        score += 50 * scoreMultiplier;
+                        score += 25 * scoreMultiplier;
                         formHandle.BringUpShop();
                     }
                 }
@@ -989,7 +977,15 @@ namespace IO_projekt
                     Sprite.Dispose();
                     Conf.EnemiesToRemove.Add(this);
 
-                    hp -= 3;
+                    if(p.shielded)
+                    {
+                        p.shielded = false;
+                        p.Sprite.Image = Properties.Resources.player1;
+                    }
+                    else
+                    {
+                        hp -= 3;
+                    }                    
 
                     this.formHandle.LifePointslbl.Text = Convert.ToString(hp);
                     p.HPCheck();

@@ -6,6 +6,7 @@ namespace IO_projekt
     {
         public System.Windows.Forms.PictureBox Sprite;
         public Form1 FormHandle;
+        bool Collected;
 
         public Bonus2(Form1 fh)
         {
@@ -18,13 +19,16 @@ namespace IO_projekt
             Sprite.Left = new Random().Next(0, FormHandle.Width - Sprite.Width);
 
             FormHandle.xGamePanel.Controls.Add(Sprite);
+
+            Collected = false;
         }
 
         public void TICK()
         {
             Sprite.Top += 2;
-            if (Sprite.Bounds.IntersectsWith(FormHandle.p.Sprite.Bounds))
+            if (Sprite.Bounds.IntersectsWith(FormHandle.p.Sprite.Bounds) && !Collected)
             {
+                Collected = true;
                 PlayerCollected();
             }
         }
@@ -34,7 +38,7 @@ namespace IO_projekt
 
     public class Credit : Bonus2
     {
-        int Amount = 100;
+        int Amount = 100;        
 
         public Credit(Form1 fh, Form1.Enemy hEnemy = null, int AmountModifier = 0) : base(fh)
         {
@@ -56,7 +60,8 @@ namespace IO_projekt
 
         public override void PlayerCollected()
         {
-            FormHandle.p.Credits += Amount;
+            FormHandle.p.Credits += Amount;            
+            this.FormHandle.bonusMedia.controls.play();
             Sprite.Dispose();
         }
     }
