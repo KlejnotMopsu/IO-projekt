@@ -175,6 +175,7 @@ namespace IO_projekt
                     {
                         Conf.BulletsToRemove.Add(this);
                         this.Sprite.Dispose();
+                        this.Explode();
 
                         en.GetHit();
                     }
@@ -201,6 +202,27 @@ namespace IO_projekt
             {
                 formHandle.Controls.Remove(this.Sprite);
                 Conf.BulletsToRemove.Add(this);
+            }
+        }
+
+        private void Explode()
+        {
+            Rectangle TempRectangle = new Rectangle()
+            {
+                Width = 200,
+                Height = 200
+            };
+            TempRectangle.Location = new Point(
+                this.Sprite.Location.X - TempRectangle.Width/2,
+                this.Sprite.Location.Y - TempRectangle.Height/2
+                );
+            
+            foreach (Form1.Enemy e in Conf.enemies)
+            {
+                if (e.Sprite.Bounds.IntersectsWith(TempRectangle))
+                {
+                    e.GetHit();
+                }
             }
         }
 
