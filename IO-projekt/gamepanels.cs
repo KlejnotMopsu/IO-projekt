@@ -305,6 +305,7 @@ namespace IO_projekt
 
         public class ThirdArea : GamePanel
         {
+            double rollRange;
             public ThirdArea(Form1 fh, Form1.Player ph) : base(fh, ph)
             {
                 this.BackColor = ColorTranslator.FromHtml("#2e040c");
@@ -316,22 +317,24 @@ namespace IO_projekt
                 this.Height = FormHandle.Height;
 
                 this.SpawnPlayer();
+
+                rollRange = 200;
             }
 
             public override void TICK()
             {
-                int roll = Seed.Next(200);
+                int roll = Seed.Next((int)Math.Ceiling(rollRange));
 
-                if (roll < 3)
+                if (roll < 3 || Conf.enemies.Count == 0)
                 {
                     Form1.EnemyStandard er = new Form1.EnemyStandard(FormHandle, FormHandle.p);
                     Conf.enemies.Add(er);
+                    rollRange *= 0.99;
                 }
-
-                if (roll > 197)
+                else if (roll < 6)
                 {
                     Conf.enemies.Add(new Form1.EnemyExploder(FormHandle, FormHandle.p));
-                }
+                }                
 
                 roll = Seed.Next(750);
                 if (roll == 0)
