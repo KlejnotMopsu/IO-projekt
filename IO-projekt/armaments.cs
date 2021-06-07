@@ -44,6 +44,38 @@ namespace IO_projekt
         }
     }
 
+    public class DoubleGun : Gun
+    {
+        public DoubleGun(Form1.Player ph) : base(ph)
+        {
+            ShotsInterval = 100;
+        }
+
+        public override void Shoot()
+        {
+            using (SoundPlayer sp = new SoundPlayer(Properties.Resources.laser))
+            {
+                sp.Play();
+            }
+
+            Conf.bullets.Add(new Form1.Player.Bullet(PlayerHandle.formHandle, PlayerHandle, this.PlayerHandle.Sprite.Location.X + this.PlayerHandle.Sprite.Width / 4, this.PlayerHandle.Sprite.Location.Y));
+            Conf.bullets.Add(new Form1.Player.Bullet(PlayerHandle.formHandle, PlayerHandle, this.PlayerHandle.Sprite.Location.X + this.PlayerHandle.Sprite.Width / 2 + this.PlayerHandle.Sprite.Width / 4, this.PlayerHandle.Sprite.Location.Y));
+        }
+    }
+
+    public class SpiralGun : Gun
+    {
+        public SpiralGun(Form1.Player ph) : base(ph)
+        {
+
+        }
+
+        public override void Shoot()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class ScatterGun : Gun
     {
         public ScatterGun(Form1.Player ph) : base(ph)

@@ -93,13 +93,15 @@ namespace IO_projekt
             this.Controls.Add(BlackScreen);
             BlackScreen.BringToFront();
 
-            BlackScreen.Controls.Add(new Label() {
+            Label NextLevelLabel = new Label()
+            {
                 Text = "Next level",
                 Font = new Font("Stencil", 50, FontStyle.Bold),
                 ForeColor = Color.White,
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleCenter
-            });
+            };
+            BlackScreen.Controls.Add(NextLevelLabel);
 
             while (BlackScreen.Left < -50)
             {
@@ -146,9 +148,41 @@ namespace IO_projekt
             MainTimer.Start();
         }
 
-        public void BringUpShop()
-        {
+        public async void BringUpShop()
+        { 
+
+            UpdateHpLabel();
+            p.MoveRightStop();
+            p.MoveLeftStop();
+            p.MoveUpStop();
+            p.MoveDownStop();
+            p.CloseGunLock();
+
+            /*
+            Panel BlackScreen = new Panel();
+            BlackScreen.BackColor = Color.Black;
+            BlackScreen.Width = this.Width + 50;
+            BlackScreen.Height = this.Height;
+            BlackScreen.Top = 0;
+            BlackScreen.Left = -BlackScreen.Width;
+            
+            this.Controls.Add(BlackScreen);
+            BlackScreen.BringToFront();
+            
+            Label ShopLabel = new Label()
+            {
+                Text = "Shop",
+                Font = new Font("Stencil", 50, FontStyle.Bold),
+                ForeColor = Color.White,
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+            BlackScreen.Controls.Add(ShopLabel);
+         
+            */
             new ShopPanel(this);
+
+            //BlackScreen.Dispose();
         }
 
         public void UpdateHpLabel()

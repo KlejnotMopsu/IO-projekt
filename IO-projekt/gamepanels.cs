@@ -76,11 +76,13 @@ namespace IO_projekt
                 }
                 else if (Form1.level >= 4 && !Form1.BossLevel)
                 {
+                    /*
                     bossMedia = new WindowsMediaPlayer();
-                    File.WriteAllBytes(@"sound\boss1Inc.wav", StreamToByteArr(Properties.Resources.boss1Inc));
-                    bossMedia.URL = @"sound\boss1Inc.wav";
+                    //File.WriteAllBytes(@"sound\boss1Inc.wav", StreamToByteArr(Properties.Resources.boss1Inc));
+                    //bossMedia.URL = @"sound\boss1Inc.wav";
                     bossMedia.settings.volume = 10;
                     bossMedia.controls.play();
+                    */
 
                     Form1.BossLevel = true;
                     Form1.level = 0;
