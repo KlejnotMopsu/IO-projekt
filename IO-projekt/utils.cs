@@ -60,8 +60,11 @@ namespace IO_projekt
             this.Focus();
             GameOver = false;
             Pause = false;
+            BossLevel = false;
             pauseLabel.Visible = false;
             hp = 100;
+            CurrentLevel = 1;
+            level = 1;
             UpdateHpLabel();
             score = 0;
             UpdateScoreLabel();

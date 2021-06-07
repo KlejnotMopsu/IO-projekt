@@ -809,19 +809,22 @@ namespace IO_projekt
 
                 if (HitPoints <= 0)
                 {
-                    this.Sprite.Dispose();
-                    PlayDeathAnim();
+                    this.Sprite.Dispose();                    
                     this.hpBar.Dispose();
-                    Conf.EnemiesToRemove.Add(this);                    
-                    Console.WriteLine("score = " + score);
-                    formHandle.Pointslbl.Text = Convert.ToString(score);
+                    Conf.EnemiesToRemove.Add(this);                                                            
                     BossShootTimer.Stop();
                     alive = false;
 
                     if(sa.leftBoss.alive == false && sa.rightBoss.alive == false)
                     {
                         score += 25 * scoreMultiplier;
+                        Console.WriteLine("score = " + score);
+                        formHandle.Pointslbl.Text = Convert.ToString(score);
                         formHandle.BringUpShop();
+                    }
+                    else
+                    {
+                        PlayDeathAnim();
                     }
                 }
                 else if(phase == 2 && HitPoints < MaxHitPoints / 2)
@@ -1046,11 +1049,21 @@ namespace IO_projekt
                 }
                 else if (Sprite.Bounds.IntersectsWith(p.Sprite.Bounds) || Sprite.Top >= formHandle.Height)
                 {
-                    hp -= 10;
-                    p.HPCheck();
-                    formHandle.UpdateHpLabel();
+                    if (p.shielded)
+                    {
+                        p.shielded = false;
+                        p.Sprite.Image = Properties.Resources.player1;
+                    }
+                    else
+                    {
+                        hp -= 20;
+                        formHandle.UpdateHpLabel();
+                        p.HPCheck();                        
+                    }
+                                       
                     Conf.EnemiesToRemove.Add(this);
                     this.Sprite.Dispose();
+                    PlayDeathAnim();
                 }
 
                 Sprite.Top += EnemySpeed;
@@ -1059,7 +1072,7 @@ namespace IO_projekt
             public override void GetHit()
             {
                 alreadyShot = true;
-                score++;
+                score += 1 * scoreMultiplier;
                 this.formHandle.Pointslbl.Text = Convert.ToString(score);
             }
 
@@ -1136,11 +1149,21 @@ namespace IO_projekt
 
                     if (Sprite.Bounds.IntersectsWith(hExploder.p.Sprite.Bounds))
                     {
-                        hp -= 10;
-                        p.HPCheck();
-                        formHandle.UpdateHpLabel();
+                        if (p.shielded)
+                        {
+                            p.shielded = false;
+                            p.Sprite.Image = Properties.Resources.player1;
+                        }
+                        else
+                        {
+                            hp -= 10;
+                            formHandle.UpdateHpLabel();
+                            p.HPCheck();
+                        }
+
                         Conf.EnemiesToRemove.Add(this);
                         this.Sprite.Dispose();
+                        PlayDeathAnim();
                     }
 
                     if (Sprite.Top > formHandle.Height
@@ -1156,7 +1179,9 @@ namespace IO_projekt
 
                 public override void GetHit()
                 {
-                    return;
+                    Conf.EnemiesToRemove.Add(this);
+                    this.Sprite.Dispose();
+                    PlayDeathAnim();
                 }
             }
         }
