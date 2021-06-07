@@ -132,11 +132,16 @@ namespace IO_projekt
 
     public class Rocket : Form1.Player.Bullet
     {
+        int SmokeInterval = 40;
+        int SmokeCooldown;
+
         public Rocket(Form1 fh)
         {
+            SmokeCooldown = SmokeInterval;
+
             Console.WriteLine("Creating Rocket...");
             formHandle = fh;
-            BulletSpeed = 4;
+            BulletSpeed = 7;
             DistanceTravelled = 0;
             MaxDistanceTravelled = fh.Height + 200;
             Sprite = new PictureBox();
@@ -155,6 +160,13 @@ namespace IO_projekt
 
         public override void TICK()
         {
+            SmokeCooldown -= 10;
+            if (SmokeCooldown <= 0)
+            {
+                CreateSmokeCloud(new Point(Sprite.Location.X, Sprite.Location.Y+Sprite.Height));
+                SmokeCooldown = SmokeInterval;
+            }
+
             if (this.Sprite.Top > 0)
             {
                 foreach (Form1.Enemy en in Conf.enemies)
@@ -192,21 +204,64 @@ namespace IO_projekt
             }
         }
 
-        private async void CreateSmokeCloud()
+        private void CreateSmokeCloud(Point loc)
         {
-            Thread th = new Thread(() =>
+            Thread th = new Thread(async () =>
                 {
                     PictureBox TempPb = new PictureBox()
                     {
                         Width = 20,
                         Height = 20,
-                        BackColor = Color.White
+                        BackColor = Color.Transparent,
+                        //Image = Properties.Resources.SmokePic,
+                        SizeMode = PictureBoxSizeMode.Zoom,
+                        Location = loc
                     };
-                    //this.formHandle.Invoke(formHandle.Controls.Add(TempPb));
+                    formHandle.xGamePanel.Invoke(new MethodInvoker(delegate { formHandle.Controls.Add(TempPb); }));
+                    TempPb.BringToFront();
+
+
+                    int alpha = 90;
+                    while (alpha > 0)
+                    {                        
+                        TempPb.Image = SetAlpha((Bitmap)Properties.Resources.SmokePic, alpha);
+                        alpha -= 5;
+                        TempPb.Width += 1;
+                        TempPb.Height += 1;
+                        await Task.Delay(100).ConfigureAwait(false);
+                    }
+
+                    Console.WriteLine("Reached here");
+                    formHandle.xGamePanel.Invoke(new MethodInvoker(delegate { formHandle.Controls.Remove(TempPb); }));
+                    TempPb.Dispose();
                 }
             );
 
             th.Start();
+
+            Bitmap SetAlpha(Bitmap bmpIn, int alpha)
+            {
+                Bitmap bmpOut = new Bitmap(bmpIn.Width, bmpIn.Height);
+                float a = alpha / 255f;
+                Rectangle r = new Rectangle(0, 0, bmpIn.Width, bmpIn.Height);
+
+                float[][] matrixItems = {
+                new float[] {1, 0, 0, 0, 0},
+                new float[] {0, 1, 0, 0, 0},
+                new float[] {0, 0, 1, 0, 0},
+                new float[] {0, 0, 0, a, 0},
+                new float[] {0, 0, 0, 0, 1}};
+
+                System.Drawing.Imaging.ColorMatrix colorMatrix = new System.Drawing.Imaging.ColorMatrix(matrixItems);
+
+                System.Drawing.Imaging.ImageAttributes imageAtt = new System.Drawing.Imaging.ImageAttributes();
+                imageAtt.SetColorMatrix(colorMatrix, System.Drawing.Imaging.ColorMatrixFlag.Default, System.Drawing.Imaging.ColorAdjustType.Bitmap);
+
+                using (Graphics g = Graphics.FromImage(bmpOut))
+                    g.DrawImage(bmpIn, r, r.X, r.Y, r.Width, r.Height, GraphicsUnit.Pixel, imageAtt);
+
+                return bmpOut;
+            }
         }
     }
 }

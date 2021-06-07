@@ -148,6 +148,9 @@ namespace IO_projekt
                 set { scatterGun = value; }
             }
 
+            public bool bulletSpeedIncreased = false;
+            public int bulletSpeed = 10;
+
             System.Windows.Forms.Timer MoveRightTimer;
             System.Windows.Forms.Timer MoveLeftTimer;
             System.Windows.Forms.Timer MoveUpTimer;

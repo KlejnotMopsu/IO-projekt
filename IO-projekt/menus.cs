@@ -770,7 +770,7 @@ namespace IO_projekt
                     break;
 
                 case "Bullet Speed":
-                    if (!FormHandle.p.bulletSpeedIncreased)
+                    if (FormHandle.p.bulletSpeedIncreased)
                     {
                         FormHandle.p.bulletSpeed = 20;
                         FormHandle.p.bulletSpeedIncreased = true;
