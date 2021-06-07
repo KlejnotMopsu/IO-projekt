@@ -496,6 +496,7 @@ namespace IO_projekt
             int phase;
             System.Windows.Forms.Timer BossShootTimer;
             PictureBox hpBar;
+            bool dead = false;
 
             public EnemyBoss(Form1 f, Player p)
             {
@@ -606,7 +607,7 @@ namespace IO_projekt
                 formHandle.xGamePanel.Controls.Remove(this.hpBar);
                 formHandle.xGamePanel.Controls.Add(this.hpBar);                
 
-                if (HitPoints <= 0)
+                if (HitPoints <= 0 && !dead)
                 {
                     this.Sprite.Dispose();
                     this.hpBar.Dispose();
@@ -615,6 +616,7 @@ namespace IO_projekt
                     Console.WriteLine("score = " + score);
                     formHandle.Pointslbl.Text = Convert.ToString(score);
                     BossShootTimer.Stop();
+                    dead = true;
 
                     formHandle.BringUpShop();                    
                 }
