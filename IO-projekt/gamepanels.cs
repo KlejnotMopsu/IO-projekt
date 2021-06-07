@@ -77,7 +77,7 @@ namespace IO_projekt
                 else if (Form1.level >= 4 && !Form1.BossLevel)
                 {
                     bossMedia = new WindowsMediaPlayer();
-                    File.WriteAllBytes(@"sound\boss1Inc" + roll.ToString() + ".wav", StreamToByteArr(Properties.Resources.boss1Inc));
+                    File.WriteAllBytes(@"sound\boss1Inc" + Seed.Next().ToString() + ".wav", StreamToByteArr(Properties.Resources.boss1Inc));
                     bossMedia.URL = @"sound\boss1Inc.wav";
                     bossMedia.settings.volume = 10;
                     bossMedia.controls.play();
