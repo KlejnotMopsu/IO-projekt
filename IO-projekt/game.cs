@@ -115,7 +115,8 @@ namespace IO_projekt
     {
         public class Player
         {
-            Form1 formHandle;
+            public Form1 formHandle;
+            public Gun CurrentGun;
 
             public PictureBox Sprite;
             public Point Position;
@@ -124,7 +125,7 @@ namespace IO_projekt
             public int Credits;
 
             bool IsGunLockOpen;
-            public int NeededGunCooldown = 250;
+            //public int NeededGunCooldown = 250;
             int GunCooldown;
 
             int doubleShootTime;
@@ -166,6 +167,7 @@ namespace IO_projekt
 
                 MovementSpeed = 20;
 
+                CurrentGun = new ScatterGun(this);
                 IsGunLockOpen = false;
                 GunCooldown = 0;
 
@@ -260,11 +262,13 @@ namespace IO_projekt
             {
                 public int DistanceTravelled;
                 public int MaxDistanceTravelled;
-                int BulletSpeed;
-                int BulletSpeedHorizontal;
+                public int BulletSpeed;
+                public int BulletSpeedHorizontal;
                 public PictureBox Sprite;
                 
-                Form1 formHandle;
+                public Form1 formHandle;
+
+                public Bullet() { }
 
                 public Bullet(Form1 f, Player p, int x, int y)
                 {
@@ -278,6 +282,22 @@ namespace IO_projekt
                     Sprite.BackColor = Color.Transparent;
                     Sprite.Image = Properties.Resources.BulletPic;
                     Sprite.Location = new Point(x - this.Sprite.Width / 2, y);
+
+                    f.xGamePanel.Controls.Add(this.Sprite);
+                }
+
+                public Bullet(Form1 f, Player p)
+                {
+                    formHandle = f;
+                    BulletSpeed = 15;
+                    BulletSpeedHorizontal = 0;
+                    DistanceTravelled = 0;
+                    MaxDistanceTravelled = f.Height + 200;
+                    Sprite = new PictureBox();
+                    Sprite.Width = Sprite.Height = 10;
+                    Sprite.BackColor = Color.Transparent;
+                    Sprite.Image = Properties.Resources.BulletPic;
+                    Sprite.Location = new Point(p.Sprite.Location.X + p.Sprite.Width/2 - this.Sprite.Width/2, p.Sprite.Location.Y);
 
                     f.xGamePanel.Controls.Add(this.Sprite);
                 }
@@ -308,7 +328,7 @@ namespace IO_projekt
                     f.xGamePanel.Controls.Add(this.Sprite);
                 }
 
-                public void TICK()
+                public virtual void TICK()
                 {
                     if (this.Sprite.Top > 0)
                     {
@@ -442,8 +462,10 @@ namespace IO_projekt
                 {
                     if (GunCooldown <= 0)
                     {
-                        GunCooldown = NeededGunCooldown;
+                        GunCooldown = CurrentGun.ShotsInterval;
 
+                        CurrentGun.Shoot();
+                        /*
                         using (SoundPlayer sp = new SoundPlayer(Properties.Resources.laser))
                         {
                             sp.Play();
@@ -463,7 +485,7 @@ namespace IO_projekt
                         {
                             Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y, "left"));
                             Conf.bullets.Add(new Bullet(formHandle, this, this.Sprite.Location.X + this.Sprite.Width / 2, this.Sprite.Location.Y, "right"));
-                        }
+                        }*/
                     }
                 }
             }

@@ -22,7 +22,6 @@ namespace IO_projekt
         
         public GamePanel xGamePanel;
 
-        PauseMenuPanel PauseMenu;
         public MainMenuPanel MainMenu;
         ScoreEntry xScoreEntry;
 
@@ -182,11 +181,15 @@ namespace IO_projekt
             }
             if (e.KeyCode == Keys.I)
             {
-                p.NeededGunCooldown = 20;
+                p.CurrentGun.ShotsInterval = 20;
             }
             if (e.KeyCode == Keys.O)
             {
                 Conf.bonuses.Add(new Bonus(this, p));
+            }
+            if(e.KeyCode == Keys.R)
+            {
+                Conf.bullets.Add(new Rocket(this));
             }
             if (e.KeyCode == Keys.P)
             {

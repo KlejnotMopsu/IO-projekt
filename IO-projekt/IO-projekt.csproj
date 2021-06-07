@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="armaments.cs" />
     <Compile Include="bonuses.cs" />
     <Compile Include="enemies.cs">
       <SubType>Form</SubType>
